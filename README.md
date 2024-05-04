@@ -31,6 +31,12 @@
         <artifactId>spel-validator</artifactId>
         <version>Latest Version</version>
     </dependency>
+    
+    <dependency>
+        <groupId>org.hibernate.validator</groupId>
+        <artifactId>hibernate-validator</artifactId>
+        <version>${hibernate-validator.version}</version>
+    </dependency>
     ```
 
 - 在接口参数上使用 `@Valid` 或 `@Validated` 注解

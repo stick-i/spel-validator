@@ -35,6 +35,8 @@ public class ObjectValidResult {
 	 * 添加校验结果
 	 * <p>
 	 * 当校验结果为false时，会将错误信息添加到结果中
+	 *
+	 * @param results 字段校验结果列表
 	 */
 	public void addFieldResults(List<FieldValidResult> results) {
 		List<FieldError> errors = new ArrayList<>();

@@ -17,7 +17,7 @@ import java.util.Set;
 public interface SpelConstraintValidator<A extends Annotation> {
 
 	/**
-	 * 校验被标记的注解。
+	 * 校验被标记的字段
 	 *
 	 * @param annotation 注解值
 	 * @param obj        被校验的对象
@@ -29,7 +29,9 @@ public interface SpelConstraintValidator<A extends Annotation> {
 	Set<Class<?>> DEFAULT_SUPPORT_TYPE = Collections.singleton(Object.class);
 
 	/**
-	 * 校验器支持的对象类型列表，默认为 Object。
+	 * 校验器支持的对象类型列表，默认为 Object
+	 *
+	 * @return 支持的对象类型列表
 	 */
 	default Set<Class<?>> supportType() {
 		return DEFAULT_SUPPORT_TYPE;
