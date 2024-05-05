@@ -29,7 +29,7 @@ public @interface SpelAssert {
 	/**
 	 * 校验失败时的错误消息
 	 */
-	String message() default "不能为null";
+	String message() default "不允许的值";
 
 	/**
 	 * 约束开启条件，必须为合法的SpEL表达式，计算结果必须为boolean类型。

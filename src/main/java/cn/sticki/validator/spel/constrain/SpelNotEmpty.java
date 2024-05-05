@@ -38,7 +38,7 @@ public @interface SpelNotEmpty {
 	/**
 	 * 校验失败时的错误消息
 	 */
-	String message() default "不能为空字符串";
+	String message() default "不能为空";
 
 	/**
 	 * 约束开启条件，必须为合法的SpEL表达式，计算结果必须为boolean类型。
