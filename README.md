@@ -32,22 +32,28 @@
 ## 📦 快速开始
 
 - 添加依赖
-  - Latest
-    Version: [![Maven Central](https://img.shields.io/maven-central/v/cn.sticki/spel-validator.svg)](https://search.maven.org/search?q=g:cn.sticki%20a:spel-validator)
-  - Maven:
-    ```xml
-    <dependency>
-        <groupId>cn.sticki</groupId>
-        <artifactId>spel-validator</artifactId>
-        <version>Latest Version</version>
-    </dependency>
-    
-    <dependency>
-        <groupId>org.hibernate.validator</groupId>
-        <artifactId>hibernate-validator</artifactId>
-        <version>${hibernate-validator.version}</version>
-    </dependency>
-    ```
+
+  Latest Version:
+  [![Maven Central](https://img.shields.io/maven-central/v/cn.sticki/spel-validator.svg)](https://search.maven.org/search?q=g:cn.sticki%20a:spel-validator)
+  ```xml
+  <dependency>
+      <groupId>cn.sticki</groupId>
+      <artifactId>spel-validator</artifactId>
+      <version>Latest Version</version>
+  </dependency>
+  
+  <dependency>
+      <groupId>org.hibernate.validator</groupId>
+      <artifactId>hibernate-validator</artifactId>
+      <version>${hibernate-validator.version}</version>
+  </dependency>
+  
+  <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+      <version>${spring-boot-starter-web.version}</version>
+  </dependency>
+  ```
 
 - 在接口参数上使用 `@Valid` 或 `@Validated` 注解
 
