@@ -57,13 +57,6 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>javax.validation</groupId>
-			<artifactId>validation-api</artifactId>
-			<version>2.0.1.Final</version>
-			<optional>true</optional>
-		</dependency>
-
-		<dependency>
 			<groupId>org.hibernate.validator</groupId>
 			<artifactId>hibernate-validator</artifactId>
 			<version>6.2.5.Final</version>
@@ -114,6 +107,25 @@
 					<encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
 			</plugin>
+			<!-- Source -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>3.1.0</version>
+				<inherited>true</inherited>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<excludeResources>true</excludeResources>
+					<useDefaultExcludes>true</useDefaultExcludes>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -122,25 +134,6 @@
 			<id>release</id>
 			<build>
 				<plugins>
-					<!-- Source -->
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-source-plugin</artifactId>
-						<version>3.1.0</version>
-						<inherited>true</inherited>
-						<executions>
-							<execution>
-								<id>attach-sources</id>
-								<goals>
-									<goal>jar</goal>
-								</goals>
-							</execution>
-						</executions>
-						<configuration>
-							<excludeResources>true</excludeResources>
-							<useDefaultExcludes>true</useDefaultExcludes>
-						</configuration>
-					</plugin>
 					<!-- Javadoc -->
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
