@@ -11,7 +11,9 @@ import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * 基于SpEL断言校验注解，用于标记被注解的元素需要满足指定的断言条件。
+ * 被标记的元素需要满足指定的断言条件。
+ * <p>
+ * 接受任何类型。
  *
  * @author 阿杆
  * @version 1.0

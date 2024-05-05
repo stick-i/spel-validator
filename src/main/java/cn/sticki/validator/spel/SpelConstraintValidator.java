@@ -18,13 +18,19 @@ public interface SpelConstraintValidator<A extends Annotation> {
 
 	/**
 	 * 校验被标记的字段
+	 * <p>
+	 * 限制：
+	 * <ul>
+	 *     <li>该方法会被并发访问，实现时需要保证线程安全。</li>
+	 *     <li>校验时不能改变 obj 对象的值，这个对象与接口参数的对象是同一个。</li>
+	 * </ul>
 	 *
 	 * @param annotation 注解值
 	 * @param obj        被校验的对象
 	 * @param field      被校验的字段，该字段存在于 obj 中
 	 * @return 校验结果
 	 */
-	FieldValidResult isValid(A annotation, Object obj, Field field);
+	FieldValidResult isValid(A annotation, Object obj, Field field) throws IllegalAccessException;
 
 	Set<Class<?>> DEFAULT_SUPPORT_TYPE = Collections.singleton(Object.class);
 

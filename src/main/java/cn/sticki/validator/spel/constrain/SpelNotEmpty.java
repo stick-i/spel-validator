@@ -2,7 +2,7 @@ package cn.sticki.validator.spel.constrain;
 
 import cn.sticki.validator.spel.SpelConstraint;
 import cn.sticki.validator.spel.SpelValid;
-import cn.sticki.validator.spel.constraintvalidator.SpelNotNullValidator;
+import cn.sticki.validator.spel.constraintvalidator.SpelNotEmptyValidator;
 import org.intellij.lang.annotations.Language;
 
 import java.lang.annotation.Documented;
@@ -14,23 +14,31 @@ import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * 被标记的元素不能为null。
+ * 被标记的元素不能为空。
+ * <p>
+ * 支持的类型有：
+ * <ul>
+ *     <li>{@link CharSequence}（评估字符序列的长度）</li>
+ *     <li>{@link java.util.Collection}（评估集合大小）</li>
+ *     <li>{@link java.util.Map}（评估Map大小）</li>
+ *     <li>数组（计算数组长度）</li>
+ * </ul>
  *
  * @author 阿杆
  * @version 1.0
- * @since 2024/5/1
+ * @since 2024/5/5
  */
 @Documented
 @Retention(RUNTIME)
 @Target(FIELD)
-@Repeatable(SpelNotNull.List.class)
-@SpelConstraint(validatedBy = SpelNotNullValidator.class)
-public @interface SpelNotNull {
+@Repeatable(SpelNotEmpty.List.class)
+@SpelConstraint(validatedBy = SpelNotEmptyValidator.class)
+public @interface SpelNotEmpty {
 
 	/**
 	 * 校验失败时的错误消息
 	 */
-	String message() default "不能为null";
+	String message() default "不能为空字符串";
 
 	/**
 	 * 约束开启条件，必须为合法的SpEL表达式，计算结果必须为boolean类型。
@@ -52,17 +60,12 @@ public @interface SpelNotNull {
 	@Language("SpEL")
 	String[] group() default {};
 
-	/**
-	 * 在同一元素上定义多个注解。
-	 *
-	 * @see SpelNotNull
-	 */
+	@Documented
 	@Target(FIELD)
 	@Retention(RUNTIME)
-	@Documented
 	@interface List {
 
-		SpelNotNull[] value();
+		SpelNotEmpty[] value();
 
 	}
 
