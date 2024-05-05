@@ -40,6 +40,11 @@ public class FieldValidResult {
 		this.success = success;
 	}
 
+	public FieldValidResult(boolean success, @NotNull String message) {
+		this.success = success;
+		this.message = message;
+	}
+
 	public static FieldValidResult success() {
 		return new FieldValidResult(true);
 	}
