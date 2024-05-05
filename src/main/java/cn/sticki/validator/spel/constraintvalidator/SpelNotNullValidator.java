@@ -17,8 +17,6 @@ public class SpelNotNullValidator implements SpelConstraintValidator<SpelNotNull
 
 	@Override
 	public FieldValidResult isValid(SpelNotNull annotation, Object obj, Field field) throws IllegalAccessException {
-		// 判断字段值是否为null
-		field.setAccessible(true);
 		return new FieldValidResult(field.get(obj) != null);
 	}
 

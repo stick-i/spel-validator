@@ -11,10 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -40,12 +37,27 @@ public class SpelValidExecutor {
 	 * 如果对象中有任意使用了 spel 约束注解的字段，则会对该字段进行校验。
 	 *
 	 * @param verifiedObject 被校验的对象
+	 * @return 对象校验结果
+	 */
+	@SuppressWarnings("unused")
+	@NotNull
+	public static ObjectValidResult validateObject(@NotNull Object verifiedObject) {
+		return validateObject(verifiedObject, Collections.emptySet());
+	}
+
+	/**
+	 * 验证对象
+	 * <p>
+	 * 如果对象中有任意使用了 spel 约束注解的字段，则会对该字段进行校验。
+	 *
+	 * @param verifiedObject 被校验的对象
 	 * @param validateGroups 分组信息，只有同组的注解才会被校验
 	 * @return 对象校验结果
 	 */
 	@NotNull
 	public static ObjectValidResult validateObject(@NotNull Object verifiedObject, @NotNull Set<Object> validateGroups) {
 		log.debug("Spel validate start, class [{}], groups [{}]", verifiedObject.getClass().getName(), validateGroups);
+		log.debug("Verified object [{}]", verifiedObject);
 
 		List<FieldValidResult> validationResults = new ArrayList<>();
 
@@ -114,7 +126,8 @@ public class SpelValidExecutor {
 			return;
 		}
 
-		log.debug("===> Find target annotation [{}], verifiedField [{}], anno param[{}]", annoClazz.getSimpleName(), verifiedField.getName(), annotation);
+		log.debug("===> Find target annotation [{}], verifiedField [{}]", annoClazz.getSimpleName(), verifiedField.getName());
+		log.debug("===> Annotation object [{}]", annotation);
 
 		// 获取验证器实例 todo 缓存
 		Class<? extends SpelConstraintValidator<?>> validatorClass = annoClazz.getAnnotation(SpelConstraint.class).validatedBy();

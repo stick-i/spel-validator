@@ -20,6 +20,9 @@ public class SpelNotEmptyValidator implements SpelConstraintValidator<SpelNotEmp
 	@Override
 	public FieldValidResult isValid(SpelNotEmpty annotation, Object obj, Field field) throws IllegalAccessException {
 		Object object = field.get(obj);
+		if (object == null) {
+			return new FieldValidResult(false);
+		}
 		int size = CalcLengthUtil.calcFieldSize(object);
 		return new FieldValidResult(size > 0);
 	}
