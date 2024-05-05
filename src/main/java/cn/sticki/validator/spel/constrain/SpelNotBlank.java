@@ -14,7 +14,7 @@ import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * 被标记的元素必须为非空字符串，不能为null，也不能为长度为0的字符串，也不能全是空白字符。
+ * 被标记的元素必须为非空字符串，不能为 {@code null}，也不能为长度为0的字符串，也不能全是空白字符。
  * <p>
  * 接受 {@link CharSequence} 类型。
  *

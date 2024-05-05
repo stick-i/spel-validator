@@ -1,6 +1,5 @@
 package cn.sticki.validator.spel;
 
-import javax.validation.constraints.NotNull;
 import java.lang.annotation.*;
 
 /**
@@ -33,7 +32,6 @@ import java.lang.annotation.*;
  * @see SpelConstraintValidator
  * @since 2024/4/11
  */
-@NotNull
 @Documented
 @Target(ElementType.ANNOTATION_TYPE)
 @Retention(RetentionPolicy.RUNTIME)

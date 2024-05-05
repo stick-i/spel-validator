@@ -14,7 +14,7 @@ import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * 被标记的元素不能为null。
+ * 被标记的元素不能为 {@code null}，支持任何类型。
  *
  * @author 阿杆
  * @version 1.0
