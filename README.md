@@ -17,11 +17,12 @@
 ### 特点
 
 - 强大的参数校验功能，几乎支持所有场景下的参数校验。
-- 基于 SpEL（Spring Expression Language） 表达式，支持复杂的校验逻辑，支持上下文属性关联校验。
-- 扩展自 javax.validation 包，只新增不修改，无缝集成到 Spring Boot 项目中。
+- 扩展自 javax.validation 包，只新增不修改，无缝集成到项目中。
+- 基于 SpEL（Spring Expression Language） 表达式，支持复杂的校验逻辑。
+- 支持调用 Spring Bean，可在表达式中使用注入过的 Spring Bean。
+- 校验时基于整个对象，支持对象内字段间的校验逻辑。
 - 支持自定义校验注解，可根据业务需求自定义校验逻辑。
 - 无需额外的异常处理，校验失败时会上报到 javax.validation 的异常体系中。
-- 支持调用 Spring Bean，可在表达式中使用注入过的 Spring Bean。
 - 简单易用，使用方式几乎与 javax.validation 一致，学习成本低，上手快。
 
 ### 环境
