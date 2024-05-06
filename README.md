@@ -216,7 +216,10 @@
 
 ## 📖 使用指南
 
-### 开启约束校验的方式
+> 注意：本组件的目的不是代替 `javax.validation` 的校验注解，而是作为一个扩展，方便某些场景下的参数校验。
+> 能够使用 `javax.validation` 的场景就不要使用 `spel-validator` ，因为 `spel-validator` 会有一定的性能损耗。
+
+### 开启约束校验
 
 需要满足以下两个条件，才会对带注解的元素进行校验：
 
@@ -230,7 +233,7 @@
 这是因为 `@SpelValid` 注解是基于 `javax.validation.Constraint` 实现的，只有在 `@Valid` 或 `@Validated` 注解的支持下才会生效。
 而 `spel-validator` 提供的约束注解是基于 `@SpelValid` 进行扫描校验的，只有在 `@SpelValid` 注解生效的情况下才会执行约束校验。
 
-### 约束注解
+### 使用约束注解
 
 目前支持的约束注解有：
 
@@ -282,11 +285,17 @@ public class Application {
 
 ## ❓ 常见问题
 
+### 关于性能
+
+性能上我目前还没有进行测试，但代码里使用了很多的反射，会有一定的损耗，后面我准备多加一些缓存，尽量降低性能上的影响。
+
 ## 📅 更新日志
 
 https://github.com/stick-i/spel-validator/releases
 
 ## 🤝 贡献指南
+
+暂时没写，如果想贡献代码，可以在 issue 中提出，我会尽快回复。
 
 ## 💰 捐赠支持
 
