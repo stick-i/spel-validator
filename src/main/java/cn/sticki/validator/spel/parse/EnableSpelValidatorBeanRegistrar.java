@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Import;
 import java.lang.annotation.*;
 
 /**
- * 启用SpelValidatorBeanRegistrar，启用后可以在 spel-validator 的相关注解中引用 Spring Bean。
+ * 启用 {@link SpelValidatorBeanRegistrar}，启用后可以在 spel-validator 的相关注解中引用 Spring Bean。
  * <p>
  * 例如：
  * <pre>
