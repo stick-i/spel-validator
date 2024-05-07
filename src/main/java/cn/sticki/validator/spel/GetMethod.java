@@ -1,7 +1,11 @@
 package cn.sticki.validator.spel;
 
+import lombok.EqualsAndHashCode;
+
 import java.lang.reflect.Method;
 import java.security.PrivilegedAction;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * copy from {@link org.hibernate.validator.internal.util.privilegedactions.GetMethod}
@@ -10,7 +14,10 @@ import java.security.PrivilegedAction;
  * @version 1.0
  * @since 2024/4/30
  */
+@EqualsAndHashCode
 public class GetMethod implements PrivilegedAction<Method> {
+
+	private static final Map<GetMethod, Method> runCache = new ConcurrentHashMap<>();
 
 	private final Class<?> clazz;
 
@@ -27,6 +34,22 @@ public class GetMethod implements PrivilegedAction<Method> {
 
 	@Override
 	public Method run() {
+		updateCache();
+		return runCache.get(this);
+	}
+
+	private void updateCache() {
+		if (runCache.containsKey(this)) {
+			return;
+		}
+		synchronized (runCache) {
+			if (!runCache.containsKey(this)) {
+				runCache.put(this, this.internalRun());
+			}
+		}
+	}
+
+	private Method internalRun() {
 		try {
 			return this.clazz.getMethod(this.methodName);
 		} catch (NoSuchMethodException var2) {
