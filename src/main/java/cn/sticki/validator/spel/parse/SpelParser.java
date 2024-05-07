@@ -5,8 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.expression.BeanFactoryResolver;
+import org.springframework.expression.Expression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Spel表达式解析工具
@@ -22,6 +26,8 @@ public class SpelParser {
 	private static final SpelExpressionParser parser = new SpelExpressionParser();
 
 	private static final StandardEvaluationContext context = new StandardEvaluationContext();
+
+	private static final Map<String, Expression> expressionMap = new ConcurrentHashMap<>();
 
 	static {
 		ApplicationContext applicationContext = SpelValidatorBeanRegistrar.getApplicationContext();
@@ -44,12 +50,24 @@ public class SpelParser {
 	public static Object parse(String expression, Object rootObject) {
 		try {
 			log.debug("======> Parse expression [{}]", expression);
+			updateExpressionCache(expression);
 			Object value = parser.parseExpression(expression).getValue(context, rootObject, Object.class);
 			log.debug("======> Parse result [{}]", value);
 			return value;
 		} catch (Exception e) {
 			log.error("Parse expression error, expression [{}], message [{}]", expression, e.getMessage());
 			throw new SpelParserException(e);
+		}
+	}
+
+	private static void updateExpressionCache(String expression) {
+		if (expressionMap.containsKey(expression)) {
+			return;
+		}
+		synchronized (expressionMap) {
+			if (!expressionMap.containsKey(expression)) {
+				expressionMap.put(expression, parser.parseExpression(expression));
+			}
 		}
 	}
 
