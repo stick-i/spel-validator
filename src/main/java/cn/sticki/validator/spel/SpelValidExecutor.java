@@ -59,6 +59,7 @@ public class SpelValidExecutor {
 	public static ObjectValidResult validateObject(@NotNull Object verifiedObject, @NotNull Set<Object> validateGroups) {
 		log.debug("Spel validate start, class [{}], groups [{}]", verifiedObject.getClass().getName(), validateGroups);
 		log.debug("Verified object [{}]", verifiedObject);
+		long startTime = System.nanoTime();
 
 		List<FieldValidResult> validationResults = new ArrayList<>();
 
@@ -72,7 +73,8 @@ public class SpelValidExecutor {
 		ObjectValidResult validResult = new ObjectValidResult();
 		validResult.addFieldResults(validationResults);
 
-		log.debug("Spel validate over, result {}", validResult.getErrors());
+		log.debug("Spel validate over,error list {}", validResult.getErrors());
+		log.debug("Spel validate cost time {} ms", (System.nanoTime() - startTime) / 1000000);
 		return validResult;
 	}
 
