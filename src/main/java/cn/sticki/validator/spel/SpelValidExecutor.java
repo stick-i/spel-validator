@@ -2,6 +2,7 @@ package cn.sticki.validator.spel;
 
 import cn.sticki.validator.spel.exception.SpelNotSupportedTypeException;
 import cn.sticki.validator.spel.exception.SpelValidException;
+import cn.sticki.validator.spel.manager.AnnotationMethodManager;
 import cn.sticki.validator.spel.parse.SpelParser;
 import cn.sticki.validator.spel.result.FieldValidResult;
 import cn.sticki.validator.spel.result.ObjectValidResult;
@@ -215,17 +216,17 @@ public class SpelValidExecutor {
 			return false;
 		}
 
-		if (GetMethod.action(annotationType, MESSAGE).run() == null) {
+		if (AnnotationMethodManager.get(annotationType, MESSAGE) == null) {
 			log.warn("The annotation [{}] must have a method named [message] that returns a string.", annotationType.getName());
 			return false;
 		}
 
-		if (GetMethod.action(annotationType, CONDITION).run() == null) {
+		if (AnnotationMethodManager.get(annotationType, CONDITION) == null) {
 			log.warn("The annotation [{}] must have a method named [condition] that returns a string.", annotationType.getName());
 			return false;
 		}
 
-		if (GetMethod.action(annotationType, GROUP).run() == null) {
+		if (AnnotationMethodManager.get(annotationType, GROUP) == null) {
 			log.warn("The annotation [{}] must have a method named [group] that returns a Array<String>.", annotationType.getName());
 			return false;
 		}
@@ -295,9 +296,16 @@ public class SpelValidExecutor {
 		});
 	}
 
-	// todo 缓存
+	/**
+	 * 获取注解方法的属性值
+	 *
+	 * @param annotation 注解对象
+	 * @param methodName 方法名
+	 * @param <T>        返回值类型
+	 * @return 属性值
+	 */
 	private static <T> T getAnnotationValue(@NotNull Annotation annotation, @NotNull String methodName) {
-		Method method = GetMethod.action(annotation.annotationType(), methodName).run();
+		Method method = AnnotationMethodManager.get(annotation.annotationType(), methodName);
 		try {
 			//noinspection unchecked
 			return (T) method.invoke(annotation);
