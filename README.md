@@ -24,7 +24,7 @@
   ```java
   @NotNull
   private Integer contentType;
-
+  
   @SpelNotNull(condition = "#this.contentType == 1", message = "语音内容不能为空")
   private Object audioContent;
   
@@ -65,6 +65,10 @@
 ### 环境
 
 目前仅测试了 JDK8 环境，理论上来说 JDK8+ 应该都是支持的。
+
+### 交流群
+
+<img src="./document/image/wechat-qrcode.jpg" alt="交流群二维码.jpg" style="width: 25%; height: auto;" />
 
 ## 📦 快速开始
 
@@ -212,7 +216,7 @@
       "data": null
     }
     ```
-  </details>
+    </details>
 
 ## 📖 使用指南
 
