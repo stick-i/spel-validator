@@ -2,6 +2,7 @@ package cn.sticki.validator.spel;
 
 import cn.sticki.validator.spel.exception.SpelNotSupportedTypeException;
 import cn.sticki.validator.spel.exception.SpelValidException;
+import cn.sticki.validator.spel.manager.AnnotationMethodManager;
 import cn.sticki.validator.spel.parse.SpelParser;
 import cn.sticki.validator.spel.result.FieldValidResult;
 import cn.sticki.validator.spel.result.ObjectValidResult;
@@ -58,6 +59,7 @@ public class SpelValidExecutor {
 	public static ObjectValidResult validateObject(@NotNull Object verifiedObject, @NotNull Set<Object> validateGroups) {
 		log.debug("Spel validate start, class [{}], groups [{}]", verifiedObject.getClass().getName(), validateGroups);
 		log.debug("Verified object [{}]", verifiedObject);
+		long startTime = System.nanoTime();
 
 		List<FieldValidResult> validationResults = new ArrayList<>();
 
@@ -71,7 +73,8 @@ public class SpelValidExecutor {
 		ObjectValidResult validResult = new ObjectValidResult();
 		validResult.addFieldResults(validationResults);
 
-		log.debug("Spel validate over, result {}", validResult.getErrors());
+		log.debug("Spel validate over,error list {}", validResult.getErrors());
+		log.debug("Spel validate cost time {} ms", (System.nanoTime() - startTime) / 1000000);
 		return validResult;
 	}
 
@@ -133,12 +136,12 @@ public class SpelValidExecutor {
 		Class<? extends SpelConstraintValidator<?>> validatorClass = annoClazz.getAnnotation(SpelConstraint.class).validatedBy();
 		SpelConstraintValidator<? extends Annotation> validator = getValidatorInstance(validatorClass);
 
-		// 判断对象的类型是否受支持
+		// 判断字段的类型是否受支持
 		Set<Class<?>> supported = validator.supportType();
-		Class<?> verifiedObjectClass = verifiedObject.getClass();
-		if (supported.stream().noneMatch(clazz -> clazz.isInstance(verifiedObjectClass))) {
+		Class<?> verifiedFieldClass = verifiedField.getType();
+		if (supported.stream().noneMatch(clazz -> clazz.isAssignableFrom(verifiedFieldClass))) {
 			log.error("===> Object type not supported, skip validate. supported types [{}]", supported);
-			throw new SpelNotSupportedTypeException(verifiedObjectClass, supported);
+			throw new SpelNotSupportedTypeException(verifiedFieldClass, supported);
 		}
 
 		// 匹配分组
@@ -215,17 +218,17 @@ public class SpelValidExecutor {
 			return false;
 		}
 
-		if (GetMethod.action(annotationType, MESSAGE).run() == null) {
+		if (AnnotationMethodManager.get(annotationType, MESSAGE) == null) {
 			log.warn("The annotation [{}] must have a method named [message] that returns a string.", annotationType.getName());
 			return false;
 		}
 
-		if (GetMethod.action(annotationType, CONDITION).run() == null) {
+		if (AnnotationMethodManager.get(annotationType, CONDITION) == null) {
 			log.warn("The annotation [{}] must have a method named [condition] that returns a string.", annotationType.getName());
 			return false;
 		}
 
-		if (GetMethod.action(annotationType, GROUP).run() == null) {
+		if (AnnotationMethodManager.get(annotationType, GROUP) == null) {
 			log.warn("The annotation [{}] must have a method named [group] that returns a Array<String>.", annotationType.getName());
 			return false;
 		}
@@ -295,9 +298,16 @@ public class SpelValidExecutor {
 		});
 	}
 
-	// todo 缓存
+	/**
+	 * 获取注解方法的属性值
+	 *
+	 * @param annotation 注解对象
+	 * @param methodName 方法名
+	 * @param <T>        返回值类型
+	 * @return 属性值
+	 */
 	private static <T> T getAnnotationValue(@NotNull Annotation annotation, @NotNull String methodName) {
-		Method method = GetMethod.action(annotation.annotationType(), methodName).run();
+		Method method = AnnotationMethodManager.get(annotation.annotationType(), methodName);
 		try {
 			//noinspection unchecked
 			return (T) method.invoke(annotation);

@@ -6,7 +6,7 @@
 
 	<groupId>cn.sticki</groupId>
 	<artifactId>spel-validator</artifactId>
-	<version>0.0.2-beta</version>
+	<version>0.0.3-beta</version>
 	<packaging>jar</packaging>
 	<name>Spel Validator</name>
 	<url>https://github.com/stick-i/spel-validator</url>
@@ -57,9 +57,9 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.hibernate.validator</groupId>
-			<artifactId>hibernate-validator</artifactId>
-			<version>6.2.5.Final</version>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>2.0.1.Final</version>
 			<optional>true</optional>
 		</dependency>
 
