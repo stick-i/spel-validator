@@ -135,10 +135,10 @@ public class SpelValidExecutor {
 
 		// 判断对象的类型是否受支持
 		Set<Class<?>> supported = validator.supportType();
-		Class<?> verifiedObjectClass = verifiedObject.getClass();
-		if (supported.stream().noneMatch(clazz -> clazz.isInstance(verifiedObjectClass))) {
+		Class<?> verifiedFieldClass = verifiedField.getType();
+		if (supported.stream().noneMatch(clazz -> clazz.isAssignableFrom(verifiedFieldClass))) {
 			log.error("===> Object type not supported, skip validate. supported types [{}]", supported);
-			throw new SpelNotSupportedTypeException(verifiedObjectClass, supported);
+			throw new SpelNotSupportedTypeException(verifiedFieldClass, supported);
 		}
 
 		// 匹配分组
