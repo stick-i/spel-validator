@@ -136,7 +136,7 @@ public class SpelValidExecutor {
 		Class<? extends SpelConstraintValidator<?>> validatorClass = annoClazz.getAnnotation(SpelConstraint.class).validatedBy();
 		SpelConstraintValidator<? extends Annotation> validator = getValidatorInstance(validatorClass);
 
-		// 判断对象的类型是否受支持
+		// 判断字段的类型是否受支持
 		Set<Class<?>> supported = validator.supportType();
 		Class<?> verifiedFieldClass = verifiedField.getType();
 		if (supported.stream().noneMatch(clazz -> clazz.isAssignableFrom(verifiedFieldClass))) {
