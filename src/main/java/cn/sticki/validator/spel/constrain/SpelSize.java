@@ -37,7 +37,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface SpelSize {
 
 	/**
-	 * 校验失败时的错误消息
+	 * 校验失败时的错误消息。
 	 * <p>
 	 * 默认情况下会使用带范围的错误提示，如：长度必须在 1 和 10 之间。由于目前暂不支持参数替换，故不建议进行自定义。
 	 */
