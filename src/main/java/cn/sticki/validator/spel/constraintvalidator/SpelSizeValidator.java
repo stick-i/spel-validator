@@ -46,7 +46,10 @@ public class SpelSizeValidator implements SpelConstraintValidator<SpelSize> {
 		}
 
 		if (message != null) {
-			return new FieldValidResult(false, message);
+			// 如果注解上配置了错误信息,就用注解的错误信息 反之则用自己构建的错误信息
+			String annoErrorMsg = annotation.message();
+			String errorMsg = StringUtils.hasText(annoErrorMsg) ? annoErrorMsg : message;
+			return new FieldValidResult(false, errorMsg);
 		}
 
 		return FieldValidResult.success();

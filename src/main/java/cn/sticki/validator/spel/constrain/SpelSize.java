@@ -37,7 +37,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface SpelSize {
 
 	/**
-	 * 校验失败时的错误消息，由于 {@link SpelSize} 的特殊性，不会使用此错误消息。
+	 * 校验失败时的错误消息
 	 */
 	String message() default "";
 
