@@ -38,10 +38,8 @@ public @interface SpelSize {
 
 	/**
 	 * 校验失败时的错误消息。
-	 * <p>
-	 * 默认情况下会使用带范围的错误提示，如：长度必须在 1 和 10 之间。由于目前暂不支持参数替换，故不建议进行自定义。
 	 */
-	String message() default "";
+	String message() default "长度必须在 {min} 和 {max} 之间";
 
 	/**
 	 * 约束开启条件，必须为合法的SpEL表达式，计算结果必须为boolean类型。
@@ -73,15 +71,15 @@ public @interface SpelSize {
 	}
 
 	/**
-	 * 指定元素最小值。必须为合法的SpEL表达式，计算结果必须为数字类型。
+	 * @return 指定元素最小值。必须为合法的SpEL表达式，计算结果必须为数字类型。默认值为 0。
 	 */
 	@Language("SpEL")
-	String min() default "";
+	String min() default "0";
 
 	/**
-	 * 指定元素最大值。必须为合法的SpEL表达式，计算结果必须为数字类型。
+	 * @return 指定元素最大值。必须为合法的SpEL表达式，计算结果必须为数字类型。默认值为 {@link Integer#MAX_VALUE}。
 	 */
 	@Language("SpEL")
-	String max() default "";
+	String max() default "T(Integer).MAX_VALUE";
 
 }

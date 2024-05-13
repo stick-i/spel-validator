@@ -46,12 +46,4 @@ public class CalcLengthUtil {
 		}
 	}
 
-	public static String getFieldSign(Object object) {
-		if (object instanceof CharSequence) {
-			return "长度";
-		} else {
-			return "大小";
-		}
-	}
-
 }
