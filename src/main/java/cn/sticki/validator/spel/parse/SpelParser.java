@@ -5,8 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.expression.BeanFactoryResolver;
+import org.springframework.expression.Expression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Spel表达式解析工具
@@ -35,6 +39,11 @@ public class SpelParser {
 	}
 
 	/**
+	 * 表达式缓存
+	 */
+	private static final Map<String, Expression> expressionCache = new ConcurrentHashMap<>();
+
+	/**
 	 * 解析表达式
 	 *
 	 * @param expression 表达式
@@ -44,7 +53,8 @@ public class SpelParser {
 	public static Object parse(String expression, Object rootObject) {
 		try {
 			log.debug("======> Parse expression [{}]", expression);
-			Object value = parser.parseExpression(expression).getValue(context, rootObject, Object.class);
+			Expression parsed = expressionCache.computeIfAbsent(expression, parser::parseExpression);
+			Object value = parsed.getValue(context, rootObject, Object.class);
 			log.debug("======> Parse result [{}]", value);
 			return value;
 		} catch (Exception e) {

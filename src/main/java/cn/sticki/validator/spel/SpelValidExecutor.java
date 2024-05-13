@@ -87,24 +87,43 @@ public class SpelValidExecutor {
 			@NotNull Set<Object> validGroups,
 			@NotNull List<FieldValidResult> validationResults
 	) {
-		// 获取字段上的注解 todo 缓存
-		Annotation[] annotations = verifiedField.getAnnotations();
-		for (Annotation originalAnno : annotations) {
-			String annoName = originalAnno.annotationType().getName();
-			if (annoName.endsWith("$List") || annoName.endsWith("Container")) {
-				// 容器注解，需要获取容器内部的注解类型，其声明类为真实的注解类
-				Class<?> clazz = originalAnno.annotationType().getDeclaringClass();
-				//noinspection unchecked
-				Annotation[] originalAnnoArray = verifiedField.getAnnotationsByType((Class<Annotation>) clazz);
-				for (Annotation anno : originalAnnoArray) {
-					// 执行验证
-					validateFieldAnnotation(anno, verifiedObject, verifiedField, validationResults, validGroups);
-				}
-			} else {
-				// 执行验证
-				validateFieldAnnotation(originalAnno, verifiedObject, verifiedField, validationResults, validGroups);
-			}
+		// 获取字段上的注解
+		List<Annotation> annotations = getFieldAnnotations(verifiedField);
+		for (Annotation annotation : annotations) {
+			validateFieldAnnotation(annotation, verifiedObject, verifiedField, validationResults, validGroups);
 		}
+	}
+
+	/**
+	 * 字段注解缓存
+	 */
+	private static final ConcurrentHashMap<Field, List<Annotation>> FIELD_ANNOTATION_CACHE = new ConcurrentHashMap<>();
+
+	/**
+	 * 获取字段上的注解
+	 *
+	 * @param field 字段
+	 * @return 注解列表
+	 */
+	private static List<Annotation> getFieldAnnotations(Field field) {
+		return FIELD_ANNOTATION_CACHE.computeIfAbsent(field, f -> {
+			Annotation[] annotations = f.getAnnotations();
+			List<Annotation> tempList = new ArrayList<>();
+
+			for (Annotation originalAnno : annotations) {
+				String annoName = originalAnno.annotationType().getName();
+				if (annoName.endsWith("$List") || annoName.endsWith("Container")) {
+					// 容器注解，需要获取容器内部的注解类型，其声明类为真实的注解类
+					Class<?> clazz = originalAnno.annotationType().getDeclaringClass();
+					//noinspection unchecked
+					Annotation[] originalAnnoArray = f.getAnnotationsByType((Class<Annotation>) clazz);
+					tempList.addAll(Arrays.asList(originalAnnoArray));
+				} else {
+					tempList.add(originalAnno);
+				}
+			}
+			return Collections.unmodifiableList(tempList);
+		});
 	}
 
 	/**
@@ -124,7 +143,7 @@ public class SpelValidExecutor {
 			@NotNull Set<Object> validateGroups
 	) {
 		Class<? extends Annotation> annoClazz = annotation.annotationType();
-		// 验证注解的合法性
+		// 验证注解的合法性 todo 这里应该可以放到获取注解的时候进行校验
 		if (!isSpelConstraintAnnotationCached(annoClazz)) {
 			return;
 		}
