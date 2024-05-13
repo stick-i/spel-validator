@@ -57,9 +57,9 @@ public class SpelValidExecutor {
 	 */
 	@NotNull
 	public static ObjectValidResult validateObject(@NotNull Object verifiedObject, @NotNull Set<Object> validateGroups) {
+		long startTime = System.nanoTime();
 		log.debug("Spel validate start, class [{}], groups [{}]", verifiedObject.getClass().getName(), validateGroups);
 		log.debug("Verified object [{}]", verifiedObject);
-		long startTime = System.nanoTime();
 
 		List<FieldValidResult> validationResults = new ArrayList<>();
 
