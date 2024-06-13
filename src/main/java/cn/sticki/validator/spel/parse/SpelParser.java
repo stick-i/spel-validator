@@ -27,6 +27,8 @@ public class SpelParser {
 
 	private static final StandardEvaluationContext context = new StandardEvaluationContext();
 
+	private static final Map<String, Expression> expressionCache = new ConcurrentHashMap<>();
+
 	static {
 		ApplicationContext applicationContext = SpelValidatorBeanRegistrar.getApplicationContext();
 		if (applicationContext != null) {
@@ -37,11 +39,6 @@ public class SpelParser {
 			log.warn("If you want to use spring bean reference in SpelParser, please use @EnableSpelValidatorBeanRegistrar to enable ApplicationContext support");
 		}
 	}
-
-	/**
-	 * 表达式缓存
-	 */
-	private static final Map<String, Expression> expressionCache = new ConcurrentHashMap<>();
 
 	/**
 	 * 解析表达式

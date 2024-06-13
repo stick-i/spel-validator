@@ -1,0 +1,7 @@
+# 这是一个简单的预热操作，用于在 SpringBoot 程序启动时加载 SpelParser 类，这样 static 代码块就会提前执行
+# 当然，它不是必须的
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  cn.sticki.validator.spel.parse.SpelParser,\
+  cn.sticki.validator.spel.SpelValidExecutor,\
+  cn.sticki.validator.spel.manager.AnnotationMethodManager,\
+  cn.sticki.validator.spel.util.CalcLengthUtil
