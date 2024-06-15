@@ -277,7 +277,7 @@ public class SpelValidExecutor {
 		String[] groups = getAnnotationValue(annotation, GROUP);
 		Set<Object> parsedGroups = new HashSet<>();
 		for (String group : groups) {
-			parsedGroups.add(SpelParser.parse(group, value, Object.class));
+			parsedGroups.add(SpelParser.parse(group, value));
 		}
 		return parsedGroups;
 	}
