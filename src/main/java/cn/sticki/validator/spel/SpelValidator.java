@@ -42,7 +42,7 @@ public class SpelValidator implements ConstraintValidator<SpelValid, Object> {
 
 		// 获取分组信息
 		Set<Object> groups = Arrays.stream(spelValid.spelGroups())
-				.map(it -> SpelParser.parse(it, value, Object.class))
+				.map(it -> SpelParser.parse(it, value))
 				.collect(Collectors.toSet());
 
 		// 校验对象
