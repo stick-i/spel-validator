@@ -4,6 +4,7 @@ import cn.sticki.validator.spel.ExceptionField;
 import cn.sticki.validator.spel.SpelValid;
 import cn.sticki.validator.spel.VerifyObject;
 import cn.sticki.validator.spel.constrain.SpelAssert;
+import cn.sticki.validator.spel.util.ID;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ import java.util.List;
  */
 @Data
 @SpelValid(spelGroups = "#this.group")
-public class SpelAssertTestBean {
+public class SpelAssertTestBean implements ID {
 
 	private int id;
 

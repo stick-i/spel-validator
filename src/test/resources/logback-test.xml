@@ -2,7 +2,9 @@
 <configuration>
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
-			<pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</pattern>
+			<!-- <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</pattern> -->
+			<!-- <pattern>[%-5level] %logger{26} - %msg%n</pattern> -->
+			<pattern>[%highlight(%-5level)][%X{className}-%X{id}][%X{fieldName}] - %msg%n</pattern>
 		</encoder>
 	</appender>
 
@@ -14,4 +16,5 @@
 	<!-- 为特定的包或类设置日志级别 -->
 	<logger name="cn.sticki" level="info"/>
 	<logger name="cn.sticki.validator.spel.parse.SpelParser" level="error"/>
+	<!-- <logger name="cn.sticki" level="debug"/> -->
 </configuration>

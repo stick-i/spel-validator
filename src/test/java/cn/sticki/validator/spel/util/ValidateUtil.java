@@ -3,6 +3,7 @@ package cn.sticki.validator.spel.util;
 import cn.sticki.validator.spel.ExceptionField;
 import cn.sticki.validator.spel.VerifyObject;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -44,8 +45,13 @@ public class ValidateUtil {
 			Object object = verifyObject.getObject();
 			Set<ExceptionField> exceptionFields = verifyObject.getExceptionFields();
 
-			log.info("Start checking object: {}", object);
 			String className = object.getClass().getSimpleName();
+
+			MDC.put("className", className);
+			if (object instanceof ID) {
+				MDC.put("id", String.valueOf(((ID) object).getId()));
+			}
+			log.info("Start checking object: {}", object);
 
 			// 执行约束校验
 			Set<ConstraintViolation<Object>> validate = ValidateUtil.validate(object);
@@ -53,9 +59,10 @@ public class ValidateUtil {
 			// 检查结果是否符合预期
 			for (ExceptionField exceptionField : exceptionFields) {
 				String fieldName = exceptionField.getName();
+				MDC.put("fieldName", fieldName);
 				String message = exceptionField.getMessage();
 
-				log.info("[{}] [{}] Expected exception information: {}", className, fieldName, message == null ? "ignore" : message);
+				log.info("Expected exception information: {}", message == null ? "ignore" : message);
 
 				boolean fieldMatch = false, find = false;
 
@@ -64,14 +71,14 @@ public class ValidateUtil {
 					// 找到对应的字段
 					if (violationFieldName.equals(fieldName)) {
 						find = true;
-						log.info("[{}] [{}] Real exception information: {}", className, fieldName, violation.getMessage());
+						log.info("Real exception information: {}", violation.getMessage());
 
 						// 异常信息不同时验证失败（没填写异常信息则不校验异常信息）
 						if (message != null && !message.equals(violation.getMessage())) {
-							log.error("[{}] [{}] Failed", className, fieldName);
+							log.error("Failed");
 						} else {
 							fieldMatch = true;
-							log.info("[{}] [{}] Passed", className, fieldName);
+							log.info("Passed");
 						}
 
 						validate.remove(violation);
@@ -81,20 +88,23 @@ public class ValidateUtil {
 
 				if (!find) {
 					// 多余的字段
-					log.error("[{}] [{}] Excess field", className, fieldName);
+					log.error("Excess field");
 				}
 				if (!fieldMatch) {
 					failCount++;
 				}
 			}
+			MDC.remove("fieldName");
 
 			// 被忽略的字段
 			for (ConstraintViolation<Object> violation : validate) {
-				log.error("[{}] [{}] Ignored field", className, violation.getPropertyPath().toString());
+				log.error("Field [{}] is ignored", violation.getPropertyPath().toString());
 				failCount++;
 			}
 
-			log.info("=====> Verification end, number of failures: {}", failCount);
+			log.info("Verification end, number of failures: {}", failCount);
+			log.info("------------------------------------------------------------------------");
+			MDC.clear();
 		}
 		return failCount == 0;
 	}
