@@ -39,7 +39,7 @@ public class ExampleTestBean {
 	@SpelAssert(assertTrue = " T(cn.sticki.validator.spel.enums.ExampleEnum).getByCode(#this.testEnum) != null ", message = "枚举值不合法")
 	private Integer testEnum;
 
-	public static List<VerifyObject> getVariableObjectList() {
+	public static List<VerifyObject> testCase() {
 		ArrayList<VerifyObject> result = new ArrayList<>();
 
 		ExampleTestBean bean = new ExampleTestBean();
