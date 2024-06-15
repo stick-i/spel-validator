@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<!-- 设置默认日志级别为INFO -->
+	<root level="warn">
+		<appender-ref ref="STDOUT"/>
+	</root>
+
+	<!-- 为特定的包或类设置日志级别 -->
+	<logger name="cn.sticki" level="info"/>
+	<logger name="cn.sticki.validator.spel.parse.SpelParser" level="error"/>
+</configuration>
