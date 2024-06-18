@@ -25,7 +25,11 @@ public class VerifyObject {
 	/**
 	 * 异常字段列表
 	 */
-	private Set<ExceptionField> exceptionFields;
+	private Set<VerifyFailedField> verifyFailedFields;
+
+	/**
+	 * 校验不通过字段
+	 */
 
 	private VerifyObject() {
 	}
@@ -36,7 +40,7 @@ public class VerifyObject {
 	 * @param object 待验证对象
 	 */
 	public static VerifyObject of(Object object) {
-		return VerifyObject.of(object, new ExceptionField[0]);
+		return VerifyObject.of(object, new VerifyFailedField[0]);
 	}
 
 	/**
@@ -47,7 +51,7 @@ public class VerifyObject {
 	 */
 	@SafeVarargs
 	public static <T> VerifyObject of(Object object, IGetter<T, ?>... field) {
-		return VerifyObject.of(object, Arrays.stream(field).map(ExceptionField::of).toArray(ExceptionField[]::new));
+		return VerifyObject.of(object, Arrays.stream(field).map(VerifyFailedField::of).toArray(VerifyFailedField[]::new));
 	}
 
 	/**
@@ -56,10 +60,10 @@ public class VerifyObject {
 	 * @param object 待验证对象
 	 * @param field  异常字段，异常信息
 	 */
-	public static VerifyObject of(Object object, ExceptionField... field) {
+	public static VerifyObject of(Object object, VerifyFailedField... field) {
 		VerifyObject verifyObject = new VerifyObject();
 		verifyObject.setObject(object);
-		verifyObject.setExceptionFields(Arrays.stream(field).collect(Collectors.toSet()));
+		verifyObject.setVerifyFailedFields(Arrays.stream(field).collect(Collectors.toSet()));
 		return verifyObject;
 	}
 

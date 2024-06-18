@@ -1,7 +1,7 @@
 package cn.sticki.validator.spel.bean;
 
-import cn.sticki.validator.spel.ExceptionField;
 import cn.sticki.validator.spel.SpelValid;
+import cn.sticki.validator.spel.VerifyFailedField;
 import cn.sticki.validator.spel.VerifyObject;
 import cn.sticki.validator.spel.constrain.SpelAssert;
 import cn.sticki.validator.spel.constrain.SpelNotNull;
@@ -54,8 +54,8 @@ public class ExampleTestBean {
 		bean2.setTestEnum(null);
 		result.add(VerifyObject.of(
 				bean2,
-				ExceptionField.of(ExampleTestBean::getSwitchAudio),
-				ExceptionField.of(ExampleTestBean::getTestEnum, "枚举值不合法")
+				VerifyFailedField.of(ExampleTestBean::getSwitchAudio),
+				VerifyFailedField.of(ExampleTestBean::getTestEnum, "枚举值不合法")
 		));
 
 		return result;

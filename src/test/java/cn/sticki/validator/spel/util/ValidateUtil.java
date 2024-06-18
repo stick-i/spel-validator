@@ -1,6 +1,6 @@
 package cn.sticki.validator.spel.util;
 
-import cn.sticki.validator.spel.ExceptionField;
+import cn.sticki.validator.spel.VerifyFailedField;
 import cn.sticki.validator.spel.VerifyObject;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
@@ -43,7 +43,7 @@ public class ValidateUtil {
 
 		for (VerifyObject verifyObject : verifyObjectList) {
 			Object object = verifyObject.getObject();
-			Set<ExceptionField> exceptionFields = verifyObject.getExceptionFields();
+			Set<VerifyFailedField> verifyFailedFields = verifyObject.getVerifyFailedFields();
 
 			String className = object.getClass().getSimpleName();
 
@@ -57,10 +57,10 @@ public class ValidateUtil {
 			Set<ConstraintViolation<Object>> validate = ValidateUtil.validate(object);
 
 			// 检查结果是否符合预期
-			for (ExceptionField exceptionField : exceptionFields) {
-				String fieldName = exceptionField.getName();
+			for (VerifyFailedField verifyFailedField : verifyFailedFields) {
+				String fieldName = verifyFailedField.getName();
 				MDC.put("fieldName", fieldName);
-				String message = exceptionField.getMessage();
+				String message = verifyFailedField.getMessage();
 
 				log.info("Expected exception information: {}", message == null ? "ignore" : message);
 

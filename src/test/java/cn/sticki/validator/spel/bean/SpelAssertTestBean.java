@@ -1,7 +1,7 @@
 package cn.sticki.validator.spel.bean;
 
-import cn.sticki.validator.spel.ExceptionField;
 import cn.sticki.validator.spel.SpelValid;
+import cn.sticki.validator.spel.VerifyFailedField;
 import cn.sticki.validator.spel.VerifyObject;
 import cn.sticki.validator.spel.constrain.SpelAssert;
 import cn.sticki.validator.spel.util.ID;
@@ -52,8 +52,8 @@ public class SpelAssertTestBean implements ID {
 		bean.setId(1);
 		list.add(VerifyObject.of(
 				bean,
-				ExceptionField.of(SpelAssertTestBean::getTest2),
-				ExceptionField.of(SpelAssertTestBean::getTest4, "test4")
+				VerifyFailedField.of(SpelAssertTestBean::getTest2),
+				VerifyFailedField.of(SpelAssertTestBean::getTest4, "test4")
 		));
 
 		SpelAssertTestBean bean2 = new SpelAssertTestBean();
@@ -62,8 +62,8 @@ public class SpelAssertTestBean implements ID {
 		bean2.setGroup("group1");
 		list.add(VerifyObject.of(
 				bean2,
-				ExceptionField.of(SpelAssertTestBean::getTest2),
-				ExceptionField.of(SpelAssertTestBean::getTest5, "group1")
+				VerifyFailedField.of(SpelAssertTestBean::getTest2),
+				VerifyFailedField.of(SpelAssertTestBean::getTest5, "group1")
 		));
 
 		SpelAssertTestBean bean3 = new SpelAssertTestBean();
@@ -72,7 +72,7 @@ public class SpelAssertTestBean implements ID {
 		bean3.setGroup("00");
 		list.add(VerifyObject.of(
 				bean3,
-				ExceptionField.of(SpelAssertTestBean::getTest2)
+				VerifyFailedField.of(SpelAssertTestBean::getTest2)
 		));
 
 		SpelAssertTestBean bean4 = new SpelAssertTestBean();
@@ -81,9 +81,9 @@ public class SpelAssertTestBean implements ID {
 		// bean4.setGroup2("group2");
 		list.add(VerifyObject.of(
 				bean4,
-				ExceptionField.of(SpelAssertTestBean::getTest2),
-				ExceptionField.of(SpelAssertTestBean::getTest4, "test4"),
-				ExceptionField.of(SpelAssertTestBean::getTest6, "group2")
+				VerifyFailedField.of(SpelAssertTestBean::getTest2),
+				VerifyFailedField.of(SpelAssertTestBean::getTest4, "test4"),
+				VerifyFailedField.of(SpelAssertTestBean::getTest6, "group2")
 		));
 
 		return list;
