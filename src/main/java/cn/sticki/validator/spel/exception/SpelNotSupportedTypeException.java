@@ -19,7 +19,7 @@ public class SpelNotSupportedTypeException extends SpelValidException {
 	private final Set<Class<?>> supperType;
 
 	public SpelNotSupportedTypeException(Class<?> clazz, Set<Class<?>> supperType) {
-		super("Object class not supported, class: " + clazz.getName() + ", supperType: " + supperType.toString());
+		super("Class type not supported, current type: " + clazz.getName() + ", supper type: " + supperType.toString());
 		this.clazz = clazz;
 		this.supperType = supperType;
 	}

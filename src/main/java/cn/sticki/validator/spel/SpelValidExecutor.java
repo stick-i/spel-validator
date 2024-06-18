@@ -159,7 +159,7 @@ public class SpelValidExecutor {
 		Set<Class<?>> supported = validator.supportType();
 		Class<?> verifiedFieldClass = verifiedField.getType();
 		if (supported.stream().noneMatch(clazz -> clazz.isAssignableFrom(verifiedFieldClass))) {
-			log.error("===> Object type not supported, skip validate. supported types [{}]", supported);
+			log.error("===> Object type not supported, skip validate. Current type[{}], supported types [{}]", verifiedFieldClass, supported);
 			throw new SpelNotSupportedTypeException(verifiedFieldClass, supported);
 		}
 
