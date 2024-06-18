@@ -53,60 +53,82 @@ public class ValidateUtil {
 			}
 			log.info("Start checking object: {}", object);
 
-			// 执行约束校验
-			Set<ConstraintViolation<Object>> validate = ValidateUtil.validate(object);
-
-			// 检查结果是否符合预期
-			for (VerifyFailedField verifyFailedField : verifyFailedFields) {
-				String fieldName = verifyFailedField.getName();
-				MDC.put("fieldName", fieldName);
-				String message = verifyFailedField.getMessage();
-
-				log.info("Expected exception information: {}", message == null ? "ignore" : message);
-
-				boolean fieldMatch = false, find = false;
-
-				for (ConstraintViolation<Object> violation : validate) {
-					String violationFieldName = violation.getPropertyPath().toString();
-					// 找到对应的字段
-					if (violationFieldName.equals(fieldName)) {
-						find = true;
-						log.info("Real exception information: {}", violation.getMessage());
-
-						// 异常信息不同时验证失败（没填写异常信息则不校验异常信息）
-						if (message != null && !message.equals(violation.getMessage())) {
-							log.error("Failed");
-						} else {
-							fieldMatch = true;
-							log.info("Passed");
-						}
-
-						validate.remove(violation);
-						break;
-					}
+			Set<ConstraintViolation<Object>> validate;
+			try {
+				// 执行约束校验
+				validate = ValidateUtil.validate(object);
+			} catch (Exception e) {
+				if (verifyObject.isExpectException()) {
+					log.info("Passed, Capture exception {}, message: {}", e.getClass(), e.getMessage());
+					continue;
 				}
-
-				if (!find) {
-					// 多余的字段
-					log.error("Excess field");
-				}
-				if (!fieldMatch) {
-					failCount++;
-				}
+				throw e;
 			}
-			MDC.remove("fieldName");
 
-			// 被忽略的字段
-			for (ConstraintViolation<Object> violation : validate) {
-				log.error("Field [{}] is ignored", violation.getPropertyPath().toString());
-				failCount++;
-			}
+			failCount += getFailCount(verifyFailedFields, validate);
 
 			log.info("Verification end, number of failures: {}", failCount);
 			log.info("------------------------------------------------------------------------");
 			MDC.clear();
 		}
 		return failCount == 0;
+	}
+
+	/**
+	 * 验证字段约束结果是否符合预期
+	 *
+	 * @param verifyFailedFields 预期失败字段
+	 * @param validate           验证结果
+	 * @return 验证失败次数
+	 */
+	private static int getFailCount(Set<VerifyFailedField> verifyFailedFields, Set<ConstraintViolation<Object>> validate) {
+		int failCount = 0;
+		// 检查结果是否符合预期
+		for (VerifyFailedField verifyFailedField : verifyFailedFields) {
+			String fieldName = verifyFailedField.getName();
+			MDC.put("fieldName", fieldName);
+			String message = verifyFailedField.getMessage();
+
+			log.info("Expected exception information: {}", message == null ? "ignore" : message);
+
+			boolean fieldMatch = false, find = false;
+
+			for (ConstraintViolation<Object> violation : validate) {
+				String violationFieldName = violation.getPropertyPath().toString();
+				// 找到对应的字段
+				if (violationFieldName.equals(fieldName)) {
+					find = true;
+					log.info("Real exception information: {}", violation.getMessage());
+
+					// 异常信息不同时验证失败（没填写异常信息则不校验异常信息）
+					if (message != null && !message.equals(violation.getMessage())) {
+						log.error("Failed");
+					} else {
+						fieldMatch = true;
+						log.info("Passed");
+					}
+
+					validate.remove(violation);
+					break;
+				}
+			}
+
+			if (!find) {
+				// 多余的字段
+				log.error("Excess field");
+			}
+			if (!fieldMatch) {
+				failCount++;
+			}
+		}
+
+		MDC.remove("fieldName");
+		// 被忽略的字段
+		for (ConstraintViolation<Object> violation : validate) {
+			log.error("Field [{}] is ignored", violation.getPropertyPath().toString());
+			failCount++;
+		}
+		return failCount;
 	}
 
 }

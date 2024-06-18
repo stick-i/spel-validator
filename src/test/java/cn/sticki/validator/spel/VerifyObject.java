@@ -28,6 +28,11 @@ public class VerifyObject {
 	private Set<VerifyFailedField> verifyFailedFields;
 
 	/**
+	 * 是否期望抛出异常
+	 */
+	private boolean expectException;
+
+	/**
 	 * 校验不通过字段
 	 */
 
@@ -41,6 +46,15 @@ public class VerifyObject {
 	 */
 	public static VerifyObject of(Object object) {
 		return VerifyObject.of(object, new VerifyFailedField[0]);
+	}
+
+	/**
+	 * 创建待验证对象
+	 *
+	 * @param object 待验证对象
+	 */
+	public static VerifyObject of(Object object, boolean expectException) {
+		return VerifyObject.of(object, new VerifyFailedField[0], expectException);
 	}
 
 	/**
@@ -61,9 +75,20 @@ public class VerifyObject {
 	 * @param field  异常字段，异常信息
 	 */
 	public static VerifyObject of(Object object, VerifyFailedField... field) {
+		return VerifyObject.of(object, field, false);
+	}
+
+	/**
+	 * 创建待验证对象
+	 *
+	 * @param object 待验证对象
+	 * @param field  异常字段，异常信息
+	 */
+	public static VerifyObject of(Object object, VerifyFailedField[] field, boolean expectException) {
 		VerifyObject verifyObject = new VerifyObject();
 		verifyObject.setObject(object);
 		verifyObject.setVerifyFailedFields(Arrays.stream(field).collect(Collectors.toSet()));
+		verifyObject.setExpectException(expectException);
 		return verifyObject;
 	}
 

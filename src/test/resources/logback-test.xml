@@ -2,8 +2,9 @@
 <configuration>
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
-			<!-- <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</pattern> -->
-			<!-- <pattern>[%-5level] %logger{26} - %msg%n</pattern> -->
+			<!-- 详细日志模式 -->
+			<!-- <pattern>%d{yyyy-MM-dd HH:mm:ss} [%highlight(%-5level)] %logger{26} [%X{className}-%X{id}][%X{fieldName}] - %msg%n</pattern> -->
+			<!-- 简单日志模式 -->
 			<pattern>[%highlight(%-5level)][%X{className}-%X{id}][%X{fieldName}] - %msg%n</pattern>
 		</encoder>
 	</appender>
