@@ -70,6 +70,8 @@
 
 <img src="./document/image/wechat-qrcode.jpg" alt="交流群二维码.jpg" style="width: 25%; height: auto;" />
 
+> 如果二维码过期，请添加微信号 `sticki6`，备注 `SpEL`，我拉你入群。
+
 ## 📦 快速开始
 
 - 添加依赖
