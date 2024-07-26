@@ -1,14 +1,12 @@
 package cn.sticki.validator.spel;
 
-import cn.sticki.validator.spel.util.IGetter;
 import lombok.Data;
 
 import java.util.Arrays;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.Collection;
 
 /**
- * todo
+ * 验证对象类
  *
  * @author 阿杆
  * @version 1.0
@@ -25,7 +23,7 @@ public class VerifyObject {
 	/**
 	 * 异常字段列表
 	 */
-	private Set<VerifyFailedField> verifyFailedFields;
+	private Collection<VerifyFailedField> verifyFailedFields;
 
 	/**
 	 * 是否期望抛出异常
@@ -60,34 +58,43 @@ public class VerifyObject {
 	/**
 	 * 创建待验证对象
 	 *
-	 * @param object 待验证对象
-	 * @param field  异常字段
+	 * @param object             待验证对象
+	 * @param verifyFailedFields 待验证的异常字段信息
 	 */
-	@SafeVarargs
-	public static <T> VerifyObject of(Object object, IGetter<T, ?>... field) {
-		return VerifyObject.of(object, Arrays.stream(field).map(VerifyFailedField::of).toArray(VerifyFailedField[]::new));
+	public static VerifyObject of(Object object, VerifyFailedField... verifyFailedFields) {
+		return VerifyObject.of(object, verifyFailedFields, false);
 	}
 
 	/**
 	 * 创建待验证对象
 	 *
-	 * @param object 待验证对象
-	 * @param field  异常字段，异常信息
+	 * @param object             待验证对象
+	 * @param verifyFailedFields 待验证的异常字段信息
 	 */
-	public static VerifyObject of(Object object, VerifyFailedField... field) {
-		return VerifyObject.of(object, field, false);
+	public static VerifyObject of(Object object, Collection<VerifyFailedField> verifyFailedFields) {
+		return VerifyObject.of(object, verifyFailedFields, false);
 	}
 
 	/**
 	 * 创建待验证对象
 	 *
-	 * @param object 待验证对象
-	 * @param field  异常字段，异常信息
+	 * @param object             待验证对象
+	 * @param verifyFailedFields 待验证的异常字段信息
 	 */
-	public static VerifyObject of(Object object, VerifyFailedField[] field, boolean expectException) {
+	public static VerifyObject of(Object object, VerifyFailedField[] verifyFailedFields, boolean expectException) {
+		return VerifyObject.of(object, Arrays.asList(verifyFailedFields), expectException);
+	}
+
+	/**
+	 * 创建待验证对象
+	 *
+	 * @param object             待验证对象
+	 * @param verifyFailedFields 待验证的异常字段信息
+	 */
+	public static VerifyObject of(Object object, Collection<VerifyFailedField> verifyFailedFields, boolean expectException) {
 		VerifyObject verifyObject = new VerifyObject();
 		verifyObject.setObject(object);
-		verifyObject.setVerifyFailedFields(Arrays.stream(field).collect(Collectors.toSet()));
+		verifyObject.setVerifyFailedFields(verifyFailedFields);
 		verifyObject.setExpectException(expectException);
 		return verifyObject;
 	}

@@ -8,6 +8,7 @@ import org.slf4j.MDC;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -43,7 +44,7 @@ public class ValidateUtil {
 
 		for (VerifyObject verifyObject : verifyObjectList) {
 			Object object = verifyObject.getObject();
-			Set<VerifyFailedField> verifyFailedFields = verifyObject.getVerifyFailedFields();
+			Collection<VerifyFailedField> verifyFailedFields = verifyObject.getVerifyFailedFields();
 
 			String className = object.getClass().getSimpleName();
 
@@ -81,7 +82,7 @@ public class ValidateUtil {
 	 * @param validate           验证结果
 	 * @return 验证失败次数
 	 */
-	private static int getFailCount(Set<VerifyFailedField> verifyFailedFields, Set<ConstraintViolation<Object>> validate) {
+	private static int getFailCount(Collection<VerifyFailedField> verifyFailedFields, Set<ConstraintViolation<Object>> validate) {
 		int failCount = 0;
 		// 检查结果是否符合预期
 		for (VerifyFailedField verifyFailedField : verifyFailedFields) {

@@ -4,6 +4,10 @@ import cn.sticki.validator.spel.util.BeanUtil;
 import cn.sticki.validator.spel.util.IGetter;
 import lombok.Data;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * 验证失败的字段
  *
@@ -33,6 +37,11 @@ public class VerifyFailedField {
 
 	public static <T> VerifyFailedField of(IGetter<T, ?> field) {
 		return VerifyFailedField.of(field, null);
+	}
+
+	@SafeVarargs
+	public static <T> List<VerifyFailedField> of(IGetter<T, ?>... fields) {
+		return Arrays.stream(fields).map(VerifyFailedField::of).collect(Collectors.toList());
 	}
 
 	public static <T> VerifyFailedField of(IGetter<T, ?> field, String errorMessage) {

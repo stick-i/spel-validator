@@ -45,12 +45,14 @@ public class SpelNotBlankTestBean {
 		list.add(VerifyObject.of(new TestBean2(), true));
 
 		// 测试用例2：条件测试
-		VerifyObject verifyObject2 = VerifyObject.of(new SpelNotBlankTestBean(),
-				SpelNotBlankTestBean::getTypeTest1,
-				SpelNotBlankTestBean::getTypeTest2,
-				SpelNotBlankTestBean::getTypeTest3,
-				SpelNotBlankTestBean::getTest2
-		);
+		VerifyObject verifyObject2 = VerifyObject.of(
+				new SpelNotBlankTestBean(),
+				VerifyFailedField.of(
+						SpelNotBlankTestBean::getTypeTest1,
+						SpelNotBlankTestBean::getTypeTest2,
+						SpelNotBlankTestBean::getTypeTest3,
+						SpelNotBlankTestBean::getTest2
+				));
 		verifyObject2.getVerifyFailedFields().add(VerifyFailedField.of(SpelNotBlankTestBean::getTest3, "test3"));
 		list.add(verifyObject2);
 
