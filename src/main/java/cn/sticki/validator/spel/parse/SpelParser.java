@@ -35,8 +35,8 @@ public class SpelParser {
 			AutowireCapableBeanFactory beanFactory = applicationContext.getAutowireCapableBeanFactory();
 			context.setBeanResolver(new BeanFactoryResolver(beanFactory));
 		} else {
-			log.warn("ApplicationContext is null, SpelParser will not support spring bean reference");
-			log.warn("If you want to use spring bean reference in SpelParser, please use @EnableSpelValidatorBeanRegistrar to enable ApplicationContext support");
+			log.info("ApplicationContext is null, SpelParser will not support spring bean reference");
+			log.info("If you want to use spring bean reference in SpelParser, please use @EnableSpelValidatorBeanRegistrar to enable ApplicationContext support");
 		}
 	}
 
