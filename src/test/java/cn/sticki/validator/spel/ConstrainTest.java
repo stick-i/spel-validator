@@ -2,6 +2,7 @@ package cn.sticki.validator.spel;
 
 import cn.sticki.validator.spel.bean.SpelAssertTestBean;
 import cn.sticki.validator.spel.bean.SpelNotBlankTestBean;
+import cn.sticki.validator.spel.bean.SpelNotEmptyTestBean;
 import cn.sticki.validator.spel.util.ValidateUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -25,5 +26,14 @@ public class ConstrainTest {
 	void testSpelNotBlank() {
 		boolean verified = ValidateUtil.checkConstraintResult(SpelNotBlankTestBean.testCase());
 		Assertions.assertTrue(verified);
+	}
+
+	@Test
+	void testSpelNotEmpty() {
+		boolean verifiedParam = ValidateUtil.checkConstraintResult(SpelNotEmptyTestBean.paramTestCase());
+		Assertions.assertTrue(verifiedParam, "spelNotEmpty param test failed");
+
+		boolean verifiedType = ValidateUtil.checkConstraintResult(SpelNotEmptyTestBean.typeTestCase());
+		Assertions.assertTrue(verifiedType, "spelNotEmpty type test failed");
 	}
 }
