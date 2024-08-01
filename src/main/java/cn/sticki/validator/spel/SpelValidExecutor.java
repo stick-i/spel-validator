@@ -203,10 +203,10 @@ public class SpelValidExecutor {
 		try {
 			// noinspection unchecked
 			result = ((SpelConstraintValidator<A>) validator).isValid(annotation, verifiedObject, verifiedField);
-		} catch (RuntimeException e) {
+		} catch (SpelValidException e) {
 			log.error("Spel validate error: {} ;Located in the annotation [{}] of class [{}] field [{}]",
 					e.getMessage(), annotation.annotationType().getName(), verifiedObject.getClass().getName(), verifiedField.getName());
-			throw new SpelValidException(e);
+			throw e;
 		} catch (IllegalAccessException e) {
 			// 被验证的字段在类中无法访问
 			log.error("The validated field [{}] is not accessible in the class [{}]",
