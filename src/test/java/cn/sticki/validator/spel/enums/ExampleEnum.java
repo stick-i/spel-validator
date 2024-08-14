@@ -12,32 +12,32 @@ import lombok.Getter;
 @Getter
 public enum ExampleEnum {
 
-	ONE(1),
+    ONE(1),
 
-	TWO(2),
+    TWO(2),
 
-	THREE(3),
+    THREE(3),
 
-	FOUR(4),
+    FOUR(4),
 
-	FIVE(5);
+    FIVE(5);
 
-	private final Integer code;
+    private final Integer code;
 
-	ExampleEnum(Integer code) {
-		this.code = code;
-	}
+    ExampleEnum(Integer code) {
+        this.code = code;
+    }
 
-	public static ExampleEnum getByCode(Integer code) {
-		if (code == null) {
-			return null;
-		}
-		for (ExampleEnum value : values()) {
-			if (value.code.equals(code)) {
-				return value;
-			}
-		}
-		return null;
-	}
+    public static ExampleEnum getByCode(Integer code) {
+        if (code == null) {
+            return null;
+        }
+        for (ExampleEnum value : values()) {
+            if (value.code.equals(code)) {
+                return value;
+            }
+        }
+        return null;
+    }
 
 }

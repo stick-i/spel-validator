@@ -15,9 +15,9 @@ import java.lang.reflect.Field;
  */
 public class SpelNotNullValidator implements SpelConstraintValidator<SpelNotNull> {
 
-	@Override
-	public FieldValidResult isValid(SpelNotNull annotation, Object obj, Field field) throws IllegalAccessException {
-		return new FieldValidResult(field.get(obj) != null);
-	}
+    @Override
+    public FieldValidResult isValid(SpelNotNull annotation, Object obj, Field field) throws IllegalAccessException {
+        return new FieldValidResult(field.get(obj) != null);
+    }
 
 }

@@ -17,13 +17,13 @@ import java.lang.reflect.Field;
  */
 public class SpelAssertValidator implements SpelConstraintValidator<SpelAssert> {
 
-	@Override
-	public FieldValidResult isValid(SpelAssert annotation, Object obj, Field field) {
-		if (annotation.assertTrue().isEmpty()) {
-			throw new SpelArgumentException("assertTrue must not be empty");
-		}
+    @Override
+    public FieldValidResult isValid(SpelAssert annotation, Object obj, Field field) {
+        if (annotation.assertTrue().isEmpty()) {
+            throw new SpelArgumentException("assertTrue must not be empty");
+        }
 
-		return new FieldValidResult(SpelParser.parse(annotation.assertTrue(), obj, Boolean.class));
-	}
+        return new FieldValidResult(SpelParser.parse(annotation.assertTrue(), obj, Boolean.class));
+    }
 
 }

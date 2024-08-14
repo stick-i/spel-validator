@@ -16,24 +16,24 @@ import org.junit.jupiter.api.Test;
  */
 public class ConstrainTest {
 
-	@Test
-	void testSpelAssert() {
-		boolean verified = ValidateUtil.checkConstraintResult(SpelAssertTestBean.testCase());
-		Assertions.assertTrue(verified);
-	}
+    @Test
+    void testSpelAssert() {
+        boolean verified = ValidateUtil.checkConstraintResult(SpelAssertTestBean.testCase());
+        Assertions.assertTrue(verified);
+    }
 
-	@Test
-	void testSpelNotBlank() {
-		boolean verified = ValidateUtil.checkConstraintResult(SpelNotBlankTestBean.testCase());
-		Assertions.assertTrue(verified);
-	}
+    @Test
+    void testSpelNotBlank() {
+        boolean verified = ValidateUtil.checkConstraintResult(SpelNotBlankTestBean.testCase());
+        Assertions.assertTrue(verified);
+    }
 
-	@Test
-	void testSpelNotEmpty() {
-		boolean verifiedParam = ValidateUtil.checkConstraintResult(SpelNotEmptyTestBean.paramTestCase());
-		Assertions.assertTrue(verifiedParam, "spelNotEmpty param test failed");
+    @Test
+    void testSpelNotEmpty() {
+        boolean verifiedParam = ValidateUtil.checkConstraintResult(SpelNotEmptyTestBean.paramTestCase());
+        Assertions.assertTrue(verifiedParam, "spelNotEmpty param test failed");
 
-		boolean verifiedType = ValidateUtil.checkConstraintResult(SpelNotEmptyTestBean.typeTestCase());
-		Assertions.assertTrue(verifiedType, "spelNotEmpty type test failed");
-	}
+        boolean verifiedType = ValidateUtil.checkConstraintResult(SpelNotEmptyTestBean.typeTestCase());
+        Assertions.assertTrue(verifiedType, "spelNotEmpty type test failed");
+    }
 }

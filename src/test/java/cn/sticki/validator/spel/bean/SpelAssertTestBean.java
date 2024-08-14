@@ -21,72 +21,72 @@ import java.util.List;
 @SpelValid(spelGroups = "#this.group")
 public class SpelAssertTestBean implements ID {
 
-	private int id;
+    private int id;
 
-	@SpelAssert(condition = "false", assertTrue = "false")
-	private Integer test;
+    @SpelAssert(condition = "false", assertTrue = "false")
+    private Integer test;
 
-	@SpelAssert(condition = "true", assertTrue = "false ")
-	private List<Integer> test2;
+    @SpelAssert(condition = "true", assertTrue = "false ")
+    private List<Integer> test2;
 
-	@SpelAssert(condition = "true", assertTrue = "true")
-	private Double test3;
+    @SpelAssert(condition = "true", assertTrue = "true")
+    private Double test3;
 
-	@SpelAssert(assertTrue = "#this.test4 == 'test4'", message = "test4")
-	private String test4;
+    @SpelAssert(assertTrue = "#this.test4 == 'test4'", message = "test4")
+    private String test4;
 
-	private String group;
+    private String group;
 
-	@SpelAssert(assertTrue = "false", message = "group1", group = "'group1'")
-	private Boolean test5;
+    @SpelAssert(assertTrue = "false", message = "group1", group = "'group1'")
+    private Boolean test5;
 
-	private String group2 = "group2";
+    private String group2 = "group2";
 
-	@SpelAssert(assertTrue = "false", message = "group2", group = "#this.group2")
-	private Boolean test6;
+    @SpelAssert(assertTrue = "false", message = "group2", group = "#this.group2")
+    private Boolean test6;
 
-	public static List<VerifyObject> testCase() {
-		ArrayList<VerifyObject> list = new ArrayList<>();
+    public static List<VerifyObject> testCase() {
+        ArrayList<VerifyObject> list = new ArrayList<>();
 
-		SpelAssertTestBean bean = new SpelAssertTestBean();
-		bean.setId(1);
-		list.add(VerifyObject.of(
-				bean,
-				VerifyFailedField.of(SpelAssertTestBean::getTest2),
-				VerifyFailedField.of(SpelAssertTestBean::getTest4, "test4")
-		));
+        SpelAssertTestBean bean = new SpelAssertTestBean();
+        bean.setId(1);
+        list.add(VerifyObject.of(
+                bean,
+                VerifyFailedField.of(SpelAssertTestBean::getTest2),
+                VerifyFailedField.of(SpelAssertTestBean::getTest4, "test4")
+        ));
 
-		SpelAssertTestBean bean2 = new SpelAssertTestBean();
-		bean2.setId(2);
-		bean2.setTest4("test4");
-		bean2.setGroup("group1");
-		list.add(VerifyObject.of(
-				bean2,
-				VerifyFailedField.of(SpelAssertTestBean::getTest2),
-				VerifyFailedField.of(SpelAssertTestBean::getTest5, "group1")
-		));
+        SpelAssertTestBean bean2 = new SpelAssertTestBean();
+        bean2.setId(2);
+        bean2.setTest4("test4");
+        bean2.setGroup("group1");
+        list.add(VerifyObject.of(
+                bean2,
+                VerifyFailedField.of(SpelAssertTestBean::getTest2),
+                VerifyFailedField.of(SpelAssertTestBean::getTest5, "group1")
+        ));
 
-		SpelAssertTestBean bean3 = new SpelAssertTestBean();
-		bean3.setId(3);
-		bean3.setTest4("test4");
-		bean3.setGroup("00");
-		list.add(VerifyObject.of(
-				bean3,
-				VerifyFailedField.of(SpelAssertTestBean::getTest2)
-		));
+        SpelAssertTestBean bean3 = new SpelAssertTestBean();
+        bean3.setId(3);
+        bean3.setTest4("test4");
+        bean3.setGroup("00");
+        list.add(VerifyObject.of(
+                bean3,
+                VerifyFailedField.of(SpelAssertTestBean::getTest2)
+        ));
 
-		SpelAssertTestBean bean4 = new SpelAssertTestBean();
-		bean4.setId(4);
-		bean4.setGroup("group2");
-		// bean4.setGroup2("group2");
-		list.add(VerifyObject.of(
-				bean4,
-				VerifyFailedField.of(SpelAssertTestBean::getTest2),
-				VerifyFailedField.of(SpelAssertTestBean::getTest4, "test4"),
-				VerifyFailedField.of(SpelAssertTestBean::getTest6, "group2")
-		));
+        SpelAssertTestBean bean4 = new SpelAssertTestBean();
+        bean4.setId(4);
+        bean4.setGroup("group2");
+        // bean4.setGroup2("group2");
+        list.add(VerifyObject.of(
+                bean4,
+                VerifyFailedField.of(SpelAssertTestBean::getTest2),
+                VerifyFailedField.of(SpelAssertTestBean::getTest4, "test4"),
+                VerifyFailedField.of(SpelAssertTestBean::getTest6, "group2")
+        ));
 
-		return list;
-	}
+        return list;
+    }
 
 }

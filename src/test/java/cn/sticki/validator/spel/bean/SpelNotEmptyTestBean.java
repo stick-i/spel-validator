@@ -19,117 +19,117 @@ import java.util.*;
  */
 public class SpelNotEmptyTestBean {
 
-	/**
-	 * 参数测试
-	 */
-	@Data
-	@Builder
-	@SpelValid
-	public static class ParamTestBean implements ID {
+    /**
+     * 参数测试
+     */
+    public static List<VerifyObject> paramTestCase() {
+        ArrayList<VerifyObject> result = new ArrayList<>();
 
-		private int id;
+        // null
+        result.add(VerifyObject.of(
+                ParamTestBean.builder().id(1).condition(true).build(),
+                VerifyFailedField.of(ParamTestBean::getTest, ParamTestBean::getTest2, ParamTestBean::getTest3)
+        ));
 
-		// 默认参数
-		@SpelNotEmpty
-		private String test;
+        // 空字符串
+        result.add(VerifyObject.of(
+                ParamTestBean.builder().id(2).condition(true).test("").test2("").test3("").build(),
+                VerifyFailedField.of(ParamTestBean::getTest, ParamTestBean::getTest2, ParamTestBean::getTest3)
+        ));
 
-		private boolean condition;
+        // 正常情况
+        result.add(VerifyObject.of(
+                ParamTestBean.builder().id(3).condition(true).test("1").test2("2").test3("3").build()
+        ));
 
-		// 变量参数
-		@SpelNotEmpty(condition = "#this.condition", message = "test2")
-		private String test2;
+        // condition测试
+        result.add(VerifyObject.of(
+                ParamTestBean.builder().id(4).condition(false).build(),
+                VerifyFailedField.of(ParamTestBean::getTest)
+        ));
+        result.add(VerifyObject.of(
+                ParamTestBean.builder().id(5).condition(false).test("1").test2("2").test3("3").build()
+        ));
 
-		// 变量参数2
-		@SpelNotEmpty(condition = "#this.condition", message = "test3")
-		private String test3;
+        return result;
+    }
 
-	}
+    /**
+     * 类型测试
+     */
+    public static List<VerifyObject> typeTestCase() {
+        ArrayList<VerifyObject> result = new ArrayList<>();
 
-	/**
-	 * 参数测试
-	 */
-	public static List<VerifyObject> paramTestCase() {
-		ArrayList<VerifyObject> result = new ArrayList<>();
+        // null
+        result.add(VerifyObject.of(
+                TypeTestBean.builder().build(),
+                VerifyFailedField.of(TypeTestBean::getTestCharSequence, TypeTestBean::getTestCollection, TypeTestBean::getTestMap, TypeTestBean::getTestArray)
+        ));
 
-		// null
-		result.add(VerifyObject.of(
-				ParamTestBean.builder().id(1).condition(true).build(),
-				VerifyFailedField.of(ParamTestBean::getTest, ParamTestBean::getTest2, ParamTestBean::getTest3)
-		));
+        // empty
+        result.add(VerifyObject.of(
+                TypeTestBean.builder().testCharSequence("").testArray(new Object[0]).testCollection(Collections.emptyList()).testMap(Collections.emptyMap()).build(),
+                VerifyFailedField.of(TypeTestBean::getTestCharSequence, TypeTestBean::getTestCollection, TypeTestBean::getTestMap, TypeTestBean::getTestArray)
+        ));
 
-		// 空字符串
-		result.add(VerifyObject.of(
-				ParamTestBean.builder().id(2).condition(true).test("").test2("").test3("").build(),
-				VerifyFailedField.of(ParamTestBean::getTest, ParamTestBean::getTest2, ParamTestBean::getTest3)
-		));
+        result.add(VerifyObject.of(
+                TypeTestBean.builder()
+                        .testCharSequence("11")
+                        .testArray(new Object[1])
+                        .testCollection(Collections.singleton(new Object()))
+                        .testMap(Collections.singletonMap("1", "1"))
+                        .build()
+        ));
 
-		// 正常情况
-		result.add(VerifyObject.of(
-				ParamTestBean.builder().id(3).condition(true).test("1").test2("2").test3("3").build()
-		));
+        return result;
+    }
 
-		// condition测试
-		result.add(VerifyObject.of(
-				ParamTestBean.builder().id(4).condition(false).build(),
-				VerifyFailedField.of(ParamTestBean::getTest)
-		));
-		result.add(VerifyObject.of(
-				ParamTestBean.builder().id(5).condition(false).test("1").test2("2").test3("3").build()
-		));
+    /**
+     * 参数测试
+     */
+    @Data
+    @Builder
+    @SpelValid
+    public static class ParamTestBean implements ID {
 
-		return result;
-	}
+        private int id;
 
-	/**
-	 * 支持的类型测试
-	 */
-	@Data
-	@Builder
-	@SpelValid
-	static class TypeTestBean {
+        // 默认参数
+        @SpelNotEmpty
+        private String test;
 
-		@SpelNotEmpty
-		private CharSequence testCharSequence;
+        private boolean condition;
 
-		@SpelNotEmpty
-		private Collection<?> testCollection;
+        // 变量参数
+        @SpelNotEmpty(condition = "#this.condition", message = "test2")
+        private String test2;
 
-		@SpelNotEmpty
-		private Map<?, ?> testMap;
+        // 变量参数2
+        @SpelNotEmpty(condition = "#this.condition", message = "test3")
+        private String test3;
 
-		@SpelNotEmpty
-		private Object[] testArray;
+    }
 
-	}
+    /**
+     * 支持的类型测试
+     */
+    @Data
+    @Builder
+    @SpelValid
+    static class TypeTestBean {
 
-	/**
-	 * 类型测试
-	 */
-	public static List<VerifyObject> typeTestCase() {
-		ArrayList<VerifyObject> result = new ArrayList<>();
+        @SpelNotEmpty
+        private CharSequence testCharSequence;
 
-		// null
-		result.add(VerifyObject.of(
-				TypeTestBean.builder().build(),
-				VerifyFailedField.of(TypeTestBean::getTestCharSequence, TypeTestBean::getTestCollection, TypeTestBean::getTestMap, TypeTestBean::getTestArray)
-		));
+        @SpelNotEmpty
+        private Collection<?> testCollection;
 
-		// empty
-		result.add(VerifyObject.of(
-				TypeTestBean.builder().testCharSequence("").testArray(new Object[0]).testCollection(Collections.emptyList()).testMap(Collections.emptyMap()).build(),
-				VerifyFailedField.of(TypeTestBean::getTestCharSequence, TypeTestBean::getTestCollection, TypeTestBean::getTestMap, TypeTestBean::getTestArray)
-		));
+        @SpelNotEmpty
+        private Map<?, ?> testMap;
 
-		result.add(VerifyObject.of(
-				TypeTestBean.builder()
-						.testCharSequence("11")
-						.testArray(new Object[1])
-						.testCollection(Collections.singleton(new Object()))
-						.testMap(Collections.singletonMap("1", "1"))
-						.build()
-		));
+        @SpelNotEmpty
+        private Object[] testArray;
 
-		return result;
-	}
+    }
 
 }

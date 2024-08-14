@@ -9,16 +9,16 @@ package cn.sticki.validator.spel.exception;
  */
 public class SpelParserException extends SpelValidException {
 
-	public SpelParserException(String message) {
-		super(message);
-	}
+    public SpelParserException(String message) {
+        super(message);
+    }
 
-	public SpelParserException(String message, Throwable cause) {
-		super(message, cause);
-	}
+    public SpelParserException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-	public SpelParserException(Throwable cause) {
-		super(cause);
-	}
+    public SpelParserException(Throwable cause) {
+        super(cause);
+    }
 
 }

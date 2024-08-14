@@ -9,6 +9,6 @@ package cn.sticki.validator.spel.util;
  */
 public interface ID {
 
-	int getId();
+    int getId();
 
 }

@@ -14,10 +14,10 @@ import org.junit.jupiter.api.Test;
  */
 public class ExampleTest {
 
-	@Test
-	void testExample() {
-		boolean verified = ValidateUtil.checkConstraintResult(ExampleTestBean.testCase());
-		Assertions.assertTrue(verified);
-	}
+    @Test
+    void testExample() {
+        boolean verified = ValidateUtil.checkConstraintResult(ExampleTestBean.testCase());
+        Assertions.assertTrue(verified);
+    }
 
 }
