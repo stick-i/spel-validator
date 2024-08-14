@@ -22,6 +22,32 @@ public class SpelNotEmptyTestBean {
     /**
      * 参数测试
      */
+    @Data
+    @Builder
+    @SpelValid
+    public static class ParamTestBean implements ID {
+
+        private int id;
+
+        // 默认参数
+        @SpelNotEmpty
+        private String test;
+
+        private boolean condition;
+
+        // 变量参数
+        @SpelNotEmpty(condition = "#this.condition", message = "test2")
+        private String test2;
+
+        // 变量参数2
+        @SpelNotEmpty(condition = "#this.condition", message = "test3")
+        private String test3;
+
+    }
+
+    /**
+     * 参数测试
+     */
     public static List<VerifyObject> paramTestCase() {
         ArrayList<VerifyObject> result = new ArrayList<>();
 
@@ -55,6 +81,28 @@ public class SpelNotEmptyTestBean {
     }
 
     /**
+     * 支持的类型测试
+     */
+    @Data
+    @Builder
+    @SpelValid
+    static class TypeTestBean {
+
+        @SpelNotEmpty
+        private CharSequence testCharSequence;
+
+        @SpelNotEmpty
+        private Collection<?> testCollection;
+
+        @SpelNotEmpty
+        private Map<?, ?> testMap;
+
+        @SpelNotEmpty
+        private Object[] testArray;
+
+    }
+
+    /**
      * 类型测试
      */
     public static List<VerifyObject> typeTestCase() {
@@ -82,54 +130,6 @@ public class SpelNotEmptyTestBean {
         ));
 
         return result;
-    }
-
-    /**
-     * 参数测试
-     */
-    @Data
-    @Builder
-    @SpelValid
-    public static class ParamTestBean implements ID {
-
-        private int id;
-
-        // 默认参数
-        @SpelNotEmpty
-        private String test;
-
-        private boolean condition;
-
-        // 变量参数
-        @SpelNotEmpty(condition = "#this.condition", message = "test2")
-        private String test2;
-
-        // 变量参数2
-        @SpelNotEmpty(condition = "#this.condition", message = "test3")
-        private String test3;
-
-    }
-
-    /**
-     * 支持的类型测试
-     */
-    @Data
-    @Builder
-    @SpelValid
-    static class TypeTestBean {
-
-        @SpelNotEmpty
-        private CharSequence testCharSequence;
-
-        @SpelNotEmpty
-        private Collection<?> testCollection;
-
-        @SpelNotEmpty
-        private Map<?, ?> testMap;
-
-        @SpelNotEmpty
-        private Object[] testArray;
-
     }
 
 }

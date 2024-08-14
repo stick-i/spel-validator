@@ -1,5 +1,6 @@
 package cn.sticki.validator.spel;
 
+import cn.sticki.validator.spel.bean.ExampleTestBean;
 import cn.sticki.validator.spel.bean.SpelAssertTestBean;
 import cn.sticki.validator.spel.bean.SpelNotBlankTestBean;
 import cn.sticki.validator.spel.bean.SpelNotEmptyTestBean;
@@ -15,6 +16,15 @@ import org.junit.jupiter.api.Test;
  * @since 2024/6/15
  */
 public class ConstrainTest {
+
+    /**
+     * 这是一个测试示例
+     */
+    @Test
+    void testExample() {
+        boolean verified = ValidateUtil.checkConstraintResult(ExampleTestBean.testCase());
+        Assertions.assertTrue(verified);
+    }
 
     @Test
     void testSpelAssert() {
@@ -35,5 +45,20 @@ public class ConstrainTest {
 
         boolean verifiedType = ValidateUtil.checkConstraintResult(SpelNotEmptyTestBean.typeTestCase());
         Assertions.assertTrue(verifiedType, "spelNotEmpty type test failed");
+    }
+
+    @Test
+    void testSpelNotNull() {
+
+    }
+
+    @Test
+    void testSpelNull() {
+
+    }
+
+    @Test
+    void testSpelSize() {
+
     }
 }
