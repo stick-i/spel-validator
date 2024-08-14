@@ -1,7 +1,7 @@
 package cn.sticki.validator.spel;
 
 import cn.sticki.validator.spel.exception.SpelNotSupportedTypeException;
-import cn.sticki.validator.spel.exception.SpelValidException;
+import cn.sticki.validator.spel.exception.SpelValidatorException;
 import cn.sticki.validator.spel.manager.AnnotationMethodManager;
 import cn.sticki.validator.spel.parse.SpelParser;
 import cn.sticki.validator.spel.result.FieldValidResult;
@@ -213,7 +213,7 @@ public class SpelValidExecutor {
         try {
             // noinspection unchecked
             result = ((SpelConstraintValidator<A>) validator).isValid(annotation, verifiedObject, verifiedField);
-        } catch (SpelValidException e) {
+        } catch (SpelValidatorException e) {
             log.error("Spel validate error: {} ;Located in the annotation [{}] of class [{}] field [{}]",
                     e.getMessage(), annotation.annotationType().getName(), verifiedObject.getClass().getName(), verifiedField.getName());
             throw e;
@@ -221,7 +221,7 @@ public class SpelValidExecutor {
             // 被验证的字段在类中无法访问
             log.error("The validated field [{}] is not accessible in the class [{}]",
                     verifiedField.getName(), verifiedObject.getClass().getName());
-            throw new SpelValidException("Failed to access field value", e);
+            throw new SpelValidatorException("Failed to access field value", e);
         }
         autoFillValidResult(result, annotation, verifiedField);
         return result;
@@ -312,7 +312,7 @@ public class SpelValidExecutor {
             try {
                 return key.getDeclaredConstructor().newInstance();
             } catch (Exception e) {
-                throw new SpelValidException("Create validator [" + validator.getName() + "] instance error: " + e.getMessage(), e);
+                throw new SpelValidatorException("Create validator [" + validator.getName() + "] instance error: " + e.getMessage(), e);
             }
         });
     }
@@ -331,7 +331,7 @@ public class SpelValidExecutor {
             //noinspection unchecked
             return (T) method.invoke(annotation);
         } catch (Exception e) {
-            throw new SpelValidException("Get method [" + annotation.annotationType().getName() + "." + methodName + "] error: " + e.getMessage(), e);
+            throw new SpelValidatorException("Get method [" + annotation.annotationType().getName() + "." + methodName + "] error: " + e.getMessage(), e);
         }
     }
 

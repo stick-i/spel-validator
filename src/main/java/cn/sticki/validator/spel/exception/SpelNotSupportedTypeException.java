@@ -12,7 +12,7 @@ import java.util.Set;
  * @since 2024/5/3
  */
 @Getter
-public class SpelNotSupportedTypeException extends SpelValidException {
+public class SpelNotSupportedTypeException extends SpelValidatorException {
 
     private final Class<?> clazz;
 
