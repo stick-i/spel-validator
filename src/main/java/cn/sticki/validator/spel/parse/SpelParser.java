@@ -2,6 +2,8 @@ package cn.sticki.validator.spel.parse;
 
 import cn.sticki.validator.spel.exception.SpelParserException;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.expression.BeanFactoryResolver;
@@ -47,6 +49,7 @@ public class SpelParser {
      * @param rootObject 用于计算表达式的根对象
      * @return 表达式计算结果
      */
+    @Nullable
     public static Object parse(String expression, Object rootObject) {
         try {
             log.debug("======> Parse expression [{}]", expression);
@@ -70,6 +73,7 @@ public class SpelParser {
      * @return 表达式计算结果
      * @throws SpelParserException 当表达式计算结果为null或者不是指定类型时抛出
      */
+    @NotNull
     public static <T> T parse(String expression, Object rootObject, Class<T> requiredType) {
         Object any = parse(expression, rootObject);
         if (any == null) {

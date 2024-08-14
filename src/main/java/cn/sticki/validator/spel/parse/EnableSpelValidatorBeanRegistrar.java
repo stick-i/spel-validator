@@ -17,6 +17,7 @@ import java.lang.annotation.*;
  * @version 1.0
  * @since 2024/5/4
  */
+@SuppressWarnings("unused")
 @Documented
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

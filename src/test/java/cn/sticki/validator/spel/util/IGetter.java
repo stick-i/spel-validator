@@ -10,6 +10,7 @@ package cn.sticki.validator.spel.util;
 @FunctionalInterface
 public interface IGetter<T, R> extends java.io.Serializable {
 
+    @SuppressWarnings("unused")
     R apply(T t);
 
 }
