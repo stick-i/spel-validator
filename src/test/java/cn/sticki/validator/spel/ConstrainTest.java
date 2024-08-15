@@ -58,7 +58,14 @@ public class ConstrainTest {
 
     @Test
     void testSpelNull() {
+        boolean paramTest = ValidateUtil.checkConstraintResult(SpelNullTestBean.paramTestCase());
+        Assertions.assertTrue(paramTest, "spelNull param test failed");
 
+        boolean typeTest = ValidateUtil.checkConstraintResult(SpelNullTestBean.typeTestCase());
+        Assertions.assertTrue(typeTest, "spelNull type test failed");
+
+        boolean repeatableTest = ValidateUtil.checkConstraintResult(SpelNullTestBean.repeatableTestCase());
+        Assertions.assertTrue(repeatableTest, "spelNull repeatable test failed");
     }
 
     @Test
