@@ -44,10 +44,23 @@ public class VerifyFailedField {
         return Arrays.stream(fields).map(VerifyFailedField::of).collect(Collectors.toList());
     }
 
+    /**
+     * 创建一个验证失败的字段
+     *
+     * @param field        字段
+     * @param errorMessage 期望的错误信息
+     */
     public static <T> VerifyFailedField of(IGetter<T, ?> field, String errorMessage) {
         return VerifyFailedField.of(BeanUtil.getFieldName(field), errorMessage);
     }
 
+    /**
+     * 创建一个验证失败的字段
+     *
+     * @param fieldName    字段名
+     * @param errorMessage 期望的错误信息
+     * @return
+     */
     public static VerifyFailedField of(String fieldName, String errorMessage) {
         VerifyFailedField verifyFailedField = new VerifyFailedField();
         verifyFailedField.setName(fieldName);

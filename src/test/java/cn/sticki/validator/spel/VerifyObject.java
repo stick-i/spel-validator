@@ -78,6 +78,18 @@ public class VerifyObject {
     /**
      * 创建待验证对象
      *
+     * @param object              待验证对象
+     * @param verifyFailedFields1 待验证的异常字段信息
+     * @param verifyFailedFields2 待验证的异常字段信息
+     */
+    public static VerifyObject of(Object object, Collection<VerifyFailedField> verifyFailedFields1, Collection<VerifyFailedField> verifyFailedFields2) {
+        verifyFailedFields1.addAll(verifyFailedFields2);
+        return VerifyObject.of(object, verifyFailedFields1, false);
+    }
+
+    /**
+     * 创建待验证对象
+     *
      * @param object             待验证对象
      * @param verifyFailedFields 待验证的异常字段信息
      */
