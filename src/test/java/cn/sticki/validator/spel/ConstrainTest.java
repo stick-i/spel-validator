@@ -70,6 +70,10 @@ public class ConstrainTest {
 
     @Test
     void testSpelSize() {
+        boolean paramTest = ValidateUtil.checkConstraintResult(SpelSizeTestBean.paramTestCase());
+        Assertions.assertTrue(paramTest, "spelSize param test failed");
 
+        boolean repeatableTest = ValidateUtil.checkConstraintResult(SpelSizeTestBean.repeatableTestCase());
+        Assertions.assertTrue(repeatableTest, "spelSize repeatable test failed");
     }
 }

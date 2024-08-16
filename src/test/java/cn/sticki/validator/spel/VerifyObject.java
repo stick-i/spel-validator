@@ -82,8 +82,8 @@ public class VerifyObject {
      * @param verifyFailedFields1 待验证的异常字段信息
      * @param verifyFailedFields2 待验证的异常字段信息
      */
-    public static VerifyObject of(Object object, Collection<VerifyFailedField> verifyFailedFields1, Collection<VerifyFailedField> verifyFailedFields2) {
-        verifyFailedFields1.addAll(verifyFailedFields2);
+    public static VerifyObject of(Object object, Collection<VerifyFailedField> verifyFailedFields1, VerifyFailedField... verifyFailedFields2) {
+        verifyFailedFields1.addAll(Arrays.asList(verifyFailedFields2));
         return VerifyObject.of(object, verifyFailedFields1, false);
     }
 
