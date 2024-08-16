@@ -17,74 +17,96 @@ import java.util.List;
  * @version 1.0
  * @since 2024/6/15
  */
-@Data
-@SpelValid(spelGroups = "#this.group")
-public class SpelAssertTestBean implements ID {
+public class SpelAssertTestBean {
 
-    private int id;
+    @Data
+    @SpelValid(spelGroups = "#this.group")
+    public static class ParamTestBean implements ID {
 
-    @SpelAssert(condition = "false", assertTrue = "false")
-    private Integer test;
+        private int id;
 
-    @SpelAssert(condition = "true", assertTrue = "false ")
-    private List<Integer> test2;
+        @SpelAssert(condition = "false", assertTrue = "false")
+        private Integer test;
 
-    @SpelAssert(condition = "true", assertTrue = "true")
-    private Double test3;
+        @SpelAssert(condition = "true", assertTrue = "false ")
+        private List<Integer> test2;
 
-    @SpelAssert(assertTrue = "#this.test4 == 'test4'", message = "test4")
-    private String test4;
+        @SpelAssert(condition = "true")
+        private Double test3;
 
-    private String group;
+        @SpelAssert(assertTrue = "#this.test4 == 'test4'", message = "test4")
+        private String test4;
 
-    @SpelAssert(assertTrue = "false", message = "group1", group = "'group1'")
-    private Boolean test5;
+        private String group;
 
-    private String group2 = "group2";
+        @SpelAssert(assertTrue = "false", message = "group1", group = "'group1'")
+        private Boolean test5;
 
-    @SpelAssert(assertTrue = "false", message = "group2", group = "#this.group2")
-    private Boolean test6;
+        private String group2 = "group2";
 
-    public static List<VerifyObject> testCase() {
+        @SpelAssert(assertTrue = "false", message = "group2", group = "#this.group2")
+        private Boolean test6;
+
+    }
+
+    public static List<VerifyObject> paramTestCase() {
         ArrayList<VerifyObject> list = new ArrayList<>();
 
-        SpelAssertTestBean bean = new SpelAssertTestBean();
+        ParamTestBean bean = new ParamTestBean();
         bean.setId(1);
         list.add(VerifyObject.of(
                 bean,
-                VerifyFailedField.of(SpelAssertTestBean::getTest2),
-                VerifyFailedField.of(SpelAssertTestBean::getTest4, "test4")
+                VerifyFailedField.of(ParamTestBean::getTest2),
+                VerifyFailedField.of(ParamTestBean::getTest4, "test4")
         ));
 
-        SpelAssertTestBean bean2 = new SpelAssertTestBean();
+        ParamTestBean bean2 = new ParamTestBean();
         bean2.setId(2);
         bean2.setTest4("test4");
         bean2.setGroup("group1");
         list.add(VerifyObject.of(
                 bean2,
-                VerifyFailedField.of(SpelAssertTestBean::getTest2),
-                VerifyFailedField.of(SpelAssertTestBean::getTest5, "group1")
+                VerifyFailedField.of(ParamTestBean::getTest2),
+                VerifyFailedField.of(ParamTestBean::getTest5, "group1")
         ));
 
-        SpelAssertTestBean bean3 = new SpelAssertTestBean();
+        ParamTestBean bean3 = new ParamTestBean();
         bean3.setId(3);
         bean3.setTest4("test4");
         bean3.setGroup("00");
         list.add(VerifyObject.of(
                 bean3,
-                VerifyFailedField.of(SpelAssertTestBean::getTest2)
+                VerifyFailedField.of(ParamTestBean::getTest2)
         ));
 
-        SpelAssertTestBean bean4 = new SpelAssertTestBean();
+        ParamTestBean bean4 = new ParamTestBean();
         bean4.setId(4);
         bean4.setGroup("group2");
         // bean4.setGroup2("group2");
         list.add(VerifyObject.of(
                 bean4,
-                VerifyFailedField.of(SpelAssertTestBean::getTest2),
-                VerifyFailedField.of(SpelAssertTestBean::getTest4, "test4"),
-                VerifyFailedField.of(SpelAssertTestBean::getTest6, "group2")
+                VerifyFailedField.of(ParamTestBean::getTest2),
+                VerifyFailedField.of(ParamTestBean::getTest4, "test4"),
+                VerifyFailedField.of(ParamTestBean::getTest6, "group2")
         ));
+
+        return list;
+    }
+
+    @Data
+    @SpelValid
+    public static class EmptyTestBean {
+
+        @SpelAssert(condition = "true", assertTrue = "")
+        private Integer test;
+
+    }
+
+    public static List<VerifyObject> emptyTestCase() {
+        ArrayList<VerifyObject> list = new ArrayList<>();
+
+        EmptyTestBean bean = new EmptyTestBean();
+        list.add(VerifyObject.of(bean, true));
 
         return list;
     }

@@ -25,8 +25,11 @@ public class ConstrainTest {
 
     @Test
     void testSpelAssert() {
-        boolean verified = ValidateUtil.checkConstraintResult(SpelAssertTestBean.testCase());
+        boolean verified = ValidateUtil.checkConstraintResult(SpelAssertTestBean.paramTestCase());
         Assertions.assertTrue(verified);
+
+        boolean emptyTest = ValidateUtil.checkConstraintResult(SpelAssertTestBean.emptyTestCase());
+        Assertions.assertTrue(emptyTest);
     }
 
     @Test

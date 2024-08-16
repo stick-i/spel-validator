@@ -1,8 +1,6 @@
 package cn.sticki.validator.spel.result;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -13,8 +11,6 @@ import org.jetbrains.annotations.NotNull;
  * @since 2024/4/29
  */
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class FieldValidResult {
 
     /**

@@ -57,7 +57,7 @@ public @interface SpelAssert {
      * 计算结果必须为boolean类型，true为校验成功，false为校验失败
      */
     @Language("SpEL")
-    String assertTrue() default "";
+    String assertTrue() default "true";
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
