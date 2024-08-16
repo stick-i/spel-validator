@@ -30,10 +30,6 @@ public class VerifyObject {
      */
     private boolean expectException;
 
-    /**
-     * 校验不通过字段
-     */
-
     private VerifyObject() {
     }
 
