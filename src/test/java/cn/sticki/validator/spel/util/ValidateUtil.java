@@ -54,6 +54,7 @@ public class ValidateUtil {
     public static boolean checkConstraintResult(VerifyObject verifyObject) {
         Object object = verifyObject.getObject();
         Collection<VerifyFailedField> verifyFailedFields = verifyObject.getVerifyFailedFields();
+        boolean expectException = verifyObject.isExpectException();
 
         String className = object.getClass().getSimpleName();
 
@@ -69,11 +70,18 @@ public class ValidateUtil {
             Set<ConstraintViolation<Object>> validate = ValidateUtil.validate(object);
             failCount += calcFailCount(verifyFailedFields, ViolationSet.of(validate));
         } catch (Exception e) {
-            if (verifyObject.isExpectException()) {
+            if (expectException) {
                 log.info("Passed, Capture exception {}, message: {}", e.getClass(), e.getMessage());
+                expectException = false;
             } else {
                 log.error("Failed, Capture exception {}, message: {}", e.getClass(), e.getMessage());
+                failCount++;
             }
+        }
+
+        if (expectException) {
+            log.error("Failed, No exception captured");
+            failCount++;
         }
 
         log.info("Verification end, number of failures: {}", failCount);
