@@ -58,6 +58,7 @@ public class SpelParser {
             log.debug("======> Parse result [{}]", value);
             return value;
         } catch (Exception e) {
+            // todo 是否需要捕获所有异常？如果是在业务代码中抛出的异常，是否需要继续抛出？
             log.error("Parse expression error, expression [{}], message [{}]", expression, e.getMessage());
             throw new SpelParserException(e);
         }
