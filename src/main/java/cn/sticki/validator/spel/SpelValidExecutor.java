@@ -8,6 +8,7 @@ import cn.sticki.validator.spel.result.FieldValidResult;
 import cn.sticki.validator.spel.result.ObjectValidResult;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -19,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * spel 相关注解的执行器，对使用了 {@link SpelConstraint} 进行标记的注解执行校验。
  *
  * @author 阿杆
- * @version 1.0
+ * @version 2.0
  * @see SpelConstraint
  * @since 2024/4/29
  */
@@ -33,19 +34,19 @@ public class SpelValidExecutor {
     private static final String GROUP = "group";
 
     /**
+     * 字段缓存，仅缓存包含 Spel 约束注解的字段
+     */
+    private static final ConcurrentHashMap<Class<?>, List<Field>> FIELD_CACHE = new ConcurrentHashMap<>();
+
+    /**
      * 字段注解缓存
      */
     private static final ConcurrentHashMap<Field, List<Annotation>> FIELD_ANNOTATION_CACHE = new ConcurrentHashMap<>();
 
     /**
-     * 约束注解缓存
-     */
-    private static final ConcurrentHashMap<Class<? extends Annotation>, Boolean> CONSTRAINT_ANNOTATION_CACHE = new ConcurrentHashMap<>();
-
-    /**
      * 校验器实例管理器，避免重复创建校验器实例。
      */
-    private static final ConcurrentHashMap<Class<? extends SpelConstraintValidator<?>>, SpelConstraintValidator<?>> VALIDATOR_INSTANCE_CACHE = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Annotation, SpelConstraintValidator<?>> VALIDATOR_INSTANCE_CACHE = new ConcurrentHashMap<>();
 
     /**
      * 验证对象
@@ -76,17 +77,23 @@ public class SpelValidExecutor {
         log.debug("Spel validate start, class [{}], groups [{}]", verifiedObject.getClass().getName(), validateGroups);
         log.debug("Verified object [{}]", verifiedObject);
 
-        List<FieldValidResult> validationResults = new ArrayList<>();
-
-        // 获取类的字段 todo 缓存
-        Field[] fields = verifiedObject.getClass().getDeclaredFields();
-        for (Field field : fields) {
-            field.setAccessible(true);
-            validateField(verifiedObject, field, validateGroups, validationResults);
-        }
-
         ObjectValidResult validResult = new ObjectValidResult();
-        validResult.addFieldResults(validationResults);
+
+        // 获取字段
+        List<Field> spelConstraintFields = getSpelConstraintFields(verifiedObject.getClass());
+        for (Field field : spelConstraintFields) {
+            // 获取注解
+            List<Annotation> spelConstraintAnnotations = getSpelConstraintAnnotations(field);
+            for (Annotation annotation : spelConstraintAnnotations) {
+                // 获取验证器实例
+                SpelConstraintValidator<? extends Annotation> validator = getValidatorInstance(annotation);
+                // 执行校验
+                FieldValidResult validationResult = validateFieldAnnotation(annotation, validator, verifiedObject, field, validateGroups);
+                if (validationResult != null) {
+                    validResult.addFieldResult(validationResult);
+                }
+            }
+        }
 
         log.debug("Spel validate over,error list {}", validResult.getErrors());
         log.debug("Spel validate cost time {} ms", (System.nanoTime() - startTime) / 1000000);
@@ -94,28 +101,32 @@ public class SpelValidExecutor {
     }
 
     /**
-     * 验证字段
+     * 获取包含 Spel 约束注解的字段列表
      */
-    private static void validateField(
-            @NotNull Object verifiedObject,
-            @NotNull Field verifiedField,
-            @NotNull Set<Object> validGroups,
-            @NotNull List<FieldValidResult> validationResults
-    ) {
-        // 获取字段上的注解
-        List<Annotation> annotations = getFieldAnnotations(verifiedField);
-        for (Annotation annotation : annotations) {
-            validateFieldAnnotation(annotation, verifiedObject, verifiedField, validationResults, validGroups);
-        }
+    @NotNull
+    private static List<Field> getSpelConstraintFields(@NotNull Class<?> clazz) {
+        // 获取类的字段
+        return FIELD_CACHE.computeIfAbsent(clazz, aClass -> {
+            List<Field> list = new ArrayList<>();
+            Field[] fields = aClass.getDeclaredFields();
+            for (Field field : fields) {
+                field.setAccessible(true);
+                if (!getSpelConstraintAnnotations(field).isEmpty()) {
+                    list.add(field);
+                }
+            }
+            return Collections.unmodifiableList(list);
+        });
     }
 
     /**
-     * 获取字段上的注解
+     * 获取字段上符合 Spel约束规范 的注解
      *
      * @param field 字段
      * @return 注解列表
      */
-    private static List<Annotation> getFieldAnnotations(Field field) {
+    @NotNull
+    private static List<Annotation> getSpelConstraintAnnotations(@NotNull Field field) {
         return FIELD_ANNOTATION_CACHE.computeIfAbsent(field, f -> {
             Annotation[] annotations = f.getAnnotations();
             List<Annotation> tempList = new ArrayList<>();
@@ -124,46 +135,40 @@ public class SpelValidExecutor {
                 String annoName = originalAnno.annotationType().getName();
                 if (annoName.endsWith("$List") || annoName.endsWith("Container")) {
                     // 容器注解，需要获取容器内部的注解类型，其声明类为真实的注解类
-                    Class<?> clazz = originalAnno.annotationType().getDeclaringClass();
                     //noinspection unchecked
-                    Annotation[] originalAnnoArray = f.getAnnotationsByType((Class<Annotation>) clazz);
+                    Class<? extends Annotation> clazz = (Class<? extends Annotation>) originalAnno.annotationType().getDeclaringClass();
+                    Annotation[] originalAnnoArray = f.getAnnotationsByType(clazz);
                     tempList.addAll(Arrays.asList(originalAnnoArray));
                 } else {
                     tempList.add(originalAnno);
                 }
             }
+
+            // 验证注解的合法性，移除不合法的注解
+            tempList.removeIf(annotation -> !isSpelConstraintAnnotation(annotation.annotationType()));
+
             return Collections.unmodifiableList(tempList);
         });
     }
 
     /**
-     * 对任意的注解执行校验，当注解不是Ex约束注解时，将返回null。
+     * 对任意的注解执行校验，当注解不是合法的约束注解时，将返回null。
      *
      * @param annotation        注解数组，数组内的注解必须为同一类型
      * @param verifiedObject    被校验的对象
      * @param verifiedField     被校验的字段，必须存在于被校验的对象中
-     * @param validationResults 校验结果列表
      * @param validateGroups    分组信息
+     * @return 校验结果
      */
-    private static void validateFieldAnnotation(
+    private static @Nullable FieldValidResult validateFieldAnnotation(
             @NotNull Annotation annotation,
+            @NotNull SpelConstraintValidator<? extends Annotation> validator,
             @NotNull Object verifiedObject,
             @NotNull Field verifiedField,
-            @NotNull List<FieldValidResult> validationResults,
             @NotNull Set<Object> validateGroups
     ) {
-        Class<? extends Annotation> annoClazz = annotation.annotationType();
-        // 验证注解的合法性 todo 这里应该可以放到获取注解的时候进行校验
-        if (!isSpelConstraintAnnotationCached(annoClazz)) {
-            return;
-        }
-
-        log.debug("===> Find target annotation [{}], verifiedField [{}]", annoClazz.getSimpleName(), verifiedField.getName());
+        log.debug("===> Find target annotation [{}], verifiedField [{}]", annotation.annotationType().getSimpleName(), verifiedField.getName());
         log.debug("===> Annotation object [{}]", annotation);
-
-        // 获取验证器实例 todo 缓存
-        Class<? extends SpelConstraintValidator<?>> validatorClass = annoClazz.getAnnotation(SpelConstraint.class).validatedBy();
-        SpelConstraintValidator<? extends Annotation> validator = getValidatorInstance(validatorClass);
 
         // 判断字段的类型是否受支持
         Set<Class<?>> supported = validator.supportType();
@@ -177,21 +182,20 @@ public class SpelValidExecutor {
         Set<Object> annoGroups = parseGroups(annotation, verifiedObject);
         if (!annoGroups.isEmpty() && !matchGroup(validateGroups, annoGroups)) {
             log.debug("===> Group not matched, skip validate. annotation groups [{}]", annoGroups);
-            return;
+            return null;
         }
 
         // 判断condition条件是否成立
         String condition = getAnnotationValue(annotation, CONDITION);
         if (!condition.isEmpty() && !SpelParser.parse(condition, verifiedObject, Boolean.class)) {
             log.debug("===> Condition not valid, skip validate. condition [{}]", condition);
-            return;
+            return null;
         }
 
         // 执行校验
         FieldValidResult validationResult = doValidate(validator, annotation, verifiedObject, verifiedField);
-        validationResults.add(validationResult);
-
         log.debug("===> Validate result [{}]", validationResult.isSuccess());
+        return validationResult;
     }
 
     /**
@@ -225,13 +229,6 @@ public class SpelValidExecutor {
         }
         autoFillValidResult(result, annotation, verifiedField);
         return result;
-    }
-
-    /**
-     * 判断注解是否为合法的约束注解，该方法会缓存结果。
-     */
-    private static boolean isSpelConstraintAnnotationCached(@NotNull Class<? extends Annotation> annotationType) {
-        return CONSTRAINT_ANNOTATION_CACHE.computeIfAbsent(annotationType, SpelValidExecutor::isSpelConstraintAnnotation);
     }
 
     /**
@@ -307,12 +304,14 @@ public class SpelValidExecutor {
      * 获取校验器实例，当实例不存在时会创建一个新的实例。
      */
     @NotNull
-    private static <T extends SpelConstraintValidator<?>> SpelConstraintValidator<?> getValidatorInstance(@NotNull Class<T> validator) {
-        return VALIDATOR_INSTANCE_CACHE.computeIfAbsent(validator, key -> {
+    private static SpelConstraintValidator<? extends Annotation> getValidatorInstance(Annotation annotation) {
+        return VALIDATOR_INSTANCE_CACHE.computeIfAbsent(annotation, key -> {
             try {
-                return key.getDeclaredConstructor().newInstance();
+                Class<? extends Annotation> annoClazz = annotation.annotationType();
+                Class<? extends SpelConstraintValidator<?>> validatorClass = annoClazz.getAnnotation(SpelConstraint.class).validatedBy();
+                return validatorClass.getDeclaredConstructor().newInstance();
             } catch (Exception e) {
-                throw new SpelValidatorException("Create validator [" + validator.getName() + "] instance error: " + e.getMessage(), e);
+                throw new SpelValidatorException("Failed to create validator instance, annotation [" + annotation.annotationType().getName() + "]", e);
             }
         });
     }
