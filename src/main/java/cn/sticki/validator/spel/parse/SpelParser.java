@@ -84,7 +84,8 @@ public class SpelParser {
         if (!requiredType.isInstance(any)) {
             throw new SpelParserException("Expression [" + expression + "] calculate result must be [" + requiredType.getName() + "]");
         }
-        return requiredType.cast(any);
+        //noinspection unchecked
+        return (T) any;
     }
 
 }
