@@ -30,7 +30,7 @@ public enum ExampleEnum {
 
     public static ExampleEnum getByCode(Integer code) {
         if (code == null) {
-            return null;
+            throw new IllegalArgumentException("code can not be null");
         }
         for (ExampleEnum value : values()) {
             if (value.code.equals(code)) {

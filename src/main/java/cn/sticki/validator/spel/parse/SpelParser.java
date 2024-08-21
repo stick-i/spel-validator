@@ -7,7 +7,9 @@ import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.expression.BeanFactoryResolver;
+import org.springframework.expression.EvaluationException;
 import org.springframework.expression.Expression;
+import org.springframework.expression.ParseException;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
@@ -57,8 +59,7 @@ public class SpelParser {
             Object value = parsed.getValue(context, rootObject, Object.class);
             log.debug("======> Parse result [{}]", value);
             return value;
-        } catch (Exception e) {
-            // todo 是否需要捕获所有异常？如果是在业务代码中抛出的异常，是否需要继续抛出？
+        } catch (ParseException | EvaluationException e) {
             log.error("Parse expression error, expression [{}], message [{}]", expression, e.getMessage());
             throw new SpelParserException(e);
         }
@@ -83,7 +84,8 @@ public class SpelParser {
         if (!requiredType.isInstance(any)) {
             throw new SpelParserException("Expression [" + expression + "] calculate result must be [" + requiredType.getName() + "]");
         }
-        return requiredType.cast(any);
+        //noinspection unchecked
+        return (T) any;
     }
 
 }

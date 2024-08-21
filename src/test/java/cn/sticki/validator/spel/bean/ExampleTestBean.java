@@ -5,6 +5,7 @@ import cn.sticki.validator.spel.VerifyFailedField;
 import cn.sticki.validator.spel.VerifyObject;
 import cn.sticki.validator.spel.constrain.SpelAssert;
 import cn.sticki.validator.spel.constrain.SpelNotNull;
+import cn.sticki.validator.spel.util.ID;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -18,45 +19,61 @@ import java.util.List;
  * @version 1.0
  * @since 2024/6/13
  */
-@Data
-@SpelValid
 public class ExampleTestBean {
 
-    @NotNull
-    private Boolean switchAudio;
+    @Data
+    @SpelValid
+    public static class ParamTestBean implements ID {
 
-    /**
-     * 当 switchAudio 为 true 时，校验 audioContent，audioContent 不能为null
-     */
-    @SpelNotNull(condition = "#this.switchAudio == true", message = "语音内容不能为空")
-    private String audioContent;
+        private int id;
 
-    /**
-     * 枚举值校验
-     * <p>
-     * 通过静态方法调用，校验枚举值是否存在
-     */
-    @SpelAssert(assertTrue = " T(cn.sticki.validator.spel.enums.ExampleEnum).getByCode(#this.testEnum) != null ", message = "枚举值不合法")
-    private Integer testEnum;
+        @NotNull
+        private Boolean switchAudio;
+
+        /**
+         * 当 switchAudio 为 true 时，校验 audioContent，audioContent 不能为null
+         */
+        @SpelNotNull(condition = "#this.switchAudio == true", message = "语音内容不能为空")
+        private String audioContent;
+
+        /**
+         * 枚举值校验
+         * <p>
+         * 通过静态方法调用，校验枚举值是否存在
+         */
+        @SpelAssert(assertTrue = " T(cn.sticki.validator.spel.enums.ExampleEnum).getByCode(#this.testEnum) != null ", message = "枚举值不合法")
+        private Integer testEnum;
+
+    }
+
 
     public static List<VerifyObject> testCase() {
         ArrayList<VerifyObject> result = new ArrayList<>();
 
-        ExampleTestBean bean = new ExampleTestBean();
+        ParamTestBean bean = new ParamTestBean();
+        bean.setId(1);
         bean.setSwitchAudio(true);
         bean.setAudioContent("hello");
         bean.setTestEnum(1);
         result.add(VerifyObject.of(bean));
 
-        ExampleTestBean bean2 = new ExampleTestBean();
+        ParamTestBean bean2 = new ParamTestBean();
+        bean2.setId(2);
         bean2.setSwitchAudio(null);
         bean2.setAudioContent(null);
-        bean2.setTestEnum(null);
+        bean2.setTestEnum(0);
         result.add(VerifyObject.of(
                 bean2,
-                VerifyFailedField.of(ExampleTestBean::getSwitchAudio),
-                VerifyFailedField.of(ExampleTestBean::getTestEnum, "枚举值不合法")
+                VerifyFailedField.of(ParamTestBean::getSwitchAudio),
+                VerifyFailedField.of(ParamTestBean::getTestEnum, "枚举值不合法")
         ));
+
+        ParamTestBean bean3 = new ParamTestBean();
+        bean3.setId(3);
+        bean3.setSwitchAudio(null);
+        bean3.setAudioContent(null);
+        bean3.setTestEnum(null);
+        result.add(VerifyObject.of(bean3, true));
 
         return result;
     }
