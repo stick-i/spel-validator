@@ -24,7 +24,7 @@ public class AnnotationMethodManager {
      */
     public static Method get(Class<? extends Annotation> clazz, String methodName) {
         // 由于注解类的方法无法重载，可以通过注解类和方法名来唯一确定一个方法
-        return METHOD_CACHE.computeIfAbsent(clazz.toString() + methodName, s -> {
+        return METHOD_CACHE.computeIfAbsent(clazz.toString() + "#" + methodName, s -> {
             try {
                 return clazz.getMethod(methodName);
             } catch (NoSuchMethodException e) {
