@@ -7,7 +7,7 @@
 
     <groupId>cn.sticki</groupId>
     <artifactId>spel-validator</artifactId>
-    <version>0.1.1-beta</version>
+    <version>0.2.0-beta</version>
     <packaging>jar</packaging>
     <name>Spel Validator</name>
     <url>https://github.com/stick-i/spel-validator</url>
