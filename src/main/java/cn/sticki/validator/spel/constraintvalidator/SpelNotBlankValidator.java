@@ -18,17 +18,17 @@ import java.util.Set;
  */
 public class SpelNotBlankValidator implements SpelConstraintValidator<SpelNotBlank> {
 
-	@Override
-	public FieldValidResult isValid(SpelNotBlank annotation, Object obj, Field field) throws IllegalAccessException {
-		CharSequence fieldValue = (CharSequence) field.get(obj);
-		return new FieldValidResult(StringUtils.hasText(fieldValue));
-	}
+    private static final Set<Class<?>> SUPPORT_TYPE = Collections.singleton(CharSequence.class);
 
-	private static final Set<Class<?>> SUPPORT_TYPE = Collections.singleton(CharSequence.class);
+    @Override
+    public FieldValidResult isValid(SpelNotBlank annotation, Object obj, Field field) throws IllegalAccessException {
+        CharSequence fieldValue = (CharSequence) field.get(obj);
+        return new FieldValidResult(StringUtils.hasText(fieldValue));
+    }
 
-	@Override
-	public Set<Class<?>> supportType() {
-		return SUPPORT_TYPE;
-	}
+    @Override
+    public Set<Class<?>> supportType() {
+        return SUPPORT_TYPE;
+    }
 
 }

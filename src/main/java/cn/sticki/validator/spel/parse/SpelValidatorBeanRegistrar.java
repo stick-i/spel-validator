@@ -16,12 +16,12 @@ import org.springframework.context.ApplicationContextAware;
 @Slf4j
 public class SpelValidatorBeanRegistrar implements ApplicationContextAware {
 
-	@Getter
-	private static ApplicationContext applicationContext;
+    @Getter
+    private static ApplicationContext applicationContext;
 
-	@Override
-	public void setApplicationContext(@NotNull ApplicationContext applicationContext) {
-		SpelValidatorBeanRegistrar.applicationContext = applicationContext;
-	}
+    @Override
+    public void setApplicationContext(@NotNull ApplicationContext applicationContext) {
+        SpelValidatorBeanRegistrar.applicationContext = applicationContext;
+    }
 
 }
