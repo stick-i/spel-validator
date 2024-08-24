@@ -33,3 +33,10 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+### vuepress ###
+/document/web-docs/node_modules/
+/document/web-docs/docs/.vuepress/.cache/
+/document/web-docs/docs/.vuepress/.temp/
+/document/web-docs/pnpm-lock.yaml
+/document/web-docs/docs/.vuepress/dist/
