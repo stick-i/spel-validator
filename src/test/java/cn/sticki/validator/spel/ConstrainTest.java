@@ -79,4 +79,13 @@ public class ConstrainTest {
         boolean repeatableTest = ValidateUtil.checkConstraintResult(SpelSizeTestBean.repeatableTestCase());
         Assertions.assertTrue(repeatableTest, "spelSize repeatable test failed");
     }
+
+    @Test
+    void testSpelMin() {
+        boolean paramTest = ValidateUtil.checkConstraintResult(SpelMinTestBean.paramTestCase());
+        Assertions.assertTrue(paramTest, "spelMin param test failed");
+
+        boolean repeatableTest = ValidateUtil.checkConstraintResult(SpelMinTestBean.repeatableTestCase());
+        Assertions.assertTrue(repeatableTest, "spelMin repeatable test failed");
+    }
 }
