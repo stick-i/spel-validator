@@ -8,7 +8,6 @@ import cn.sticki.validator.spel.util.ID;
 import lombok.Builder;
 import lombok.Data;
 
-import javax.validation.constraints.Min;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -60,11 +59,9 @@ public class SpelMinTestBean {
         private Short testShort;
 
         @SpelMin(condition = "#this.condition", value = "#this.min")
-        @Min(value = 0)
         private Long testLong;
 
         @SpelMin(condition = "#this.condition", value = "#this.min")
-        @Min(value = 0)
         private Double testDouble;
 
         @SpelMin(condition = "#this.condition", value = "#this.min")
@@ -80,14 +77,14 @@ public class SpelMinTestBean {
 
         // null
         result.add(VerifyObject.of(
-                SpelMinTestBean.ParamTestBean.builder().id(1).condition(true).min(1).build(),
+                ParamTestBean.builder().id(1).condition(true).min(1).build(),
                 VerifyFailedField.of()
         ));
 
         // 小于最小值
         result.add(VerifyObject.of(
                 ParamTestBean.builder().id(2).condition(true).min(5)
-                        .test("1")
+                        .test("-1")
                         .testString("2")
                         .testBigDecimal(new BigDecimal(0))
                         .testBigInteger(new BigInteger("0"))
@@ -99,21 +96,38 @@ public class SpelMinTestBean {
                         .testFloat((float) (1 / 3))
                         .build(),
                 VerifyFailedField.of(
-                        SpelMinTestBean.ParamTestBean::getTestBigDecimal,
-                        SpelMinTestBean.ParamTestBean::getTestBigInteger,
-                        SpelMinTestBean.ParamTestBean::getTestByte,
-                        SpelMinTestBean.ParamTestBean::getTestInt,
-                        SpelMinTestBean.ParamTestBean::getTestShort,
-                        SpelMinTestBean.ParamTestBean::getTestLong,
-                        SpelMinTestBean.ParamTestBean::getTestDouble,
-                        SpelMinTestBean.ParamTestBean::getTestFloat
+                        ParamTestBean::getTest,
+                        ParamTestBean::getTestBigDecimal,
+                        ParamTestBean::getTestBigInteger,
+                        ParamTestBean::getTestByte,
+                        ParamTestBean::getTestInt,
+                        ParamTestBean::getTestShort,
+                        ParamTestBean::getTestLong,
+                        ParamTestBean::getTestDouble,
+                        ParamTestBean::getTestFloat
                 ),
-                VerifyFailedField.of(SpelMinTestBean.ParamTestBean::getTestString, "testString")
+                VerifyFailedField.of(ParamTestBean::getTestString, "testString")
         ));
 
-        // 正常情况
+        // 等于最小值
         result.add(VerifyObject.of(
-                ParamTestBean.builder().id(3).condition(true).min(0)
+                ParamTestBean.builder().id(3).condition(true).min(5)
+                        .test("0")
+                        .testString("5")
+                        .testBigDecimal(new BigDecimal("5"))
+                        .testBigInteger(new BigInteger("5"))
+                        .testByte((byte) 5)
+                        .testInt(5)
+                        .testShort((short) 5)
+                        .testLong(5L)
+                        .testDouble(5d)
+                        .testFloat(5f)
+                        .build()
+        ));
+
+        // 大于最小值
+        result.add(VerifyObject.of(
+                ParamTestBean.builder().id(4).condition(true).min(0)
                         .test("123")
                         .testString("123")
                         .testBigDecimal(new BigDecimal("123.12"))
@@ -129,24 +143,25 @@ public class SpelMinTestBean {
 
         // message
         result.add(VerifyObject.of(
-                SpelMinTestBean.ParamTestBean.builder().id(4).condition(true).min(1).testString("2").build(),
-                VerifyFailedField.of(SpelMinTestBean.ParamTestBean::getTestString, "testString")
+                ParamTestBean.builder().id(5).condition(true).min(2).testString("1").build(),
+                VerifyFailedField.of(ParamTestBean::getTestString, "testString")
         ));
 
         // condition测试
         result.add(VerifyObject.of(
-                ParamTestBean.builder().id(5).condition(true).min(0)
-                        .test("123")
-                        .testString("123")
-                        .testBigDecimal(new BigDecimal("123.12"))
-                        .testBigInteger(new BigInteger("123123"))
-                        .testByte((byte) 12)
-                        .testInt(12)
-                        .testShort((short) 12)
-                        .testLong(123L)
-                        .testDouble((double) (100 / 3))
-                        .testFloat((float) (100 / 3))
-                        .build()
+                ParamTestBean.builder().id(6).condition(false).min(0)
+                        .test("-123")
+                        .testString("-123")
+                        .testBigDecimal(new BigDecimal("-123.12"))
+                        .testBigInteger(new BigInteger("-123123"))
+                        .testByte((byte) -12)
+                        .testInt(-12)
+                        .testShort((short) -12)
+                        .testLong(-123L)
+                        .testDouble((double) (-100 / 3))
+                        .testFloat((float) (-100 / 3))
+                        .build(),
+                VerifyFailedField.of(ParamTestBean::getTest)
         ));
         return result;
     }
@@ -180,51 +195,48 @@ public class SpelMinTestBean {
 
         // condition1
         result.add(VerifyObject.of(
-                SpelMinTestBean.RepeatableTestBean.builder().id(1).condition1(true).condition2(false).test(1L).build(),
-                VerifyFailedField.of(SpelMinTestBean.RepeatableTestBean::getTest, "condition1")
+                RepeatableTestBean.builder().id(1).condition1(true).condition2(false).test(2L).build()
         ));
         result.add(VerifyObject.of(
-                SpelMinTestBean.RepeatableTestBean.builder().id(2).condition1(true).condition2(false).test(1L).build()
+                RepeatableTestBean.builder().id(2).condition1(true).condition2(false).test(1L).build()
         ));
         result.add(VerifyObject.of(
-                SpelMinTestBean.RepeatableTestBean.builder().id(3).condition1(true).condition2(false).test(123L).build(),
-                VerifyFailedField.of(SpelMinTestBean.RepeatableTestBean::getTest, "condition1")
+                RepeatableTestBean.builder().id(3).condition1(true).condition2(false).test(0L).build(),
+                VerifyFailedField.of(RepeatableTestBean::getTest, "condition1")
         ));
 
         // condition2
         result.add(VerifyObject.of(
-                SpelMinTestBean.RepeatableTestBean.builder().id(4).condition1(false).condition2(true).test(1L).build(),
-                VerifyFailedField.of(SpelMinTestBean.RepeatableTestBean::getTest, "condition2")
+                RepeatableTestBean.builder().id(4).condition1(false).condition2(true).test(3L).build()
         ));
         result.add(VerifyObject.of(
-                SpelMinTestBean.RepeatableTestBean.builder().id(5).condition1(false).condition2(true).test(12L).build()
+                RepeatableTestBean.builder().id(5).condition1(false).condition2(true).test(2L).build()
         ));
         result.add(VerifyObject.of(
-                SpelMinTestBean.RepeatableTestBean.builder().id(6).condition1(false).condition2(true).test(1234L).build(),
-                VerifyFailedField.of(SpelMinTestBean.RepeatableTestBean::getTest, "condition2")
+                RepeatableTestBean.builder().id(6).condition1(false).condition2(true).test(1L).build(),
+                VerifyFailedField.of(RepeatableTestBean::getTest, "condition2")
         ));
 
         // condition1 & condition2
         result.add(VerifyObject.of(
-                SpelMinTestBean.RepeatableTestBean.builder().id(7).condition1(true).condition2(true).test(1L).build(),
-                VerifyFailedField.of(SpelMinTestBean.RepeatableTestBean::getTest, "condition2")
+                RepeatableTestBean.builder().id(7).condition1(true).condition2(true).test(1L).build(),
+                VerifyFailedField.of(RepeatableTestBean::getTest, "condition2")
         ));
         result.add(VerifyObject.of(
-                SpelMinTestBean.RepeatableTestBean.builder().id(8).condition1(true).condition2(true).test(12L).build()
+                RepeatableTestBean.builder().id(8).condition1(true).condition2(true).test(2L).build()
         ));
         result.add(VerifyObject.of(
-                SpelMinTestBean.RepeatableTestBean.builder().id(9).condition1(true).condition2(true).test(123L).build(),
-                VerifyFailedField.of(SpelMinTestBean.RepeatableTestBean::getTest, "condition1")
+                RepeatableTestBean.builder().id(9).condition1(true).condition2(true).test(3L).build()
         ));
         result.add(VerifyObject.of(
-                SpelMinTestBean.RepeatableTestBean.builder().id(10).condition1(true).condition2(true).test(1234L).build(),
-                VerifyFailedField.of(SpelMinTestBean.RepeatableTestBean::getTest, "condition2"),
-                VerifyFailedField.of(SpelMinTestBean.RepeatableTestBean::getTest, "condition1")
+                RepeatableTestBean.builder().id(10).condition1(true).condition2(true).test(-1L).build(),
+                VerifyFailedField.of(RepeatableTestBean::getTest, "condition2"),
+                VerifyFailedField.of(RepeatableTestBean::getTest, "condition1")
         ));
         result.add(VerifyObject.of(
-                SpelMinTestBean.RepeatableTestBean.builder().id(11).condition1(true).condition2(true).test(0L).build(),
-                VerifyFailedField.of(SpelMinTestBean.RepeatableTestBean::getTest, "condition1"),
-                VerifyFailedField.of(SpelMinTestBean.RepeatableTestBean::getTest, "condition2")
+                RepeatableTestBean.builder().id(11).condition1(true).condition2(true).test(0L).build(),
+                VerifyFailedField.of(RepeatableTestBean::getTest, "condition1"),
+                VerifyFailedField.of(RepeatableTestBean::getTest, "condition2")
         ));
 
         return result;
