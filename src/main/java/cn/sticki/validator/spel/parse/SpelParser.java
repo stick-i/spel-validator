@@ -49,7 +49,7 @@ public class SpelParser {
      *
      * @param expression 表达式
      * @param rootObject 用于计算表达式的根对象
-     * @return 表达式计算结果
+     * @return 表达式计算结果。若为基本数据类型，则会自动转为包装类型。
      */
     @Nullable
     public static Object parse(String expression, Object rootObject) {
@@ -72,7 +72,7 @@ public class SpelParser {
      * @param expression   表达式
      * @param rootObject   用于计算表达式的根对象
      * @param requiredType 指定返回值的类型
-     * @return 表达式计算结果
+     * @return 表达式计算结果。若为基本数据类型，则会自动转为包装类型。
      * @throws SpelParserException 当表达式计算结果为null或者不是指定类型时抛出
      */
     @NotNull

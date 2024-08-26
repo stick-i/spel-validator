@@ -14,9 +14,14 @@ import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * 被标记的元素其值必须大于或等于指定的最小值。{@code null} 元素被认为是有效的。
- *
- * @author oddfar
+ * 被标记的元素值必须大于或等于指定的最小值。{@code null} 元素被认为是有效的。
+ * <p>
+ * 支持的类型有：
+ * <ul>
+ *     <li>{@link CharSequence}（转为BigDecimal后再进行比较）</li>
+ *     <li>{@link Number} 及它们的基本数据类型</li>
+ * </ul>
+ * @author oddfar、阿杆
  * @version 1.0
  * @since 2024/8/25
  */
@@ -26,6 +31,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Repeatable(SpelMin.List.class)
 @SpelConstraint(validatedBy = SpelMinValidator.class)
 public @interface SpelMin {
+
     /**
      * 校验失败时的错误消息。
      */
@@ -52,7 +58,9 @@ public @interface SpelMin {
     String[] group() default {};
 
     /**
-     * @return 指定元素最小值。必须为合法的SpEL表达式，计算结果必须为数字类型。默认值为 0。
+     * 指定元素最小值。必须为合法的SpEL表达式，
+     * <p>
+     * 表达式的计算结果必须为 {@link Number} 或 {@link CharSequence} 类型。
      */
     @Language("SpEL")
     String value() default "0";
