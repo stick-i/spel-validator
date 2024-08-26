@@ -55,14 +55,15 @@ public class SpelMinValidator implements SpelConstraintValidator<SpelMin> {
         HashSet<Class<?>> hashSet = new HashSet<>();
         hashSet.add(CharSequence.class);
         hashSet.add(Number.class);
+        hashSet.add(int.class);
+        hashSet.add(long.class);
+        hashSet.add(float.class);
+        hashSet.add(double.class);
+        hashSet.add(short.class);
+        hashSet.add(byte.class);
         SUPPORT_TYPE = Collections.unmodifiableSet(hashSet);
     }
 
-    /**
-     * 校验器支持的对象类型列表，默认为 Object
-     *
-     * @return 支持的对象类型列表
-     */
     @Override
     public Set<Class<?>> supportType() {
         return SUPPORT_TYPE;

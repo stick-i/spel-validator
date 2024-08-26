@@ -242,4 +242,75 @@ public class SpelMinTestBean {
         return result;
     }
 
+    /**
+     * 基本数据类型支持性测试
+     */
+    @Data
+    @Builder
+    @SpelValid
+    public static class ParamTestBean2 implements ID {
+
+        private int id;
+
+        @SpelMin
+        private int testInt;
+
+        @SpelMin
+        private long testLong;
+
+        @SpelMin
+        private double testDouble;
+
+        @SpelMin
+        private float testFloat;
+
+        @SpelMin
+        private byte testByte;
+
+        @SpelMin
+        private short testShort;
+
+    }
+
+    public static List<VerifyObject> paramTest2Case() {
+        ArrayList<VerifyObject> result = new ArrayList<>();
+
+        // 大于最小值
+        result.add(VerifyObject.of(
+                ParamTestBean2.builder().id(1).testInt(1).testLong(1).testDouble(1).testFloat(1).testByte((byte) 1).testShort((short) 1).build()
+        ));
+
+        // 等于最小值
+        result.add(VerifyObject.of(
+                ParamTestBean2.builder().id(2).testInt(0).testLong(0).testDouble(0).testFloat(0).testByte((byte) 0).testShort((short) 0).build()
+        ));
+
+        // 小于最小值
+        result.add(VerifyObject.of(
+                ParamTestBean2.builder().id(3).testInt(-1).testLong(-1).testDouble(-1).testFloat(-1).testByte((byte) -1).testShort((short) -1).build(),
+                VerifyFailedField.of(
+                        ParamTestBean2::getTestInt,
+                        ParamTestBean2::getTestLong,
+                        ParamTestBean2::getTestDouble,
+                        ParamTestBean2::getTestFloat,
+                        ParamTestBean2::getTestByte,
+                        ParamTestBean2::getTestShort
+                )
+        ));
+
+        // 小数
+        result.add(VerifyObject.of(
+                ParamTestBean2.builder().id(4).testDouble(0.1).testFloat(0.1f).build()
+        ));
+        result.add(VerifyObject.of(
+                ParamTestBean2.builder().id(5).testDouble(-0.1).testFloat(-0.1f).build(),
+                VerifyFailedField.of(
+                        ParamTestBean2::getTestDouble,
+                        ParamTestBean2::getTestFloat
+                )
+        ));
+
+        return result;
+    }
+
 }
