@@ -2,12 +2,16 @@ package cn.sticki.validator.spel.constraintvalidator;
 
 import cn.sticki.validator.spel.SpelConstraintValidator;
 import cn.sticki.validator.spel.constrain.SpelMin;
+import cn.sticki.validator.spel.exception.SpelParserException;
 import cn.sticki.validator.spel.parse.SpelParser;
 import cn.sticki.validator.spel.result.FieldValidResult;
 import cn.sticki.validator.spel.util.BigDecimalUtil;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * {@link SpelMin} 注解校验器。
@@ -19,26 +23,49 @@ import java.math.BigDecimal;
 public class SpelMinValidator implements SpelConstraintValidator<SpelMin> {
 
     @Override
-    public FieldValidResult isValid(SpelMin annotation, Object obj, Field field) throws IllegalAccessException {
+    public FieldValidResult isValid(SpelMin spelMin, Object obj, Field field) throws IllegalAccessException {
         Object fieldValue = field.get(obj);
         // 元素为null是被允许的
         if (fieldValue == null) {
             return FieldValidResult.success();
         }
-        BigDecimal bigFieldValue = BigDecimalUtil.valueOf(fieldValue);
+        BigDecimal fieldValueBigDecimal = BigDecimalUtil.valueOf(fieldValue);
 
         // 计算表达式的值
-        Object value = SpelParser.parse(annotation.value(), obj, Object.class);
-        BigDecimal valueBigDecimal = BigDecimalUtil.valueOf(value);
+        Object minValue = SpelParser.parse(spelMin.value(), obj);
+        if (!(minValue instanceof Number) && !(minValue instanceof CharSequence)) {
+            throw new SpelParserException("Expression [" + spelMin.value() + "] calculate result must be Number or CharSequence.");
+        }
+        BigDecimal minValueBigDecimal = BigDecimalUtil.valueOf(minValue);
 
-        if (bigFieldValue.compareTo(valueBigDecimal) < 0) {
+        // 比较大小
+        if (fieldValueBigDecimal.compareTo(minValueBigDecimal) < 0) {
             // 构建错误信息
-            String message = annotation.message();
-            message = message.replace("{value}", String.valueOf(value));
+            String message = spelMin.message();
+            message = message.replace("{value}", String.valueOf(minValue));
             return new FieldValidResult(false, message);
         }
 
         return FieldValidResult.success();
+    }
+
+    static final Set<Class<?>> SUPPORT_TYPE;
+
+    static {
+        HashSet<Class<?>> hashSet = new HashSet<>();
+        hashSet.add(CharSequence.class);
+        hashSet.add(Number.class);
+        SUPPORT_TYPE = Collections.unmodifiableSet(hashSet);
+    }
+
+    /**
+     * 校验器支持的对象类型列表，默认为 Object
+     *
+     * @return 支持的对象类型列表
+     */
+    @Override
+    public Set<Class<?>> supportType() {
+        return SUPPORT_TYPE;
     }
 
 }

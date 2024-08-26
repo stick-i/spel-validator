@@ -1,5 +1,7 @@
 package cn.sticki.validator.spel.util;
 
+import cn.sticki.validator.spel.exception.SpelArgumentException;
+
 import java.math.BigDecimal;
 
 /**
@@ -19,9 +21,9 @@ public class BigDecimalUtil {
             } else {
                 return new BigDecimal(String.valueOf(val));
             }
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             // 如果转换失败
-            throw new IllegalArgumentException("无法将标记的元素值转换为数值类型");
+            throw new SpelArgumentException("Value [" + val + "] can not convert to BigDecimal.");
         }
     }
 
