@@ -84,7 +84,11 @@ public class ValidateUtil {
             failCount++;
         }
 
-        log.info("Verification end, number of failures: {}", failCount);
+        if (failCount == 0) {
+            log.info("Verification end, all passed");
+        } else {
+            log.error("Verification end, number of failures: {}", failCount);
+        }
         log.info("------------------------------------------------------------------------");
         MDC.clear();
 
