@@ -1,0 +1,22 @@
+{
+    "extends": "tsconfig-vuepress/base.json",
+    "compilerOptions": {
+        "lib": [
+            "DOM",
+            "ES2022"
+        ],
+        "module": "ESNext",
+        "moduleResolution": "Bundler",
+        "target": "ES2022",
+        "declaration": false
+    },
+    "include": [
+        "**/.vuepress/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        ".cache",
+        ".temp",
+        "dist"
+    ]
+}
