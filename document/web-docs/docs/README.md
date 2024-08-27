@@ -1,6 +1,6 @@
 ---
 home: true
-title: Home
+title: 首页
 heroImage: ./images/hero.png
 actions:
   - text: 快速开始

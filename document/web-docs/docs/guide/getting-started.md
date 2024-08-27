@@ -1,37 +1,39 @@
 # 快速开始
 
+- 支持JDK8+
+
 ## 添加依赖
 
 Latest Version:
 [![Maven Central](https://img.shields.io/maven-central/v/cn.sticki/spel-validator.svg)](https://central.sonatype.com/search?q=g:cn.sticki%20a:spel-validator)
 
 ```xml
+<dependencys>
+  <dependency>
+    <groupId>cn.sticki</groupId>
+    <artifactId>spel-validator</artifactId>
+    <version>Latest Version</version>
+  </dependency>
 
-<dependency>
-  <groupId>cn.sticki</groupId>
-  <artifactId>spel-validator</artifactId>
-  <version>Latest Version</version>
-</dependency>
+  <dependency>
+    <groupId>org.hibernate.validator</groupId>
+    <artifactId>hibernate-validator</artifactId>
+    <version>${hibernate-validator.version}</version>
+  </dependency>
 
-<dependency>
-<groupId>org.hibernate.validator</groupId>
-<artifactId>hibernate-validator</artifactId>
-<version>${hibernate-validator.version}</version>
-</dependency>
-
-<dependency>
-<groupId>org.springframework.boot</groupId>
-<artifactId>spring-boot-starter-web</artifactId>
-<version>${spring-boot-starter-web.version}</version>
-</dependency>
+  <dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+    <version>${spring-boot-starter-web.version}</version>
+  </dependency>
+</dependencys>
 ```
 
 ## 添加启动注解
 
-在接口参数上使用 `@Valid` 或 `@Validated` 注解
+在接口参数上对需要进行校验的类使用 `@Valid` 或 `@Validated` 注解
 
 ```java
-
 @RestController
 @RequestMapping("/example")
 public class ExampleController {
@@ -47,12 +49,11 @@ public class ExampleController {
 }
 ```
 
-## 添加约束注解
+## 添加SpEL约束注解
 
-在实体类上使用 `@SpelValid` 注解，同时在需要校验的字段上使用 `@SpelNotNull` 等约束注解
+在实体类上使用 `@SpelValid` 注解，表示开启校验，同时在需要校验的字段上使用 `@SpelNotNull` 等约束注解
 
 ```java
-
 @Data
 @SpelValid // 添加启动注解
 public class SimpleExampleParamVo {
@@ -61,7 +62,8 @@ public class SimpleExampleParamVo {
   private Boolean switchAudio;
 
   /**
-   * 当 switchAudio 为 true 时，校验 audioContent，audioContent 不能为null
+   * 此处开启了注解校验
+   * 当 switchAudio 字段为 true 时，校验 audioContent，audioContent 不能为null
    */
   @SpelNotNull(condition = "#this.switchAudio == true", message = "语音内容不能为空")
   private Object audioContent;
@@ -71,10 +73,9 @@ public class SimpleExampleParamVo {
 
 ## 处理异常
 
-添加异常处理器，处理校验异常
+添加全局异常处理器，处理校验不通过的异常信息
 
 ```java
-
 @RestControllerAdvice
 public class ControllerExceptionAdvice {
 

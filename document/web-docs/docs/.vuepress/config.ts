@@ -26,7 +26,7 @@ export default defineUserConfig({
     lang: 'zh-CN',
 
     title: 'SpEL Validator',
-    description: '一个强大的 Java 参数校验包，基于 SpEL 实现，扩展自 javax.validation 包，几乎支持所有场景下的参数校验。',
+    description: '基于 SpEL 的 Java 参数校验器',
 
     // specify bundler via environment variable
     bundler: viteBundler(),
@@ -108,12 +108,9 @@ export default defineUserConfig({
     // use plugins
     plugins: [
         docsearchPlugin({
-            appId: '',
-            apiKey: '',
-            indexName: 'spel-validator',
-            searchParameters: {
-                facetFilters: ['tags:v2'],
-            },
+            appId: '8FBM00A6YY',
+            apiKey: '9203c0aa6dc18e0c64e839a388178513',
+            indexName: 'spel-validator-sticki',
             locales: {
                 '/': {
                     placeholder: '搜索文档',
@@ -168,11 +165,11 @@ export default defineUserConfig({
             hostname: 'spel-validator.sticki.cn',
         }),
         // only enable shiki plugin in production mode
-        isProd
-                ? shikiPlugin({
-                    langs: ['bash', 'diff', 'json', 'md', 'ts', 'vue'],
+        !isProd ? [] :
+                shikiPlugin({
+                    langs: ['bash', 'diff', 'json', 'md', 'xml', 'java'],
                     theme: 'dark-plus',
-                })
-                : [],
+                    lineNumbers: 10,
+                }),
     ],
 })
