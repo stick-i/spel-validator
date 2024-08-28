@@ -56,12 +56,19 @@ public class ValidateUtil {
         Collection<VerifyFailedField> verifyFailedFields = verifyObject.getVerifyFailedFields();
         boolean expectException = verifyObject.isExpectException();
 
+        // 设置日志上下文
         String className = object.getClass().getSimpleName();
+        Class<?> enclosingClass = object.getClass().getEnclosingClass();
+        if (enclosingClass != null) {
+            className = enclosingClass.getSimpleName() + "." + className;
+        }
 
         MDC.put("className", className);
+        MDC.put("fullClassName", abbreviate(object.getClass().getName()));
         if (object instanceof ID) {
             MDC.put("id", String.valueOf(((ID) object).getId()));
         }
+
         log.info("Start checking object: {}", object);
 
         int failCount = 0;
@@ -143,6 +150,16 @@ public class ValidateUtil {
             failCount++;
         }
         return failCount;
+    }
+
+    public static String abbreviate(String className) {
+        String[] parts = className.split("\\.");
+        StringBuilder abbreviated = new StringBuilder();
+        for (int i = 0; i < parts.length - 1; i++) {
+            abbreviated.append(parts[i].charAt(0)).append(".");
+        }
+        abbreviated.append(parts[parts.length - 1]);
+        return abbreviated.toString();
     }
 
     static class ViolationSet {
