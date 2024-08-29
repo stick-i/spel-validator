@@ -18,7 +18,7 @@ Latest Version:
   <dependency>
     <groupId>org.hibernate.validator</groupId>
     <artifactId>hibernate-validator</artifactId>
-    <version>${hibernate-validator.version}</version>
+    <version>6.2.5.Final</version>
   </dependency>
 
   <dependency>
