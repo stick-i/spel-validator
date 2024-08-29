@@ -7,18 +7,18 @@ package cn.sticki.validator.spel.exception;
  * @version 1.0
  * @since 2024/4/29
  */
-public class SpelParserException extends SpelValidException {
+public class SpelParserException extends SpelValidatorException {
 
-	public SpelParserException(String message) {
-		super(message);
-	}
+    public SpelParserException(String message) {
+        super(message);
+    }
 
-	public SpelParserException(String message, Throwable cause) {
-		super(message, cause);
-	}
+    public SpelParserException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-	public SpelParserException(Throwable cause) {
-		super(cause);
-	}
+    public SpelParserException(Throwable cause) {
+        super(cause);
+    }
 
 }

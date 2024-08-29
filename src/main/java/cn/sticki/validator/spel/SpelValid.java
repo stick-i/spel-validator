@@ -18,35 +18,36 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * 这种行为是非递归应用的，只对当前标记对象的属性生效，不会对其属性的下层属性进行验证。
  * <p>
  * 以下是一个简单的例子：
- * <pre>
- * &#064;PostMapping("/test")
- * public void test(@RequestBody <u>@Valid</u> TestParamVo testParamVo) {
- *    ...
- * }
+ * <pre>{@code
+ *   @PostMapping("/ test")
+ *   public void test(@RequestBody @Valid TestParamVo testParamVo) {
+ *      ...
+ *   }
  *
- * &#064;Data
- * <u>&#064;SpelValid</u>
- * public class TestParamVo {
+ *   @Data
+ *   @SpelValid
+ *   public class TestParamVo {
  *
- *     private Boolean switchVoice;
+ *       private Boolean switchVoice;
  *
- *     &#064;SpelNotNull(condition = "#this.switchVoice == true")
- *     private Object voiceContent;
+ *       @SpelNotNull(condition = "#this. switchVoice == true")
+ *       private Object voiceContent;
  *
- *     <u>@Valid</u>
- *     <u>&#064;SpelValid</u>
- *     private TestParamVo2 testParamVo2;
+ *       @Valid
+ *       @SpelValid
+ *       private TestParamVo2 testParamVo2;
  *
- * }
+ *   }
  *
- * &#064;Data
- * public class TestParamVo2 {
+ *   @Data
+ *   public class TestParamVo2 {
  *
- *    &#064;SpelNotNull(condition = "true")
- *    private Object object;
+ *      @SpelNotNull(condition = "true")
+ *      private Object object;
  *
- * }
- * </pre>
+ *   }
+ *
+ * }</pre>
  * <p>
  * 在上面的例子中，{@code TestParamVo} 和 {@code TestParamVo2} 都成功开启了spel校验。
  *
@@ -60,26 +61,26 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Constraint(validatedBy = {SpelValidator.class})
 public @interface SpelValid {
 
-	String message() default "";
+    String message() default "";
 
-	Class<?>[] groups() default {};
+    Class<?>[] groups() default {};
 
-	Class<?>[] payload() default {};
+    Class<?>[] payload() default {};
 
-	/**
-	 * 开启校验的前置条件，值必须为合法的 spel 表达式
-	 * <p>
-	 * 当 表达式为空 或 计算结果为true 时，表示开启校验
-	 */
-	@Language("SpEL")
-	String condition() default "";
+    /**
+     * 开启校验的前置条件，值必须为合法的 spel 表达式
+     * <p>
+     * 当 表达式为空 或 计算结果为true 时，表示开启校验
+     */
+    @Language("SpEL")
+    String condition() default "";
 
-	/**
-	 * 分组功能，值必须为合法的 spel 表达式
-	 * <p>
-	 * 当分组信息为空时，表示不开启分组校验
-	 */
-	@Language("SpEL")
-	String[] spelGroups() default {};
+    /**
+     * 分组功能，值必须为合法的 spel 表达式
+     * <p>
+     * 当分组信息为空时，表示不开启分组校验
+     */
+    @Language("SpEL")
+    String[] spelGroups() default {};
 
 }

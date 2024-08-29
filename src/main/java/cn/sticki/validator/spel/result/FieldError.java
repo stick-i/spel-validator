@@ -14,19 +14,19 @@ import lombok.ToString;
 @Getter
 public class FieldError {
 
-	/**
-	 * 字段名称
-	 */
-	private final String fieldName;
+    /**
+     * 字段名称
+     */
+    private final String fieldName;
 
-	/**
-	 * 错误信息
-	 */
-	private final String errorMessage;
+    /**
+     * 错误信息
+     */
+    private final String errorMessage;
 
-	public FieldError(String fieldName, String errorMessage) {
-		this.fieldName = fieldName;
-		this.errorMessage = errorMessage;
-	}
+    public FieldError(String fieldName, String errorMessage) {
+        this.fieldName = fieldName;
+        this.errorMessage = errorMessage;
+    }
 
 }

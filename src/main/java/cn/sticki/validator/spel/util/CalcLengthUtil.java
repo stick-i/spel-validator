@@ -21,29 +21,29 @@ import java.util.Set;
  */
 public class CalcLengthUtil {
 
-	public static final Set<Class<?>> SUPPORT_TYPE;
+    public static final Set<Class<?>> SUPPORT_TYPE;
 
-	static {
-		HashSet<Class<?>> hashSet = new HashSet<>();
-		hashSet.add(CharSequence.class);
-		hashSet.add(java.util.Collection.class);
-		hashSet.add(java.util.Map.class);
-		hashSet.add(Object[].class);
-		SUPPORT_TYPE = Collections.unmodifiableSet(hashSet);
-	}
+    static {
+        HashSet<Class<?>> hashSet = new HashSet<>();
+        hashSet.add(CharSequence.class);
+        hashSet.add(java.util.Collection.class);
+        hashSet.add(java.util.Map.class);
+        hashSet.add(Object[].class);
+        SUPPORT_TYPE = Collections.unmodifiableSet(hashSet);
+    }
 
-	public static int calcFieldSize(Object object) {
-		if (object instanceof CharSequence) {
-			return ((CharSequence) object).length();
-		} else if (object instanceof java.util.Collection) {
-			return ((java.util.Collection<?>) object).size();
-		} else if (object instanceof java.util.Map) {
-			return ((java.util.Map<?, ?>) object).size();
-		} else if (object instanceof Object[]) {
-			return ((Object[]) object).length;
-		} else {
-			return 0;
-		}
-	}
+    public static int calcFieldSize(Object object) {
+        if (object instanceof CharSequence) {
+            return ((CharSequence) object).length();
+        } else if (object instanceof java.util.Collection) {
+            return ((java.util.Collection<?>) object).size();
+        } else if (object instanceof java.util.Map) {
+            return ((java.util.Map<?, ?>) object).size();
+        } else if (object instanceof Object[]) {
+            return ((Object[]) object).length;
+        } else {
+            return 0;
+        }
+    }
 
 }

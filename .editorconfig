@@ -35,7 +35,6 @@ ij_css_use_double_quotes = true
 ij_css_value_alignment = do_not_align
 
 [*.java]
-indent_style = tab
 max_line_length = 150
 ij_smart_tabs = true
 ij_visual_guides = 100
@@ -352,7 +351,6 @@ ij_editorconfig_space_before_comma = false
 ij_editorconfig_spaces_around_assignment_operators = true
 
 [{*.ant,*.fxml,*.jhm,*.jnlp,*.jrxml,*.pom,*.rng,*.tld,*.wadl,*.wsdl,*.xml,*.xsd,*.xsl,*.xslt,*.xul}]
-indent_style = tab
 ij_smart_tabs = true
 ij_xml_align_attributes = true
 ij_xml_align_text = false

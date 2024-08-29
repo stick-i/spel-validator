@@ -17,19 +17,19 @@ import java.util.Set;
  */
 public class SpelNotEmptyValidator implements SpelConstraintValidator<SpelNotEmpty> {
 
-	@Override
-	public FieldValidResult isValid(SpelNotEmpty annotation, Object obj, Field field) throws IllegalAccessException {
-		Object object = field.get(obj);
-		if (object == null) {
-			return new FieldValidResult(false);
-		}
-		int size = CalcLengthUtil.calcFieldSize(object);
-		return new FieldValidResult(size > 0);
-	}
+    @Override
+    public FieldValidResult isValid(SpelNotEmpty annotation, Object obj, Field field) throws IllegalAccessException {
+        Object object = field.get(obj);
+        if (object == null) {
+            return new FieldValidResult(false);
+        }
+        int size = CalcLengthUtil.calcFieldSize(object);
+        return new FieldValidResult(size > 0);
+    }
 
-	@Override
-	public Set<Class<?>> supportType() {
-		return CalcLengthUtil.SUPPORT_TYPE;
-	}
+    @Override
+    public Set<Class<?>> supportType() {
+        return CalcLengthUtil.SUPPORT_TYPE;
+    }
 
 }

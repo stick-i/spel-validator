@@ -37,9 +37,9 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface SpelConstraint {
 
-	/**
-	 * 校验器的实现类，用于校验被标记的注解。
-	 */
-	Class<? extends SpelConstraintValidator<?>> validatedBy();
+    /**
+     * 校验器的实现类，用于校验被标记的注解。
+     */
+    Class<? extends SpelConstraintValidator<?>> validatedBy();
 
 }
