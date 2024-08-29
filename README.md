@@ -1,21 +1,18 @@
-<h1 align="center">SpEL Validator</h1>
+# SpEL Validator
 
-<div align="center">
+[![Maven Central](https://img.shields.io/maven-central/v/cn.sticki/spel-validator.svg)](https://central.sonatype.com/search?q=g:cn.sticki%20a:spel-validator)
+[![license](https://img.shields.io/github/license/stick-i/spel-validator)](https://github.com/stick-i/spel-validator/blob/main/LICENSE)
 
-「SpEL Validator」是基于 SpEL 的参数校验包，也是 javax.validation 的扩展增强包，用于简化参数校验。
+一个强大的 Java 参数校验包，基于 SpEL 实现，扩展自 javax.validation 包，用于简化参数校验，几乎支持所有场景下的参数校验。
 
-</div>
 
-## 📚 目录
+## 文档
 
-[简介](#-简介) | [它解决了什么问题](#-它解决了什么问题) |
-[快速开始](#-快速开始) | [使用指南](#-使用指南) | [示例项目](#-示例项目) | [常见问题](#-常见问题) |
-[更新日志](#-更新日志) | [贡献指南](#-贡献指南) | [捐赠支持](#-捐赠支持) | [联系作者](#-联系作者)
+更详细的文档，请见在线文档：https://spel-validator.sticki.cn/
 
-## 📝 简介
+## 特点
 
-### 特点
-
+- 简单易用，使用方式几乎与 javax.validation 一致，学习成本低，上手快。
 - 强大的参数校验功能，几乎支持所有场景下的参数校验。
 - 扩展自 javax.validation 包，只新增不修改，无缝集成到项目中。
 - 基于 SpEL（Spring Expression Language） 表达式，支持复杂的校验逻辑。
@@ -23,19 +20,16 @@
 - 校验时基于整个对象，支持对象内字段间的校验逻辑。
 - 支持自定义校验注解，可根据业务需求自定义校验逻辑。
 - 无需额外的异常处理，校验失败时会上报到 javax.validation 的异常体系中。
-- 简单易用，使用方式几乎与 javax.validation 一致，学习成本低，上手快。
 
-### 环境
+## 支持的环境
 
-目前仅测试了 JDK8 环境，理论上来说 JDK8+ 应该都是支持的。
+JDK8+
 
-### 交流群
+## 交流群
 
-<img src="./document/image/wechat-qrcode.jpg" alt="交流群二维码.jpg" style="width: 25%; height: auto;" />
+请添加微信号 `sticki6`，备注 `SpEL`，我拉你入群。
 
-> 如果二维码过期，请添加微信号 `sticki6`，备注 `SpEL`，我拉你入群。
-
-## 💡 它解决了什么问题？
+## 它解决了什么问题？
 
 - 枚举值字段校验：
   ```java
@@ -84,18 +78,6 @@
       <artifactId>spel-validator</artifactId>
       <version>Latest Version</version>
   </dependency>
-  
-  <dependency>
-      <groupId>org.hibernate.validator</groupId>
-      <artifactId>hibernate-validator</artifactId>
-      <version>${hibernate-validator.version}</version>
-  </dependency>
-  
-  <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
-      <version>${spring-boot-starter-web.version}</version>
-  </dependency>
   ```
 
 - 在接口参数上使用 `@Valid` 或 `@Validated` 注解
@@ -120,22 +102,23 @@
 
   ```java
   @Data
-  @SpelValid
+  @SpelValid // 添加启动注解
   public class SimpleExampleParamVo {
   
     @NotNull
     private Boolean switchAudio;
   
     /**
-     * 当 switchAudio 为 true 时，校验 audioContent，audioContent 不能为null
+     * 此处开启了注解校验
+     * 当 switchAudio 字段为 true 时，校验 audioContent，audioContent 不能为null
      */
     @SpelNotNull(condition = "#this.switchAudio == true", message = "语音内容不能为空")
     private Object audioContent;
-
+  
   }
   ```
 
-- 添加异常处理器，处理校验异常
+- 添加全局异常处理器，处理校验异常
 
   ```java
   @RestControllerAdvice
@@ -220,93 +203,9 @@
     ```
     </details>
 
-## 📖 使用指南
-
-> 注意：本组件的目的不是代替 `javax.validation` 的校验注解，而是作为一个扩展，方便某些场景下的参数校验。
-> 能够使用 `javax.validation` 的场景就不要使用 `spel-validator` ，因为 `spel-validator` 会有一定的性能损耗。
-
-### 开启约束校验
-
-需要满足以下两个条件，才会对带注解的元素进行校验：
-
-1. 在接口参数上使用 `@Valid` 或 `@Validated` 注解
-2. 在实体类上使用 `@SpelValid` 注解
-
-如果只满足第一个条件，那么只会对带 `@NotNull`、`@NotEmpty`、`@NotBlank` 等注解的元素进行校验。
-
-如果只满足第二个条件，那么不会对任何元素进行校验。
-
-这是因为 `@SpelValid` 注解是基于 `javax.validation.Constraint` 实现的，只有在 `@Valid` 或 `@Validated` 注解的支持下才会生效。
-而 `spel-validator` 提供的约束注解是基于 `@SpelValid` 进行扫描校验的，只有在 `@SpelValid` 注解生效的情况下才会执行约束校验。
-
-### 使用约束注解
-
-目前支持的约束注解有：
-
-|       注解        |       说明        | 对标 javax.validation |
-|:---------------:|:---------------:|:-------------------:|
-|  `@SpelAssert`  |     逻辑断言校验      |          无          |
-| `@SpelNotNull`  |    非 null 校验    |     `@NotNull`      |
-| `@SpelNotEmpty` | 集合、字符串、数组大小非空校验 |     `@NotEmpty`     |
-| `@SpelNotBlank` |    字符串非空串校验     |     `@NotBlank`     |
-|   `@SpelNull`   |   必须为 null 校验   |       `@Null`       |
-|   `@SpelSize`   |  集合、字符串、数组长度校验  |       `@Size`       |
-
-每个约束注解都包含三个默认的属性：
-
-- `message`：校验失败时的提示信息。
-- `group`：分组条件，支持 SpEL 表达式，当分组条件满足时，才会对带注解的元素进行校验。
-- `condition`：约束开启条件，支持 SpEL 表达式，当 表达式为空 或 计算结果为true 时，才会对带注解的元素进行校验。
-
-### 调用 Spring Bean
-
-默认情况下，解析器无法识别 SpEL 表达式中的 Spring Bean。
-
-如果需要在 SpEL 表达式中调用 Spring Bean，需要在启动类上添加 `@EnableSpelValidatorBeanRegistrar` 注解，
-开启 Spring Bean 支持。
-
-```java
-
-@EnableSpelValidatorBeanRegistrar
-@SpringBootApplication
-public class Application {
-
-  public static void main(String[] args) {
-    SpringApplication.run(Application.class, args);
-  }
-
-}
-```
-
-### 自定义约束注解
-
-参考 `cn.sticki.validator.spel.SpelConstraint` 类，实现自定义约束注解。
-
-如果你使用过 `javax.validation` 的自定义约束注解，那么你会发现 `SpEL Validator` 的自定义约束注解几乎与 `javax.validation`
-一致。
-
 ## 📦 示例项目
 
 - [spel-validator-example](https://github.com/stick-i/spel-validator-example)
-
-## ❓ 常见问题
-
-### 关于性能
-
-代码里使用了较多的反射，会有一定的性能损耗，但我也加了一些缓存来减少损耗。
-
-我进行了简单的测试，在示例项目中，我对接口进行了多次随机调用，除了刚开始的前几次请求耗时会达到 10ms 以上，
-后续请求耗时会稳定在 1ms 左右。
-
-您可以打开 debug 日志，过滤 `Spel validate cost time` 语句，查看校验耗时，会得到类似如下的日志内容：
-
-![执行耗时日志截图.png](document/image/performance-test.png)
-
-其中每条记录表示一次接口调用的完整校验耗时。
-
-## 📅 更新日志
-
-https://github.com/stick-i/spel-validator/releases
 
 ## 🤝 贡献指南
 
@@ -320,14 +219,18 @@ https://github.com/stick-i/spel-validator/releases
 - `docs`：文档分支，修改文档的内容将提交到这里。
 - `gh-pages`：GitHub Pages 分支，用于发布在线文档。
 
-## 💰 捐赠支持
+## License
 
-| 微信赞赏                                                 | 支付宝赞赏                                            |
-|------------------------------------------------------|--------------------------------------------------|
-| ![微信](./document/image/wechat-appreciation-code.jpg) | ![支付宝](./document/image/alipay-receipt-code.jpg) |
+[Apache-2.0](https://github.com/stick-i/spel-validator/blob/main/LICENSE)
 
 ## 📧 联系作者
 
 - Email: sticki@126.com
 - 微信: sticki6
 - 公众号: 程序员阿杆
+
+## 💰 捐赠支持
+
+| 微信赞赏                                                 | 支付宝赞赏                                            |
+|------------------------------------------------------|--------------------------------------------------|
+| ![微信](./document/image/wechat-appreciation-code.jpg) | ![支付宝](./document/image/alipay-receipt-code.jpg) |
