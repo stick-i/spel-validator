@@ -13,7 +13,7 @@
 Latest Version:
 [![Maven Central](https://img.shields.io/maven-central/v/cn.sticki/spel-validator.svg)](https://central.sonatype.com/search?q=g:cn.sticki%20a:spel-validator)
 
-大多少情况下，你只需要添加以下两个依赖：
+大多数情况下，你只需要添加以下两个依赖：
 
 ```xml
 <dependencys>
@@ -87,7 +87,7 @@ public class SimpleExampleParamVo {
 
 `@SpelValid` 注解包含一个属性 `condition`，支持 SpEL 表达式。
 
-当 **表达式的算结果为true** 时，表示开启校验，默认情况下开启校验。
+当 **表达式的算结果为true** 时，表示开启校验，默认情况下是开启的。
 
 ```java
 @Data
@@ -225,16 +225,120 @@ public class TestParamVo2 {
 }
 ```
 
-## 处理异常
-
-待补充
+## 处理约束异常
 
 当校验失败时，本组件会将异常信息上报到 `javax.validation` 的异常体系中。
 
-所以正常情况下，你无需添加额外的异常处理逻辑。
+正常情况下，你只需要处理 `org.springframework.web.bind.MethodArgumentNotValidException`
+和 `org.springframework.validation.BindException` 这两个校验异常类就好了 ，而无需额外处理本组件的异常信息。
+
+事实上，`MethodArgumentNotValidException` 继承自 `BindException`，只需要处理 `BindException` 就可以了。
 
 ```java
+@RestControllerAdvice
+public class ControllerExceptionAdvice {
+
+  @ExceptionHandler({BindException.class, MethodArgumentNotValidException.class})
+  public Resp<Void> handleBindException(BindException ex) {
+    String msg = ex.getFieldErrors().stream()
+        .map(error -> error.getField() + " " + error.getDefaultMessage())
+        .reduce((s1, s2) -> s1 + "," + s2)
+        .orElse("");
+    return new Resp<>(400, msg);
+  }
+
+}
 ```
+
+## 处理业务异常
+
+由于本组件支持 [调用静态方法](spel.md#调用静态方法) 和 [调用Spring Bean方法](spel.md#调用-spring-bean)，故在校验过程中可能会抛出除约束异常以外的其他业务异常。
+
+### 举一个不太恰当的例子
+
+以下是一个枚举类，它包含了一个静态方法，用于根据code获取枚举值，如果获取不到则抛出业务异常：
+
+```java
+@Getter
+public enum ExampleEnum {
+
+  XXX(1);
+
+  private final Integer code;
+
+  ExampleEnum(Integer code) {
+    this.code = code;
+  }
+
+  /**
+   * 通过code获取枚举值，如果code不存在则抛出业务异常
+   */
+  public static ExampleEnum getByCode(Integer code) {
+    for (ExampleEnum value : values()) {
+      if (value.code.equals(code)) {
+        return value;
+      }
+    }
+    throw new BusinessException(400, "枚举值不合法");
+  }
+
+}
+```
+
+以下是一个参数类，它包含了一个枚举字段校验，在表达式中引用了上面的枚举类：
+
+```java
+@Data
+@SpelValid
+public class ParamTestBean {
+
+  /**
+   * 枚举值校验
+   * <p>
+   * 通过静态方法调用，校验枚举值是否存在
+   */
+  @SpelAssert(assertTrue = "T(cn.sticki.validator.spel.enums.ExampleEnum).getByCode(#this.testEnum)")
+  private Integer testEnum;
+
+}
+```
+
+当 `ParamTestBean` 校验失败时，我们希望它抛出一个业务异常 `BusinessException`，但实际上会得到一个 `ValidationException`：
+
+![img.png](../image/user-g-business-exception.png)
+
+由于本组件的特殊性，所有抛出的异常信息最终都会被我们下层的校验器捕获，然后包一层 `javax.validation.ValidationException` 再抛出。
+
+要从框架层面去解决这个问题，只能够脱离 `javax.validation` 的规范和 `hibernate` 的执行器来进行校验，
+目前看来这样做的成本比较大，且会带来一些其他的影响，故暂时不考虑这样做。
+
+### 解决方案
+
+当捕获到 `ValidationException` 时，首先判断下 `e.getCause()` 的类型是不是自己项目中的业务异常基类，如果是业务异常的类型，就丢给对应的方法去处理，像这样：
+
+```java
+@RestControllerAdvice
+public class ControllerExceptionAdvice {
+
+  @ExceptionHandler({BusinessException.class})
+  public Resp<Void> handleBusinessException(BusinessException ex) {
+    return new Resp<>(ex.getCode(), ex.getMessage());
+  }
+
+  @ExceptionHandler({ValidationException.class})
+  public Resp<Void> handleValidationException(ValidationException ex) {
+    if (ex.getCause() instanceof BusinessException) {
+      return handleBusinessException((BusinessException) ex.getCause());
+    }
+    return new Resp<>(500, "system error");
+  }
+
+}
+```
+
+当然这种方案也有缺点，需要将多种不同的异常类型都进行特殊处理，比较麻烦。
+
+本人不才，目前只能想到这种方案，如果你有更好的解决方案，欢迎到 GitHub 提 [issue](https://github.com/stick-i/spel-validator/issues) 
 
 ## 开启对 Spring Bean 的支持
 
