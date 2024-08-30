@@ -1,14 +1,14 @@
 ---
 home: true
-title: Home
-heroImage: https://vuejs.press/images/hero.png
+title: 首页
+heroImage: ./images/hero.png
 actions:
   - text: 快速开始
-    link: /get-started.html
+    link: /guide/getting-started.html
     type: primary
 
   - text: 项目介绍
-    link: https://vuejs.press/guide/introduction.html
+    link: /guide/introduction.html
     type: secondary
 
 features:
@@ -27,5 +27,3 @@ features:
 
 footer: Apache-2.0 license | 版权所有 © 2024-至今 阿杆
 ---
-
-[default-theme-home]: https://vuejs.press/reference/default-theme/frontmatter.html#home-page
