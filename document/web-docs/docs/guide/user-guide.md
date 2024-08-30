@@ -85,7 +85,7 @@ public class SimpleExampleParamVo {
 
 ### 设置开启条件
 
-`@SpelValid` 注解包含一个属性 `condition`，支持 SpEL 表达式。
+`@SpelValid` 注解包含一个属性 `condition`，支持 SpEL 表达式，计算结果必须为 `boolean` 类型。
 
 当 **表达式的算结果为true** 时，表示开启校验，默认情况下是开启的。
 
@@ -98,6 +98,46 @@ public class SimpleExampleParamVo {
 ```
 
 这里的 `condition` 字段同样支持上下文引用，具体使用方式参考 [引用上下文字段](#引用上下文字段)。
+
+
+## 使用约束注解
+
+目前支持的约束注解有：
+
+|       注解        |       说明        | 对标 javax.validation |
+|:---------------:|:---------------:|:-------------------:|
+|  `@SpelAssert`  |     逻辑断言校验      |    `@AssertTrue`    |
+| `@SpelNotNull`  |    非 null 校验    |     `@NotNull`      |
+| `@SpelNotEmpty` | 集合、字符串、数组大小非空校验 |     `@NotEmpty`     |
+| `@SpelNotBlank` |    字符串非空串校验     |     `@NotBlank`     |
+|   `@SpelNull`   |   必须为 null 校验   |       `@Null`       |
+|   `@SpelSize`   |  集合、字符串、数组长度校验  |       `@Size`       |
+|   `@SpelMin`    |      即将支持       |       `@Min`        |
+|   `@SpelMax`    |      即将支持       |       `@Max`        |
+
+所有约束注解都包含三个默认的属性：
+
+- `condition`：约束开启条件，支持 SpEL 表达式，表达式的计算结果必须为 `boolean` 类型，当 **计算结果为true** 时，才会对带注解的元素进行校验，默认情况下开启。
+- `message`：校验失败时的提示信息。
+- `group`：分组条件，支持 SpEL 表达式，当分组条件满足时，才会对带注解的元素进行校验。具体使用方式参考 [分组校验](#分组校验)。
+
+在需要校验的字段上使用 `@SpelNotNull` 等约束注解。
+
+```java
+@Data
+@SpelValid
+public class SimpleExampleParamVo {
+
+  /**
+   * 此处使用了 @SpelNotNull 注解
+   * 当参数 condition 的计算结果 true 时，会启用对当前字段的约束，要求为当前字段不能为null
+   * 约束校验失败时，提示信息为：语音内容不能为空
+   */
+  @SpelNotNull(condition = "true", message = "语音内容不能为空")
+  private Object audioContent;
+
+}
+```
 
 
 ## 引用上下文字段
@@ -126,52 +166,65 @@ public class SimpleExampleParamVo {
 ```
 
 
-## 使用约束注解
+## 分组校验
 
-目前支持的约束注解有：
+启动注解 `@SpelValid` 上包含一个属性 `spelGroups`，类型为字符串数组，支持 SpEL 表达式。
 
-|       注解        |       说明        | 对标 javax.validation |
-|:---------------:|:---------------:|:-------------------:|
-|  `@SpelAssert`  |     逻辑断言校验      |    `@AssertTrue`    |
-| `@SpelNotNull`  |    非 null 校验    |     `@NotNull`      |
-| `@SpelNotEmpty` | 集合、字符串、数组大小非空校验 |     `@NotEmpty`     |
-| `@SpelNotBlank` |    字符串非空串校验     |     `@NotBlank`     |
-|   `@SpelNull`   |   必须为 null 校验   |       `@Null`       |
-|   `@SpelSize`   |  集合、字符串、数组长度校验  |       `@Size`       |
-|   `@SpelMin`    |      即将支持       |       `@Min`        |
-|   `@SpelMax`    |      即将支持       |       `@Max`        |
+每一个[约束注解](#使用约束注解)上也都包含一个属性 `group`，类型为字符串数组，支持 SpEL 表达式。
 
-所有约束注解都包含三个默认的属性：
+::: tip 为什么 @SpelValid 注解上的 spelGroups 属性不叫 groups？
 
-- `message`：校验失败时的提示信息。
-- `group`：分组条件，支持 SpEL 表达式，当分组条件满足时，才会对带注解的元素进行校验。
-- `condition`：约束开启条件，支持 SpEL 表达式，当 **表达式为空** 或 **计算结果为true** 时，才会对带注解的元素进行校验。
+因为 `@SpelValid` 注解是基于 `javax.validation.Constraint` 实现的，而 `Constraint` 中已经有一个 `groups` 属性了，故命名为 `spelGroups`。
 
-在需要校验的字段上使用 `@SpelNotNull` 等约束注解。
+在使用 `@SpelValid` 的时候，你可以同时使用 `groups` 和 `spelGroups` 属性，但是 `groups` 属性只能用于 `javax.validation` 的分组校验。
+`@SpelValid` 和 `@NotNull`、`@NotEmpty` 等注解是兄弟关系，它的 `groups` 属性同样受上层 `@Valid` 或 `@Validated` 注解的影响。
+
+:::
+
+默认情况下，`@SpelValid.spelGroups` 为空，表示不进行分组校验，此时所有的约束注解都会生效。
+
+当 `@SpelValid.spelGroups` 不为空时，表示开启分组校验，此时：
+
+- 约束注解中的 `group` 属性为空时，该约束注解生效。
+- 约束注解中的 `group` 属性不为空时，只有当 `@SpelValid.spelGroups` 中的分组信息与此处的分组信息有交集时，才会对带注解的元素进行校验。
+
+这里表达式的计算结果可以是任何类型，但只有两个计算结果满足 `o.equals(e)` 时，才被认为是相等的。
+
+使用示例：
 
 ```java
 @Data
-@SpelValid
-public class SimpleExampleParamVo {
+@SpelValid(spelGroups = "#this.type")
+public class GroupExampleParamVo {
+
+  @NotNull
+  @Pattern(regexp = "^text|audio$")
+  private String type;
 
   /**
-   * 此处使用了 @SpelNotNull 注解
-   * 当参数 condition 的计算结果 true 时，会启用对当前字段的约束，要求为当前字段不能为null
-   * 约束校验失败时，提示信息为：语音内容不能为空
+   * 当 type 字段的值为 text 时，才会对此字段进行校验
    */
-  @SpelNotNull(condition = "true", message = "语音内容不能为空")
+  @SpelNotNull(group = "'text'")
+  private Object textContent;
+
+  /**
+   * 当 type 字段的值为 audio 时，才会对此字段进行校验
+   */
+  @SpelNotNull(group = "'audio'")
   private Object audioContent;
+
+  /**
+   * 未指定分组，默认被校验
+   */
+  @SpelNotNull
+  private Integer other;
 
 }
 ```
 
-## 分组校验
-
-待补充
-
 ## 嵌套校验
 
-本组件支持嵌套校验，只需要在需要校验的字段上添加 `@Valid`，以及在另一个类上添加 `@SpelValid` 注解。
+本组件支持嵌套校验，在需要校验的字段上添加 `@Valid`，以及在另一个类上添加 `@SpelValid` 注解。
 
 ```java
 @Data
