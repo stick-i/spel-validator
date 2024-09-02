@@ -20,18 +20,18 @@ export const head: HeadConfig[] = [
         },
     ],
     ['link', {rel: 'manifest', href: '/manifest.webmanifest'}],
-    ['meta', {name: 'application-name', content: 'VuePress'}],
-    ['meta', {name: 'apple-mobile-web-app-title', content: 'VuePress'}],
+    ['meta', {name: 'application-name', content: 'SpEL Validator'}],
+    ['meta', {name: 'apple-mobile-web-app-title', content: 'SpEL Validator'}],
     ['meta', {name: 'apple-mobile-web-app-status-bar-style', content: 'black'}],
     [
         'link',
-        {rel: 'apple-touch-icon', href: `/images/icons/apple-touch-icon.png`},
+        {rel: 'apple-touch-icon', href: `/images/logo.png`},
     ],
     [
         'link',
         {
             rel: 'mask-icon',
-            href: '/images/icons/safari-pinned-tab.svg',
+            href: '/images/logo.png',
             color: '#3eaf7c',
         },
     ],
