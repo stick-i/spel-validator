@@ -34,7 +34,7 @@ public class SpelMinValidator implements SpelConstraintValidator<SpelMin> {
             throw new SpelParserException("Expression [" + spelMin.value() + "] calculate result must be Number or CharSequence.");
         }
         // 比较大小，其中一个是Not-a-Number (NaN）默认失败
-        if (NumberComparatorUtil.compare(fieldValue, minValue, NumberComparatorUtil.GREATER_THAN) < 0) {
+        if (NumberComparatorUtil.compare(fieldValue, minValue, NumberComparatorUtil.LESS_THAN) < 0) {
             // 构建错误信息
             String message = spelMin.message();
             message = message.replace("{value}", String.valueOf(minValue));

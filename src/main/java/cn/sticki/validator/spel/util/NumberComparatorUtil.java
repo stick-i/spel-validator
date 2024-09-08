@@ -5,12 +5,13 @@ import java.util.OptionalInt;
 
 /**
  * 数值类比较工具
- * 参考`org.hibernate.validator.internal.constraintvalidators.bv.number.bound.NumberComparatorHelper`
+ * 参考 {@link org.hibernate.validator.internal.constraintvalidators.bv.number.bound.NumberComparatorHelper}
  * 在此基础上拓展比较
  *
  * @author oddfar
  */
-public final class NumberComparatorUtil {
+@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+public class NumberComparatorUtil {
 
     public static final OptionalInt LESS_THAN = OptionalInt.of(-1);
 
@@ -65,10 +66,10 @@ public final class NumberComparatorUtil {
         if (number instanceof Float && value instanceof Float) {
             return compare((Float) number, (Float) value);
         }
-        if (number instanceof Float && !(value instanceof Float || value instanceof Double)) {
+        if (number instanceof Float && !(value instanceof Double)) {
             return compare((Float) number, value, treatNanAs);
         }
-        if (number instanceof Double && !(value instanceof Float || value instanceof Double)) {
+        if (number instanceof Double && !(value instanceof Float)) {
             return compare((Double) number, value, treatNanAs);
         }
         if (!(number instanceof Float || number instanceof Double) && value instanceof Float) {
