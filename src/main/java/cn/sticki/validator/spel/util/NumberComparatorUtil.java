@@ -19,88 +19,55 @@ public class NumberComparatorUtil {
 
     public static final OptionalInt GREATER_THAN = OptionalInt.of(1);
 
-    public static int compare(Double number, double value) {
-        return number.compareTo(value);
-    }
-
-    public static int compare(Float number, float value) {
-        return number.compareTo(value);
-    }
-
-    public static int compare(Object number, Float value, OptionalInt treatNanAs) {
-        OptionalInt infinity = infinityCheck(value, treatNanAs);
-        if (infinity.isPresent()) {
-            return infinity.getAsInt();
-        }
-        return BigDecimalUtil.valueOf(number).compareTo(BigDecimal.valueOf(value));
-    }
-
-    public static int compare(Object number, Double value, OptionalInt treatNanAs) {
-        OptionalInt infinity = infinityCheck(value, treatNanAs);
-        if (infinity.isPresent()) {
-            return infinity.getAsInt();
-        }
-        return BigDecimalUtil.valueOf(number).compareTo(BigDecimal.valueOf(value));
-    }
-
-    public static int compare(Double number, Object value, OptionalInt treatNanAs) {
-        OptionalInt infinity = infinityCheck(number, treatNanAs);
-        if (infinity.isPresent()) {
-            return infinity.getAsInt();
-        }
-        return BigDecimalUtil.valueOf(number).compareTo(BigDecimalUtil.valueOf(value));
-    }
-
-    public static int compare(Float number, Object value, OptionalInt treatNanAs) {
-        OptionalInt infinity = infinityCheck(number, treatNanAs);
-        if (infinity.isPresent()) {
-            return infinity.getAsInt();
-        }
-        return BigDecimalUtil.valueOf(number).compareTo(BigDecimalUtil.valueOf(value));
-    }
-
     public static int compare(Object number, Object value, OptionalInt treatNanAs) {
-        if (number instanceof Double && value instanceof Double) {
-            return compare((Double) number, (Double) value);
+        boolean numberIsDouble = number instanceof Double || number instanceof Float;
+        boolean valueIsDouble = value instanceof Double || value instanceof Float;
+
+        if (numberIsDouble && valueIsDouble) {
+            return compare(((Number) number).doubleValue(), ((Number) value).doubleValue());
         }
-        if (number instanceof Float && value instanceof Float) {
-            return compare((Float) number, (Float) value);
+        if (numberIsDouble) {
+            return compare(((Number) number).doubleValue(), value, treatNanAs);
         }
-        if (number instanceof Float && !(value instanceof Double)) {
-            return compare((Float) number, value, treatNanAs);
-        }
-        if (number instanceof Double && !(value instanceof Float)) {
-            return compare((Double) number, value, treatNanAs);
-        }
-        if (!(number instanceof Float || number instanceof Double) && value instanceof Float) {
-            return compare(number, (Float) value, treatNanAs);
-        }
-        if (!(number instanceof Float || number instanceof Double) && value instanceof Double) {
-            return compare(number, (Double) value, treatNanAs);
+        if (valueIsDouble) {
+            return compare(number, ((Number) value).doubleValue(), treatNanAs);
         }
 
         return BigDecimalUtil.valueOf(number).compareTo(BigDecimalUtil.valueOf(value));
     }
 
-    public static OptionalInt infinityCheck(Double number, OptionalInt treatNanAs) {
+    private static int compare(Double number, double value) {
+        return number.compareTo(value);
+    }
+
+    private static int compare(Object number, Double value, OptionalInt treatNanAs) {
+        // 检查的是 value，所以需要反转
+        if (treatNanAs.isPresent()) {
+            treatNanAs = OptionalInt.of(-treatNanAs.getAsInt());
+        }
+        OptionalInt infinity = infinityCheck(value, treatNanAs);
+        if (infinity.isPresent()) {
+            // 这里也要反转
+            return -infinity.getAsInt();
+        }
+        return BigDecimalUtil.valueOf(number).compareTo(BigDecimal.valueOf(value));
+    }
+
+    private static int compare(Double number, Object value, OptionalInt treatNanAs) {
+        OptionalInt infinity = infinityCheck(number, treatNanAs);
+        if (infinity.isPresent()) {
+            return infinity.getAsInt();
+        }
+        return BigDecimalUtil.valueOf(number).compareTo(BigDecimalUtil.valueOf(value));
+    }
+
+    private static OptionalInt infinityCheck(Double number, OptionalInt treatNanAs) {
         OptionalInt result = FINITE_VALUE;
         if (number == Double.NEGATIVE_INFINITY) {
             result = LESS_THAN;
         } else if (number.isNaN()) {
             result = treatNanAs;
         } else if (number == Double.POSITIVE_INFINITY) {
-            result = GREATER_THAN;
-        }
-        return result;
-    }
-
-    public static OptionalInt infinityCheck(Float number, OptionalInt treatNanAs) {
-        OptionalInt result = FINITE_VALUE;
-        if (number == Float.NEGATIVE_INFINITY) {
-            result = LESS_THAN;
-        } else if (number.isNaN()) {
-            result = treatNanAs;
-        } else if (number == Float.POSITIVE_INFINITY) {
             result = GREATER_THAN;
         }
         return result;

@@ -28,13 +28,14 @@ public class SpelMinValidator implements SpelConstraintValidator<SpelMin> {
         if (fieldValue == null) {
             return FieldValidResult.success();
         }
-        // 计算表达式的值
+        // 计算表达式的值，基本数据类型会自动装箱
         Object minValue = SpelParser.parse(spelMin.value(), obj);
         if (!(minValue instanceof Number) && !(minValue instanceof CharSequence)) {
             throw new SpelParserException("Expression [" + spelMin.value() + "] calculate result must be Number or CharSequence.");
         }
         // 比较大小，其中一个是Not-a-Number (NaN）默认失败
         if (NumberComparatorUtil.compare(fieldValue, minValue, NumberComparatorUtil.LESS_THAN) < 0) {
+            // todo 目前对Double的边界值处理不太友好，message的展示类似为：不能小于等于 NaN。后续考虑去掉对Double Float类型的支持，或者对边界值抛出异常。
             // 构建错误信息
             String message = spelMin.message();
             message = message.replace("{value}", String.valueOf(minValue));
