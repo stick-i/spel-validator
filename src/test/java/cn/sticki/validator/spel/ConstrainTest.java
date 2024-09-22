@@ -84,10 +84,12 @@ public class ConstrainTest {
         boolean repeatableTest = ValidateUtil.checkConstraintResult(SpelMinTestBean.repeatableTestCase());
         boolean paramTest2 = ValidateUtil.checkConstraintResult(SpelMinTestBean.paramTest2Case());
         boolean valueTypeTest = ValidateUtil.checkConstraintResult(SpelMinTestBean.valueTypeTestCase());
+        boolean notSupportTypeTest = ValidateUtil.checkConstraintResult(SpelMinTestBean.notSupportTypeTestCase());
 
         Assertions.assertTrue(paramTest, "spelMin param test failed");
         Assertions.assertTrue(repeatableTest, "spelMin repeatable test failed");
         Assertions.assertTrue(paramTest2, "spelMin param test2 failed");
         Assertions.assertTrue(valueTypeTest, "spelMin valueType test failed");
+        Assertions.assertTrue(notSupportTypeTest, "spelMin notSupportType test failed");
     }
 }

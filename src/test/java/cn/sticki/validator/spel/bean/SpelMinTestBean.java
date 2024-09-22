@@ -11,6 +11,7 @@ import lombok.Data;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -313,6 +314,177 @@ public class SpelMinTestBean {
         return result;
     }
 
+    public static List<VerifyObject> valueTypeTestCase() {
+        ArrayList<VerifyObject> result = new ArrayList<>();
+
+        // 大于最小值
+        result.add(VerifyObject.of(
+                ValueTypeTestBean.builder().id(1).condition(1).testValueDouble(2D).testInt(1).build()
+        ));
+        result.add(VerifyObject.of(
+                ValueTypeTestBean.builder().id(2).condition(2).testValueDouble(2D).testDou(1).build()
+        ));
+        result.add(VerifyObject.of(
+                ValueTypeTestBean.builder().id(3).condition(3).testValueDouble(2D).testInteger(1).build()
+        ));
+        result.add(VerifyObject.of(
+                ValueTypeTestBean.builder().id(4).condition(4).testValueDouble(2D).testDouble(1d).build()
+        ));
+        result.add(VerifyObject.of(
+                ValueTypeTestBean.builder().id(5).condition(5).testValueDouble(2D).testString("1").build()
+        ));
+        result.add(VerifyObject.of(
+                ValueTypeTestBean.builder().id(6).condition(6).testValueDouble(2D).testBigDecimal(new BigDecimal(1)).build()
+        ));
+        result.add(VerifyObject.of(
+                ValueTypeTestBean.builder().id(7).condition(7).testValueDouble(2D).testBigInteger(new BigInteger("1")).build()
+        ));
+
+        // 等于最小值
+        result.add(VerifyObject.of(
+                ValueTypeTestBean.builder().id(8).condition(1).testValueDouble(1D).testInt(1).build()
+        ));
+        result.add(VerifyObject.of(
+                ValueTypeTestBean.builder().id(9).condition(2).testValueDouble(1D).testDou(1).build()
+        ));
+        result.add(VerifyObject.of(
+                ValueTypeTestBean.builder().id(10).condition(3).testValueDouble(1D).testInteger(1).build()
+        ));
+        result.add(VerifyObject.of(
+                ValueTypeTestBean.builder().id(11).condition(4).testValueDouble(1D).testDouble(1d).build()
+        ));
+        result.add(VerifyObject.of(
+                ValueTypeTestBean.builder().id(12).condition(5).testValueDouble(1D).testString("1").build()
+        ));
+        result.add(VerifyObject.of(
+                ValueTypeTestBean.builder().id(13).condition(6).testValueDouble(1D).testBigDecimal(new BigDecimal(1)).build()
+        ));
+        result.add(VerifyObject.of(
+                ValueTypeTestBean.builder().id(14).condition(7).testValueDouble(1D).testBigInteger(new BigInteger("1")).build()
+        ));
+
+        // 小于最小值
+        result.add(VerifyObject.of(
+                ValueTypeTestBean.builder().id(15).condition(1).testValueDouble(0D).testInt(1).build(),
+                VerifyFailedField.of(ValueTypeTestBean::getTestValueDouble)
+        ));
+        result.add(VerifyObject.of(
+                ValueTypeTestBean.builder().id(16).condition(2).testValueDouble(0D).testDou(1).build(),
+                VerifyFailedField.of(ValueTypeTestBean::getTestValueDouble)
+        ));
+        result.add(VerifyObject.of(
+                ValueTypeTestBean.builder().id(17).condition(3).testValueDouble(0D).testInteger(1).build(),
+                VerifyFailedField.of(ValueTypeTestBean::getTestValueDouble)
+        ));
+        result.add(VerifyObject.of(
+                ValueTypeTestBean.builder().id(18).condition(4).testValueDouble(0D).testDouble(1d).build(),
+                VerifyFailedField.of(ValueTypeTestBean::getTestValueDouble)
+        ));
+        result.add(VerifyObject.of(
+                ValueTypeTestBean.builder().id(19).condition(5).testValueDouble(0D).testString("1").build(),
+                VerifyFailedField.of(ValueTypeTestBean::getTestValueDouble)
+        ));
+        result.add(VerifyObject.of(
+                ValueTypeTestBean.builder().id(20).condition(6).testValueDouble(0D).testBigDecimal(new BigDecimal(1)).build(),
+                VerifyFailedField.of(ValueTypeTestBean::getTestValueDouble)
+        ));
+        result.add(VerifyObject.of(
+                ValueTypeTestBean.builder().id(21).condition(7).testValueDouble(0D).testBigInteger(new BigInteger("1")).build(),
+                VerifyFailedField.of(ValueTypeTestBean::getTestValueDouble)
+        ));
+
+        // --------- 边界值：nan、infinity
+        // double类型
+        result.add(VerifyObject.of(
+                ValueTypeTestBean.builder().id(22).condition(1).testValueDouble(Double.NaN).testInt(1).build(),
+                VerifyFailedField.of(ValueTypeTestBean::getTestValueDouble)
+        ));
+        result.add(VerifyObject.of(
+                ValueTypeTestBean.builder().id(23).condition(1).testValueDouble(Double.POSITIVE_INFINITY).testInt(1).build()
+        ));
+        result.add(VerifyObject.of(
+                ValueTypeTestBean.builder().id(24).condition(1).testValueDouble(Double.NEGATIVE_INFINITY).testInt(1).build(),
+                VerifyFailedField.of(ValueTypeTestBean::getTestValueDouble)
+        ));
+        result.add(VerifyObject.of(
+                ValueTypeTestBean.builder().id(25).condition(2).testValueDouble(1D).testDou(Double.NaN).build(),
+                VerifyFailedField.of(ValueTypeTestBean::getTestValueDouble)
+        ));
+        result.add(VerifyObject.of(
+                ValueTypeTestBean.builder().id(26).condition(2).testValueDouble(1D).testDou(Double.POSITIVE_INFINITY).build(),
+                VerifyFailedField.of(ValueTypeTestBean::getTestValueDouble)
+        ));
+        result.add(VerifyObject.of(
+                ValueTypeTestBean.builder().id(27).condition(2).testValueDouble(1D).testDou(Double.NEGATIVE_INFINITY).build()
+        ));
+        // float 类型
+        result.add(VerifyObject.of(
+                ValueTypeTestBean.builder().id(28).condition(1).testValueFloat(Float.NaN).testInt(1).build(),
+                VerifyFailedField.of(ValueTypeTestBean::getTestValueFloat)
+        ));
+        result.add(VerifyObject.of(
+                ValueTypeTestBean.builder().id(29).condition(1).testValueFloat(Float.POSITIVE_INFINITY).testInt(1).build()
+        ));
+        result.add(VerifyObject.of(
+                ValueTypeTestBean.builder().id(30).condition(1).testValueFloat(Float.NEGATIVE_INFINITY).testInt(1).build(),
+                VerifyFailedField.of(ValueTypeTestBean::getTestValueFloat)
+        ));
+        result.add(VerifyObject.of(
+                ValueTypeTestBean.builder().id(31).condition(2).testValueFloat(1F).testDou(Double.NaN).build(),
+                VerifyFailedField.of(ValueTypeTestBean::getTestValueFloat)
+        ));
+        result.add(VerifyObject.of(
+                ValueTypeTestBean.builder().id(32).condition(2).testValueFloat(1F).testDou(Double.POSITIVE_INFINITY).build(),
+                VerifyFailedField.of(ValueTypeTestBean::getTestValueFloat)
+        ));
+        result.add(VerifyObject.of(
+                ValueTypeTestBean.builder().id(33).condition(2).testValueFloat(1F).testDou(Double.NEGATIVE_INFINITY).build()
+        ));
+        // int 类型，但是表达式为double或float
+        result.add(VerifyObject.of(
+                ValueTypeTestBean.builder().id(34).condition(4).testValueInt(1).testDouble(1D).build()
+        ));
+        result.add(VerifyObject.of(
+                ValueTypeTestBean.builder().id(35).condition(8).testValueInt(1).testFloat(1F).build()
+        ));
+        result.add(VerifyObject.of(
+                ValueTypeTestBean.builder().id(36).condition(4).testValueInt(0).testDouble(Double.NaN).build(),
+                VerifyFailedField.of(ValueTypeTestBean::getTestValueInt)
+        ));
+        result.add(VerifyObject.of(
+                ValueTypeTestBean.builder().id(37).condition(8).testValueInt(0).testFloat(Float.NaN).build(),
+                VerifyFailedField.of(ValueTypeTestBean::getTestValueInt)
+        ));
+        result.add(VerifyObject.of(
+                ValueTypeTestBean.builder().id(38).condition(4).testValueInt(0).testDouble(Double.POSITIVE_INFINITY).build(),
+                VerifyFailedField.of(ValueTypeTestBean::getTestValueInt)
+        ));
+        result.add(VerifyObject.of(
+                ValueTypeTestBean.builder().id(39).condition(8).testValueInt(0).testFloat(Float.POSITIVE_INFINITY).build(),
+                VerifyFailedField.of(ValueTypeTestBean::getTestValueInt)
+        ));
+        result.add(VerifyObject.of(
+                ValueTypeTestBean.builder().id(40).condition(4).testValueInt(0).testDouble(Double.NEGATIVE_INFINITY).build()
+        ));
+        result.add(VerifyObject.of(
+                ValueTypeTestBean.builder().id(41).condition(8).testValueInt(0).testFloat(Float.NEGATIVE_INFINITY).build()
+        ));
+
+        return result;
+    }
+
+    public static List<VerifyObject> notSupportTypeTestCase() {
+        ArrayList<VerifyObject> result = new ArrayList<>();
+
+        // List类型
+        result.add(VerifyObject.of(
+                NotSupportValueTypeTestBean.builder().id(1).testString("1").testList(Collections.emptyList()).build(),
+                true
+        ));
+
+        return result;
+    }
+
     /**
      * 不同类型的value值测试
      */
@@ -332,7 +504,26 @@ public class SpelMinTestBean {
         @SpelMin(condition = "#this.condition == 5", value = "#this.testString")
         @SpelMin(condition = "#this.condition == 6", value = "#this.testBigDecimal")
         @SpelMin(condition = "#this.condition == 7", value = "#this.testBigInteger")
-        private double testValue;
+        private Double testValueDouble;
+
+        @SpelMin(condition = "#this.condition == 1", value = "#this.testInt")
+        @SpelMin(condition = "#this.condition == 2", value = "#this.testDou")
+        @SpelMin(condition = "#this.condition == 3", value = "#this.testInteger")
+        @SpelMin(condition = "#this.condition == 4", value = "#this.testDouble")
+        @SpelMin(condition = "#this.condition == 5", value = "#this.testString")
+        @SpelMin(condition = "#this.condition == 6", value = "#this.testBigDecimal")
+        @SpelMin(condition = "#this.condition == 7", value = "#this.testBigInteger")
+        private Float testValueFloat;
+
+        @SpelMin(condition = "#this.condition == 1", value = "#this.testInt")
+        @SpelMin(condition = "#this.condition == 2", value = "#this.testDou")
+        @SpelMin(condition = "#this.condition == 3", value = "#this.testInteger")
+        @SpelMin(condition = "#this.condition == 4", value = "#this.testDouble")
+        @SpelMin(condition = "#this.condition == 5", value = "#this.testString")
+        @SpelMin(condition = "#this.condition == 6", value = "#this.testBigDecimal")
+        @SpelMin(condition = "#this.condition == 7", value = "#this.testBigInteger")
+        @SpelMin(condition = "#this.condition == 8", value = "#this.testFloat")
+        private Integer testValueInt;
 
         private int testInt;
 
@@ -348,112 +539,26 @@ public class SpelMinTestBean {
 
         private BigInteger testBigInteger;
 
+        private Float testFloat;
+
     }
 
-    public static List<VerifyObject> valueTypeTestCase() {
-        ArrayList<VerifyObject> result = new ArrayList<>();
+    /**
+     * 不支持的value值类型测试
+     */
+    @Data
+    @Builder
+    @SpelValid
+    public static class NotSupportValueTypeTestBean implements ID {
 
-        // 大于最小值
-        result.add(VerifyObject.of(
-                ValueTypeTestBean.builder().id(1).condition(1).testValue(2).testInt(1).build()
-        ));
-        result.add(VerifyObject.of(
-                ValueTypeTestBean.builder().id(2).condition(2).testValue(2).testDou(1).build()
-        ));
-        result.add(VerifyObject.of(
-                ValueTypeTestBean.builder().id(3).condition(3).testValue(2).testInteger(1).build()
-        ));
-        result.add(VerifyObject.of(
-                ValueTypeTestBean.builder().id(4).condition(4).testValue(2).testDouble(1d).build()
-        ));
-        result.add(VerifyObject.of(
-                ValueTypeTestBean.builder().id(5).condition(5).testValue(2).testString("1").build()
-        ));
-        result.add(VerifyObject.of(
-                ValueTypeTestBean.builder().id(6).condition(6).testValue(2).testBigDecimal(new BigDecimal(1)).build()
-        ));
-        result.add(VerifyObject.of(
-                ValueTypeTestBean.builder().id(7).condition(7).testValue(2).testBigInteger(new BigInteger("1")).build()
-        ));
+        private int id;
 
-        // 等于最小值
-        result.add(VerifyObject.of(
-                ValueTypeTestBean.builder().id(8).condition(1).testValue(1).testInt(1).build()
-        ));
-        result.add(VerifyObject.of(
-                ValueTypeTestBean.builder().id(9).condition(2).testValue(1).testDou(1).build()
-        ));
-        result.add(VerifyObject.of(
-                ValueTypeTestBean.builder().id(10).condition(3).testValue(1).testInteger(1).build()
-        ));
-        result.add(VerifyObject.of(
-                ValueTypeTestBean.builder().id(11).condition(4).testValue(1).testDouble(1d).build()
-        ));
-        result.add(VerifyObject.of(
-                ValueTypeTestBean.builder().id(12).condition(5).testValue(1).testString("1").build()
-        ));
-        result.add(VerifyObject.of(
-                ValueTypeTestBean.builder().id(13).condition(6).testValue(1).testBigDecimal(new BigDecimal(1)).build()
-        ));
-        result.add(VerifyObject.of(
-                ValueTypeTestBean.builder().id(14).condition(7).testValue(1).testBigInteger(new BigInteger("1")).build()
-        ));
+        @SpelMin(value = "#this.testList")
+        private String testString;
 
-        // 小于最小值
-        result.add(VerifyObject.of(
-                ValueTypeTestBean.builder().id(15).condition(1).testValue(0).testInt(1).build(),
-                VerifyFailedField.of(ValueTypeTestBean::getTestValue)
-        ));
-        result.add(VerifyObject.of(
-                ValueTypeTestBean.builder().id(16).condition(2).testValue(0).testDou(1).build(),
-                VerifyFailedField.of(ValueTypeTestBean::getTestValue)
-        ));
-        result.add(VerifyObject.of(
-                ValueTypeTestBean.builder().id(17).condition(3).testValue(0).testInteger(1).build(),
-                VerifyFailedField.of(ValueTypeTestBean::getTestValue)
-        ));
-        result.add(VerifyObject.of(
-                ValueTypeTestBean.builder().id(18).condition(4).testValue(0).testDouble(1d).build(),
-                VerifyFailedField.of(ValueTypeTestBean::getTestValue)
-        ));
-        result.add(VerifyObject.of(
-                ValueTypeTestBean.builder().id(19).condition(5).testValue(0).testString("1").build(),
-                VerifyFailedField.of(ValueTypeTestBean::getTestValue)
-        ));
-        result.add(VerifyObject.of(
-                ValueTypeTestBean.builder().id(20).condition(6).testValue(0).testBigDecimal(new BigDecimal(1)).build(),
-                VerifyFailedField.of(ValueTypeTestBean::getTestValue)
-        ));
-        result.add(VerifyObject.of(
-                ValueTypeTestBean.builder().id(21).condition(7).testValue(0).testBigInteger(new BigInteger("1")).build(),
-                VerifyFailedField.of(ValueTypeTestBean::getTestValue)
-        ));
+        @SpelMin
+        private List<String> testList;
 
-        // double类型边界值：nan、infinity
-        result.add(VerifyObject.of(
-                ValueTypeTestBean.builder().id(22).condition(1).testValue(Double.NaN).testInt(1).build(),
-                VerifyFailedField.of(ValueTypeTestBean::getTestValue)
-        ));
-        result.add(VerifyObject.of(
-                ValueTypeTestBean.builder().id(23).condition(1).testValue(Double.POSITIVE_INFINITY).testInt(1).build()
-        ));
-        result.add(VerifyObject.of(
-                ValueTypeTestBean.builder().id(24).condition(1).testValue(Double.NEGATIVE_INFINITY).testInt(1).build(),
-                VerifyFailedField.of(ValueTypeTestBean::getTestValue)
-        ));
-        result.add(VerifyObject.of(
-                ValueTypeTestBean.builder().id(25).condition(2).testValue(1).testDou(Double.NaN).build(),
-                VerifyFailedField.of(ValueTypeTestBean::getTestValue)
-        ));
-        result.add(VerifyObject.of(
-                ValueTypeTestBean.builder().id(26).condition(2).testValue(1).testDou(Double.POSITIVE_INFINITY).build(),
-                VerifyFailedField.of(ValueTypeTestBean::getTestValue)
-        ));
-        result.add(VerifyObject.of(
-                ValueTypeTestBean.builder().id(27).condition(2).testValue(1).testDou(Double.NEGATIVE_INFINITY).build()
-        ));
-
-        return result;
     }
 
 }
