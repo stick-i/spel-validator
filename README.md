@@ -6,9 +6,11 @@
 一个强大的 Java 参数校验包，基于 SpEL 实现，扩展自 javax.validation 包，用于简化参数校验，几乎支持所有场景下的参数校验。
 
 
-## 文档
+## 项目地址
 
-更详细的文档，请见在线文档：https://spel-validator.sticki.cn/
+- GitHub：https://github.com/stick-i/spel-validator
+- Gitee：https://gitee.com/sticki/spel-validator
+- 在线文档：https://spel-validator.sticki.cn/
 
 ## 特点
 
