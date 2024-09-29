@@ -19,18 +19,18 @@ public class NumberComparatorUtil {
 
     public static final OptionalInt GREATER_THAN = OptionalInt.of(1);
 
-    public static int compare(Object number, Object value, OptionalInt treatNanAs) {
+    public static int compare(Number number, Number value, OptionalInt treatNanAs) {
         boolean numberIsDouble = number instanceof Double || number instanceof Float;
         boolean valueIsDouble = value instanceof Double || value instanceof Float;
 
         if (numberIsDouble && valueIsDouble) {
-            return compare(((Number) number).doubleValue(), ((Number) value).doubleValue());
+            return compare(number.doubleValue(), value.doubleValue());
         }
         if (numberIsDouble) {
-            return compare(((Number) number).doubleValue(), value, treatNanAs);
+            return compare(number.doubleValue(), value, treatNanAs);
         }
         if (valueIsDouble) {
-            return compare(number, ((Number) value).doubleValue(), treatNanAs);
+            return compare(number, value.doubleValue(), treatNanAs);
         }
 
         return BigDecimalUtil.valueOf(number).compareTo(BigDecimalUtil.valueOf(value));
@@ -40,7 +40,7 @@ public class NumberComparatorUtil {
         return number.compareTo(value);
     }
 
-    private static int compare(Object number, Double value, OptionalInt treatNanAs) {
+    private static int compare(Number number, Double value, OptionalInt treatNanAs) {
         // 检查的是 value，所以需要反转
         if (treatNanAs.isPresent()) {
             treatNanAs = OptionalInt.of(-treatNanAs.getAsInt());
@@ -53,7 +53,7 @@ public class NumberComparatorUtil {
         return BigDecimalUtil.valueOf(number).compareTo(BigDecimal.valueOf(value));
     }
 
-    private static int compare(Double number, Object value, OptionalInt treatNanAs) {
+    private static int compare(Double number, Number value, OptionalInt treatNanAs) {
         OptionalInt infinity = infinityCheck(number, treatNanAs);
         if (infinity.isPresent()) {
             return infinity.getAsInt();
