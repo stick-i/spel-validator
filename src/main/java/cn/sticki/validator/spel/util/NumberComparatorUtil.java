@@ -10,7 +10,7 @@ import java.util.OptionalInt;
  *
  * @author oddfar
  */
-@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+@SuppressWarnings({"OptionalUsedAsFieldOrParameterType", "JavadocReference"})
 public class NumberComparatorUtil {
 
     public static final OptionalInt LESS_THAN = OptionalInt.of(-1);
