@@ -17,7 +17,7 @@ public class SpelMinValidator extends AbstractSpelNumberCompareValidator<SpelMin
 
     @Override
     protected boolean compare(Number fieldValue, Number compareValue) {
-        return NumberComparatorUtil.compare(fieldValue, compareValue, NumberComparatorUtil.LESS_THAN) > 0;
+        return NumberComparatorUtil.compare(fieldValue, compareValue, NumberComparatorUtil.LESS_THAN) >= 0;
     }
 
     @Override

@@ -38,13 +38,10 @@ public class SpelMinTestBean {
 
         // 默认参数
         @SpelMin
-        private String test;
+        private Integer test;
 
         // 变量参数
         @SpelMin(condition = "#this.condition", value = "#this.min", message = "testString")
-        private String testString;
-
-        @SpelMin(condition = "#this.condition", value = "#this.min")
         private BigDecimal testBigDecimal;
 
         @SpelMin(condition = "#this.condition", value = "#this.min")
@@ -85,8 +82,7 @@ public class SpelMinTestBean {
         // 小于最小值
         result.add(VerifyObject.of(
                 ParamTestBean.builder().id(2).condition(true).min(5)
-                        .test("-1")
-                        .testString("2")
+                        .test(-1)
                         .testBigDecimal(new BigDecimal(0))
                         .testBigInteger(new BigInteger("0"))
                         .testByte((byte) 0)
@@ -98,7 +94,6 @@ public class SpelMinTestBean {
                         .build(),
                 VerifyFailedField.of(
                         ParamTestBean::getTest,
-                        ParamTestBean::getTestBigDecimal,
                         ParamTestBean::getTestBigInteger,
                         ParamTestBean::getTestByte,
                         ParamTestBean::getTestInt,
@@ -107,14 +102,13 @@ public class SpelMinTestBean {
                         ParamTestBean::getTestDouble,
                         ParamTestBean::getTestFloat
                 ),
-                VerifyFailedField.of(ParamTestBean::getTestString, "testString")
+                VerifyFailedField.of(ParamTestBean::getTestBigDecimal, "testString")
         ));
 
         // 等于最小值
         result.add(VerifyObject.of(
                 ParamTestBean.builder().id(3).condition(true).min(5)
-                        .test("0")
-                        .testString("5")
+                        .test(0)
                         .testBigDecimal(new BigDecimal("5"))
                         .testBigInteger(new BigInteger("5"))
                         .testByte((byte) 5)
@@ -129,8 +123,7 @@ public class SpelMinTestBean {
         // 大于最小值
         result.add(VerifyObject.of(
                 ParamTestBean.builder().id(4).condition(true).min(0)
-                        .test("123")
-                        .testString("123")
+                        .test(123)
                         .testBigDecimal(new BigDecimal("123.12"))
                         .testBigInteger(new BigInteger("123123"))
                         .testByte((byte) 12)
@@ -144,15 +137,14 @@ public class SpelMinTestBean {
 
         // message
         result.add(VerifyObject.of(
-                ParamTestBean.builder().id(5).condition(true).min(2).testString("1").build(),
-                VerifyFailedField.of(ParamTestBean::getTestString, "testString")
+                ParamTestBean.builder().id(5).condition(true).min(2).testBigDecimal(BigDecimal.valueOf(1)).build(),
+                VerifyFailedField.of(ParamTestBean::getTestBigDecimal, "testString")
         ));
 
         // condition测试
         result.add(VerifyObject.of(
                 ParamTestBean.builder().id(6).condition(false).min(0)
-                        .test("-123")
-                        .testString("-123")
+                        .test(-123)
                         .testBigDecimal(new BigDecimal("-123.12"))
                         .testBigInteger(new BigInteger("-123123"))
                         .testByte((byte) -12)
@@ -314,6 +306,59 @@ public class SpelMinTestBean {
         return result;
     }
 
+    /**
+     * 不同类型的value值测试
+     */
+    @Data
+    @Builder
+    @SpelValid
+    public static class ValueTypeTestBean implements ID {
+
+        private int id;
+
+        private int condition;
+
+        @SpelMin(condition = "#this.condition == 1", value = "#this.testInt")
+        @SpelMin(condition = "#this.condition == 2", value = "#this.testDou")
+        @SpelMin(condition = "#this.condition == 3", value = "#this.testInteger")
+        @SpelMin(condition = "#this.condition == 4", value = "#this.testDouble")
+        @SpelMin(condition = "#this.condition == 6", value = "#this.testBigDecimal")
+        @SpelMin(condition = "#this.condition == 7", value = "#this.testBigInteger")
+        private Double testValueDouble;
+
+        @SpelMin(condition = "#this.condition == 1", value = "#this.testInt")
+        @SpelMin(condition = "#this.condition == 2", value = "#this.testDou")
+        @SpelMin(condition = "#this.condition == 3", value = "#this.testInteger")
+        @SpelMin(condition = "#this.condition == 4", value = "#this.testDouble")
+        @SpelMin(condition = "#this.condition == 6", value = "#this.testBigDecimal")
+        @SpelMin(condition = "#this.condition == 7", value = "#this.testBigInteger")
+        private Float testValueFloat;
+
+        @SpelMin(condition = "#this.condition == 1", value = "#this.testInt")
+        @SpelMin(condition = "#this.condition == 2", value = "#this.testDou")
+        @SpelMin(condition = "#this.condition == 3", value = "#this.testInteger")
+        @SpelMin(condition = "#this.condition == 4", value = "#this.testDouble")
+        @SpelMin(condition = "#this.condition == 6", value = "#this.testBigDecimal")
+        @SpelMin(condition = "#this.condition == 7", value = "#this.testBigInteger")
+        @SpelMin(condition = "#this.condition == 8", value = "#this.testFloat")
+        private Integer testValueInt;
+
+        private int testInt;
+
+        private double testDou;
+
+        private Integer testInteger;
+
+        private Double testDouble;
+
+        private BigDecimal testBigDecimal;
+
+        private BigInteger testBigInteger;
+
+        private Float testFloat;
+
+    }
+
     public static List<VerifyObject> valueTypeTestCase() {
         ArrayList<VerifyObject> result = new ArrayList<>();
 
@@ -329,9 +374,6 @@ public class SpelMinTestBean {
         ));
         result.add(VerifyObject.of(
                 ValueTypeTestBean.builder().id(4).condition(4).testValueDouble(2D).testDouble(1d).build()
-        ));
-        result.add(VerifyObject.of(
-                ValueTypeTestBean.builder().id(5).condition(5).testValueDouble(2D).testString("1").build()
         ));
         result.add(VerifyObject.of(
                 ValueTypeTestBean.builder().id(6).condition(6).testValueDouble(2D).testBigDecimal(new BigDecimal(1)).build()
@@ -352,9 +394,6 @@ public class SpelMinTestBean {
         ));
         result.add(VerifyObject.of(
                 ValueTypeTestBean.builder().id(11).condition(4).testValueDouble(1D).testDouble(1d).build()
-        ));
-        result.add(VerifyObject.of(
-                ValueTypeTestBean.builder().id(12).condition(5).testValueDouble(1D).testString("1").build()
         ));
         result.add(VerifyObject.of(
                 ValueTypeTestBean.builder().id(13).condition(6).testValueDouble(1D).testBigDecimal(new BigDecimal(1)).build()
@@ -378,10 +417,6 @@ public class SpelMinTestBean {
         ));
         result.add(VerifyObject.of(
                 ValueTypeTestBean.builder().id(18).condition(4).testValueDouble(0D).testDouble(1d).build(),
-                VerifyFailedField.of(ValueTypeTestBean::getTestValueDouble)
-        ));
-        result.add(VerifyObject.of(
-                ValueTypeTestBean.builder().id(19).condition(5).testValueDouble(0D).testString("1").build(),
                 VerifyFailedField.of(ValueTypeTestBean::getTestValueDouble)
         ));
         result.add(VerifyObject.of(
@@ -473,76 +508,6 @@ public class SpelMinTestBean {
         return result;
     }
 
-    public static List<VerifyObject> notSupportTypeTestCase() {
-        ArrayList<VerifyObject> result = new ArrayList<>();
-
-        // List类型
-        result.add(VerifyObject.of(
-                NotSupportValueTypeTestBean.builder().id(1).testString("1").testList(Collections.emptyList()).build(),
-                true
-        ));
-
-        return result;
-    }
-
-    /**
-     * 不同类型的value值测试
-     */
-    @Data
-    @Builder
-    @SpelValid
-    public static class ValueTypeTestBean implements ID {
-
-        private int id;
-
-        private int condition;
-
-        @SpelMin(condition = "#this.condition == 1", value = "#this.testInt")
-        @SpelMin(condition = "#this.condition == 2", value = "#this.testDou")
-        @SpelMin(condition = "#this.condition == 3", value = "#this.testInteger")
-        @SpelMin(condition = "#this.condition == 4", value = "#this.testDouble")
-        @SpelMin(condition = "#this.condition == 5", value = "#this.testString")
-        @SpelMin(condition = "#this.condition == 6", value = "#this.testBigDecimal")
-        @SpelMin(condition = "#this.condition == 7", value = "#this.testBigInteger")
-        private Double testValueDouble;
-
-        @SpelMin(condition = "#this.condition == 1", value = "#this.testInt")
-        @SpelMin(condition = "#this.condition == 2", value = "#this.testDou")
-        @SpelMin(condition = "#this.condition == 3", value = "#this.testInteger")
-        @SpelMin(condition = "#this.condition == 4", value = "#this.testDouble")
-        @SpelMin(condition = "#this.condition == 5", value = "#this.testString")
-        @SpelMin(condition = "#this.condition == 6", value = "#this.testBigDecimal")
-        @SpelMin(condition = "#this.condition == 7", value = "#this.testBigInteger")
-        private Float testValueFloat;
-
-        @SpelMin(condition = "#this.condition == 1", value = "#this.testInt")
-        @SpelMin(condition = "#this.condition == 2", value = "#this.testDou")
-        @SpelMin(condition = "#this.condition == 3", value = "#this.testInteger")
-        @SpelMin(condition = "#this.condition == 4", value = "#this.testDouble")
-        @SpelMin(condition = "#this.condition == 5", value = "#this.testString")
-        @SpelMin(condition = "#this.condition == 6", value = "#this.testBigDecimal")
-        @SpelMin(condition = "#this.condition == 7", value = "#this.testBigInteger")
-        @SpelMin(condition = "#this.condition == 8", value = "#this.testFloat")
-        private Integer testValueInt;
-
-        private int testInt;
-
-        private double testDou;
-
-        private Integer testInteger;
-
-        private Double testDouble;
-
-        private String testString;
-
-        private BigDecimal testBigDecimal;
-
-        private BigInteger testBigInteger;
-
-        private Float testFloat;
-
-    }
-
     /**
      * 不支持的value值类型测试
      */
@@ -554,11 +519,23 @@ public class SpelMinTestBean {
         private int id;
 
         @SpelMin(value = "#this.testList")
-        private String testString;
+        private Integer test;
 
         @SpelMin
         private List<String> testList;
 
+    }
+
+    public static List<VerifyObject> notSupportTypeTestCase() {
+        ArrayList<VerifyObject> result = new ArrayList<>();
+
+        // List类型
+        result.add(VerifyObject.of(
+                NotSupportValueTypeTestBean.builder().id(1).test(1).testList(Collections.emptyList()).build(),
+                true
+        ));
+
+        return result;
     }
 
 }
