@@ -30,8 +30,8 @@ public class SpelMinValidator implements SpelConstraintValidator<SpelMin> {
         }
         // 计算表达式的值，基本数据类型会自动装箱
         Object minValue = SpelParser.parse(spelMin.value(), obj);
-        if (!(minValue instanceof Number) && !(minValue instanceof CharSequence)) {
-            throw new SpelParserException("Expression [" + spelMin.value() + "] calculate result must be Number or CharSequence.");
+        if (!(minValue instanceof Number)) {
+            throw new SpelParserException("Expression [" + spelMin.value() + "] calculate result must be Number.");
         }
         // 比较大小，其中一个是Not-a-Number (NaN）默认失败
         if (NumberComparatorUtil.compare(fieldValue, minValue, NumberComparatorUtil.LESS_THAN) < 0) {
@@ -49,7 +49,6 @@ public class SpelMinValidator implements SpelConstraintValidator<SpelMin> {
 
     static {
         HashSet<Class<?>> hashSet = new HashSet<>();
-        hashSet.add(CharSequence.class);
         hashSet.add(Number.class);
         hashSet.add(int.class);
         hashSet.add(long.class);
