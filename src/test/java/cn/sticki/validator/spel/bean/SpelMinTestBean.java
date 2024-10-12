@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * 功能：SpelMin 测试用例
+ * SpelMin 测试用例
  *
  * @author oddfar、阿杆
  * @since 2024/8/25

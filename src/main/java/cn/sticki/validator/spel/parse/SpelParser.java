@@ -7,9 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.expression.BeanFactoryResolver;
-import org.springframework.expression.EvaluationException;
 import org.springframework.expression.Expression;
-import org.springframework.expression.ParseException;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
@@ -59,9 +57,8 @@ public class SpelParser {
             Object value = parsed.getValue(context, rootObject, Object.class);
             log.debug("======> Parse result [{}]", value);
             return value;
-        } catch (ParseException | EvaluationException e) {
-            log.error("Parse expression error, expression [{}], message [{}]", expression, e.getMessage());
-            throw new SpelParserException(e);
+        } catch (RuntimeException e) {
+            throw new SpelParserException("Parse expression error, expression [" + expression + "], message [" + e.getMessage() + "]", e);
         }
     }
 

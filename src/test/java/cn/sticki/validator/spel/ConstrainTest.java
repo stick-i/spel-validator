@@ -98,4 +98,11 @@ public class ConstrainTest {
         Assertions.assertTrue(valueTypeTest, "spelMin valueType test failed");
         Assertions.assertTrue(notSupportTypeTest, "spelMin notSupportType test failed");
     }
+
+    @Test
+    void testSpelMax() {
+        boolean paramTest = ValidateUtil.checkConstraintResult(SpelMaxTestBean.paramTestCase());
+
+        Assertions.assertTrue(paramTest, "spelMax param test failed");
+    }
 }
