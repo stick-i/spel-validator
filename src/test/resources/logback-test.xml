@@ -3,7 +3,7 @@
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <!-- 简单日志模式 - 完整类名 -->
-            <pattern>[%highlight(%-5level)][%X{fullClassName}][%X{id}][%X{fieldName}] - %msg%n</pattern>
+            <pattern>[%highlight(%level)][%X{fullClassName}][%X{id}][%X{fieldName}] - %msg%n</pattern>
             <!-- 简单日志模式 -->
             <!-- <pattern>[%highlight(%-5level)][%X{className}][%X{id}][%X{fieldName}] - %msg%n</pattern> -->
             <!-- 详细日志模式 -->
