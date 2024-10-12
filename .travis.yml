@@ -1,6 +1,0 @@
-language: java
-sudo: false
-script: mvn clean verify
-after_success:
-  - mvn clean test jacoco:report coveralls:report -DrepoToken="${COVERALLS_TOKEN}"
-#  - mvn coveralls:report -DrepoToken="${COVERALLS_TOKEN}"
