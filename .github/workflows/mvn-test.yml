@@ -1,0 +1,22 @@
+name: run mvn test
+
+on: [ push, pull_request, workflow_dispatch ]
+
+jobs:
+  run-mvn-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '8'
+          cache: maven
+
+      - run: |
+          java -version
+          mvn -v
+
+      - run: mvn verify
+      - run: mvn clean test jacoco:report coveralls:report -DrepoToken="${{secrets.COVERALLS_TOKEN}}"
