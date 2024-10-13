@@ -1,7 +1,5 @@
-package cn.sticki.validator.spel;
+package cn.sticki.validator.spel.util;
 
-import cn.sticki.validator.spel.util.BeanUtil;
-import cn.sticki.validator.spel.util.IGetter;
 import lombok.Data;
 
 import java.util.Arrays;

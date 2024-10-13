@@ -1,4 +1,4 @@
-package cn.sticki.validator.spel;
+package cn.sticki.validator.spel.util;
 
 import lombok.Data;
 

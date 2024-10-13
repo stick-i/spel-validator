@@ -1,7 +1,5 @@
 package cn.sticki.validator.spel.util;
 
-import cn.sticki.validator.spel.VerifyFailedField;
-import cn.sticki.validator.spel.VerifyObject;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 
