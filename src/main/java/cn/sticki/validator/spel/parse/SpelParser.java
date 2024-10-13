@@ -25,13 +25,20 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class SpelParser {
 
+    static {
+        init();
+    }
+
     private static final SpelExpressionParser parser = new SpelExpressionParser();
 
     private static final StandardEvaluationContext context = new StandardEvaluationContext();
 
     private static final Map<String, Expression> expressionCache = new ConcurrentHashMap<>();
 
-    static {
+    private SpelParser() {
+    }
+
+    private static void init() {
         ApplicationContext applicationContext = SpelValidatorBeanRegistrar.getApplicationContext();
         if (applicationContext != null) {
             AutowireCapableBeanFactory beanFactory = applicationContext.getAutowireCapableBeanFactory();

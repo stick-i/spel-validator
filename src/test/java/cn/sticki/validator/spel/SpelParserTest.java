@@ -9,6 +9,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.context.support.GenericApplicationContext;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 /**
  * SpelParser 测试
  *
@@ -19,18 +22,36 @@ import org.springframework.context.support.GenericApplicationContext;
 public class SpelParserTest {
 
     @BeforeAll
-    static void beforeAll() {
+    static void init() {
         // 创建一个Spring ApplicationContext
-        GenericApplicationContext context = new GenericApplicationContext();
+        GenericApplicationContext applicationContext = new GenericApplicationContext();
         // 构建Bean
         BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(MyService.class);
-        context.registerBeanDefinition("myService", builder.getBeanDefinition());
+        applicationContext.registerBeanDefinition("myService", builder.getBeanDefinition());
         // 刷新上下文，这会初始化所有单例Bean
-        context.refresh();
+        applicationContext.refresh();
 
         // 注册上下文到SpelValidatorBeanRegistrar
+        //noinspection WriteOnlyObject
         SpelValidatorBeanRegistrar registrar = new SpelValidatorBeanRegistrar();
-        registrar.setApplicationContext(context);
+        registrar.setApplicationContext(applicationContext);
+
+        // 重新初始化 SpelParser，确保 ApplicationContext 注入成功
+        try {
+            Method method = SpelParser.class.getDeclaredMethod("init");
+            method.setAccessible(true);
+            method.invoke(null);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static class MyService {
+
+        public String test() {
+            return "spring bean";
+        }
+
     }
 
     @Test
@@ -64,14 +85,6 @@ public class SpelParserTest {
 
         // 表达式解析异常
         Assertions.assertThrows(SpelParserException.class, () -> SpelParser.parse("#this.aaa", null));
-    }
-
-    public static class MyService {
-
-        public String test() {
-            return "spring bean";
-        }
-
     }
 
 }
