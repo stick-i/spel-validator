@@ -1,19 +1,45 @@
 {
     "name": "spel-validator",
-    "version": "0.0.1",
+    "version": "0.2.0-beta",
     "description": "一个强大的 Java 参数校验包，基于 SpEL 实现，扩展自 javax.validation 包，几乎支持所有场景下的参数校验。",
     "license": "Apache-2.0",
     "type": "module",
     "scripts": {
-        "docs:build": "vuepress build docs",
-        "docs:clean-dev": "vuepress dev docs --clean-cache",
-        "docs:dev": "vuepress dev docs",
+        "docs:build": "vuepress build docs --clean-cache --clean-temp",
+        "docs:dev": "vuepress dev docs --clean-cache --clean-temp",
         "docs:update-package": "pnpm dlx vp-update"
     },
+    "prettier": "prettier-config-vuepress",
+    "dependencies": {
+        "@vuepress/bundler-vite": "2.0.0-rc.14",
+        "@vuepress/plugin-docsearch": "2.0.0-rc.40",
+        "@vuepress/plugin-baidu-analytics": "2.0.0-rc.40",
+        "@vuepress/plugin-register-components": "2.0.0-rc.37",
+        "@vuepress/plugin-shiki": "2.0.0-rc.40",
+        "@vuepress/plugin-sitemap": "2.0.0-rc.40",
+        "@vuepress/theme-default": "2.0.0-rc.40",
+        "http-server": "^14.1.1",
+        "sass-loader": "^15.0.0",
+        "vue": "^3.4.34",
+        "vuepress": "2.0.0-rc.14"
+    },
     "devDependencies": {
-        "@vuepress/bundler-vite": "^2.0.0-rc.7",
-        "@vuepress/theme-default": "^2.0.0-rc.11",
-        "vue": "^3.4.38",
-        "vuepress": "2.0.0-rc.15"
+        "@commitlint/cli": "^19.3.0",
+        "@commitlint/config-conventional": "^19.2.2",
+        "eslint": "^8.57.0",
+        "eslint-config-vuepress": "^4.10.1",
+        "eslint-config-vuepress-typescript": "^4.10.1",
+        "husky": "^9.1.1",
+        "lint-staged": "^15.2.7",
+        "prettier": "^3.3.3",
+        "prettier-config-vuepress": "^4.4.0",
+        "rimraf": "^6.0.1",
+        "sort-package-json": "^2.10.0",
+        "tsconfig-vuepress": "^4.5.0",
+        "typescript": "^5.5.4"
+    },
+    "packageManager": "pnpm@9.5.0",
+    "engines": {
+        "node": ">=18.19.0"
     }
 }
