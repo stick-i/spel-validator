@@ -218,7 +218,7 @@ public class SpelValidExecutor {
             // noinspection unchecked
             result = ((SpelConstraintValidator<A>) validator).isValid(annotation, verifiedObject, verifiedField);
         } catch (SpelValidatorException e) {
-            log.error("Spel validate error: {} ;Located in the annotation [{}] of class [{}] field [{}]",
+            log.error("Spel validate error: {}; Located in the annotation [{}] of class [{}] field [{}]",
                     e.getMessage(), annotation.annotationType().getName(), verifiedObject.getClass().getName(), verifiedField.getName());
             throw e;
         } catch (IllegalAccessException e) {

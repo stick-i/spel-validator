@@ -21,14 +21,23 @@ public class ConstrainTest {
     void testExample() {
         boolean verified = ValidateUtil.checkConstraintResult(ExampleTestBean.testCase());
         Assertions.assertTrue(verified);
+
+        boolean innerTest = ValidateUtil.checkConstraintResult(ExampleTestBean.innerTestCase());
+        Assertions.assertTrue(innerTest);
+    }
+
+    @Test
+    void testSpelValid() {
+        boolean verified = ValidateUtil.checkConstraintResult(SpelValidTestBean.paramTestCase());
+        Assertions.assertTrue(verified);
     }
 
     @Test
     void testSpelAssert() {
         boolean verified = ValidateUtil.checkConstraintResult(SpelAssertTestBean.paramTestCase());
-        Assertions.assertTrue(verified);
-
         boolean emptyTest = ValidateUtil.checkConstraintResult(SpelAssertTestBean.emptyTestCase());
+
+        Assertions.assertTrue(verified);
         Assertions.assertTrue(emptyTest);
     }
 
@@ -41,42 +50,62 @@ public class ConstrainTest {
     @Test
     void testSpelNotEmpty() {
         boolean verifiedParam = ValidateUtil.checkConstraintResult(SpelNotEmptyTestBean.paramTestCase());
-        Assertions.assertTrue(verifiedParam, "spelNotEmpty param test failed");
-
         boolean verifiedType = ValidateUtil.checkConstraintResult(SpelNotEmptyTestBean.typeTestCase());
+
+        Assertions.assertTrue(verifiedParam, "spelNotEmpty param test failed");
         Assertions.assertTrue(verifiedType, "spelNotEmpty type test failed");
     }
 
     @Test
     void testSpelNotNull() {
         boolean paramTest = ValidateUtil.checkConstraintResult(SpelNotNullTestBean.paramTestCase());
-        Assertions.assertTrue(paramTest, "spelNotNull param test failed");
-
         boolean typeTest = ValidateUtil.checkConstraintResult(SpelNotNullTestBean.typeTestCase());
-        Assertions.assertTrue(typeTest, "spelNotNull type test failed");
-
         boolean repeatableTest = ValidateUtil.checkConstraintResult(SpelNotNullTestBean.repeatableTestCase());
+
+        Assertions.assertTrue(paramTest, "spelNotNull param test failed");
+        Assertions.assertTrue(typeTest, "spelNotNull type test failed");
         Assertions.assertTrue(repeatableTest, "spelNotNull repeatable test failed");
     }
 
     @Test
     void testSpelNull() {
         boolean paramTest = ValidateUtil.checkConstraintResult(SpelNullTestBean.paramTestCase());
-        Assertions.assertTrue(paramTest, "spelNull param test failed");
-
         boolean typeTest = ValidateUtil.checkConstraintResult(SpelNullTestBean.typeTestCase());
-        Assertions.assertTrue(typeTest, "spelNull type test failed");
-
         boolean repeatableTest = ValidateUtil.checkConstraintResult(SpelNullTestBean.repeatableTestCase());
+
+        Assertions.assertTrue(paramTest, "spelNull param test failed");
+        Assertions.assertTrue(typeTest, "spelNull type test failed");
         Assertions.assertTrue(repeatableTest, "spelNull repeatable test failed");
     }
 
     @Test
     void testSpelSize() {
         boolean paramTest = ValidateUtil.checkConstraintResult(SpelSizeTestBean.paramTestCase());
-        Assertions.assertTrue(paramTest, "spelSize param test failed");
-
         boolean repeatableTest = ValidateUtil.checkConstraintResult(SpelSizeTestBean.repeatableTestCase());
+
+        Assertions.assertTrue(paramTest, "spelSize param test failed");
         Assertions.assertTrue(repeatableTest, "spelSize repeatable test failed");
+    }
+
+    @Test
+    void testSpelMin() {
+        boolean paramTest = ValidateUtil.checkConstraintResult(SpelMinTestBean.paramTestCase());
+        boolean repeatableTest = ValidateUtil.checkConstraintResult(SpelMinTestBean.repeatableTestCase());
+        boolean paramTest2 = ValidateUtil.checkConstraintResult(SpelMinTestBean.paramTest2Case());
+        boolean valueTypeTest = ValidateUtil.checkConstraintResult(SpelMinTestBean.valueTypeTestCase());
+        boolean notSupportTypeTest = ValidateUtil.checkConstraintResult(SpelMinTestBean.notSupportTypeTestCase());
+
+        Assertions.assertTrue(paramTest, "spelMin param test failed");
+        Assertions.assertTrue(repeatableTest, "spelMin repeatable test failed");
+        Assertions.assertTrue(paramTest2, "spelMin param test2 failed");
+        Assertions.assertTrue(valueTypeTest, "spelMin valueType test failed");
+        Assertions.assertTrue(notSupportTypeTest, "spelMin notSupportType test failed");
+    }
+
+    @Test
+    void testSpelMax() {
+        boolean paramTest = ValidateUtil.checkConstraintResult(SpelMaxTestBean.paramTestCase());
+
+        Assertions.assertTrue(paramTest, "spelMax param test failed");
     }
 }

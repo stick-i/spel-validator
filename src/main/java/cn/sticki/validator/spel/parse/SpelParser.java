@@ -7,9 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.expression.BeanFactoryResolver;
-import org.springframework.expression.EvaluationException;
 import org.springframework.expression.Expression;
-import org.springframework.expression.ParseException;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
@@ -27,13 +25,20 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class SpelParser {
 
+    static {
+        init();
+    }
+
     private static final SpelExpressionParser parser = new SpelExpressionParser();
 
     private static final StandardEvaluationContext context = new StandardEvaluationContext();
 
     private static final Map<String, Expression> expressionCache = new ConcurrentHashMap<>();
 
-    static {
+    private SpelParser() {
+    }
+
+    private static void init() {
         ApplicationContext applicationContext = SpelValidatorBeanRegistrar.getApplicationContext();
         if (applicationContext != null) {
             AutowireCapableBeanFactory beanFactory = applicationContext.getAutowireCapableBeanFactory();
@@ -49,7 +54,7 @@ public class SpelParser {
      *
      * @param expression 表达式
      * @param rootObject 用于计算表达式的根对象
-     * @return 表达式计算结果
+     * @return 表达式计算结果。若为基本数据类型，则会自动转为包装类型。
      */
     @Nullable
     public static Object parse(String expression, Object rootObject) {
@@ -59,9 +64,8 @@ public class SpelParser {
             Object value = parsed.getValue(context, rootObject, Object.class);
             log.debug("======> Parse result [{}]", value);
             return value;
-        } catch (ParseException | EvaluationException e) {
-            log.error("Parse expression error, expression [{}], message [{}]", expression, e.getMessage());
-            throw new SpelParserException(e);
+        } catch (RuntimeException e) {
+            throw new SpelParserException("Parse expression error, expression [" + expression + "], message [" + e.getMessage() + "]", e);
         }
     }
 
@@ -72,7 +76,7 @@ public class SpelParser {
      * @param expression   表达式
      * @param rootObject   用于计算表达式的根对象
      * @param requiredType 指定返回值的类型
-     * @return 表达式计算结果
+     * @return 表达式计算结果。若为基本数据类型，则会自动转为包装类型。
      * @throws SpelParserException 当表达式计算结果为null或者不是指定类型时抛出
      */
     @NotNull

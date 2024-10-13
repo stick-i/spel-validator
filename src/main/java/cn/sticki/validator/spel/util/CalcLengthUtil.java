@@ -21,6 +21,9 @@ import java.util.Set;
  */
 public class CalcLengthUtil {
 
+    private CalcLengthUtil() {
+    }
+
     public static final Set<Class<?>> SUPPORT_TYPE;
 
     static {
