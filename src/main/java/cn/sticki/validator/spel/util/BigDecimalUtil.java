@@ -12,11 +12,14 @@ import java.math.BigDecimal;
  */
 public class BigDecimalUtil {
 
+    private BigDecimalUtil() {
+    }
+
     public static BigDecimal valueOf(Object val) {
         try {
             if (val instanceof BigDecimal) {
                 return (BigDecimal) val;
-            }else if (val instanceof Double) {
+            } else if (val instanceof Double) {
                 return BigDecimal.valueOf((Double) val);
             } else if (val instanceof Float) {
                 return BigDecimal.valueOf((Float) val);

@@ -13,6 +13,9 @@ import java.util.OptionalInt;
 @SuppressWarnings({"OptionalUsedAsFieldOrParameterType", "JavadocReference"})
 public class NumberComparatorUtil {
 
+    private NumberComparatorUtil() {
+    }
+
     public static final OptionalInt LESS_THAN = OptionalInt.of(-1);
 
     public static final OptionalInt FINITE_VALUE = OptionalInt.empty();
@@ -20,6 +23,12 @@ public class NumberComparatorUtil {
     public static final OptionalInt GREATER_THAN = OptionalInt.of(1);
 
     public static int compare(Number number, Number value, OptionalInt treatNanAs) {
+        if (number == null || value == null || treatNanAs == null || !treatNanAs.isPresent()) {
+            throw new IllegalArgumentException("[Number], [Value] and [TreatNanAs] must not be null.");
+        }
+        if (number.equals(value)) {
+            return 0;
+        }
         boolean numberIsDouble = number instanceof Double || number instanceof Float;
         boolean valueIsDouble = value instanceof Double || value instanceof Float;
 
@@ -42,9 +51,8 @@ public class NumberComparatorUtil {
 
     private static int compare(Number number, Double value, OptionalInt treatNanAs) {
         // 检查的是 value，所以需要反转
-        if (treatNanAs.isPresent()) {
-            treatNanAs = OptionalInt.of(-treatNanAs.getAsInt());
-        }
+        //noinspection OptionalGetWithoutIsPresent
+        treatNanAs = OptionalInt.of(-treatNanAs.getAsInt());
         OptionalInt infinity = infinityCheck(value, treatNanAs);
         if (infinity.isPresent()) {
             // 这里也要反转

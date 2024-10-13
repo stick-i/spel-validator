@@ -6,6 +6,7 @@ import cn.sticki.validator.spel.constrain.SpelNotNull;
 import cn.sticki.validator.spel.util.ID;
 import cn.sticki.validator.spel.util.VerifyFailedField;
 import cn.sticki.validator.spel.util.VerifyObject;
+import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -46,7 +47,6 @@ public class ExampleTestBean {
 
     }
 
-
     public static List<VerifyObject> testCase() {
         ArrayList<VerifyObject> result = new ArrayList<>();
 
@@ -76,6 +76,51 @@ public class ExampleTestBean {
         result.add(VerifyObject.of(bean3, true));
 
         return result;
+    }
+
+    public static List<VerifyObject> innerTestCase() {
+        ArrayList<VerifyObject> result = new ArrayList<>();
+
+        InnerTestBean bean = InnerTestBean.builder().id(1)
+                .testClass(InnerTestBean.TestClass.builder().testInt(1).build())
+                .build();
+        result.add(VerifyObject.of(bean));
+
+        InnerTestBean bean2 = InnerTestBean.builder().id(2)
+                .testClass(InnerTestBean.TestClass.builder().testInt(null).build())
+                .build();
+        result.add(VerifyObject.of(bean2, VerifyFailedField.of("testClass.testInt")));
+
+        InnerTestBean bean3 = InnerTestBean.builder().id(3)
+                .testClass(null)
+                .build();
+        result.add(VerifyObject.of(bean3));
+
+        return result;
+    }
+
+    /**
+     * 内部嵌套类测试
+     */
+    @Data
+    @Builder
+    @SpelValid
+    public static class InnerTestBean implements ID {
+
+        private int id;
+
+        @SpelValid()
+        private TestClass testClass;
+
+        @Data
+        @Builder
+        public static class TestClass {
+
+            @SpelNotNull
+            private Integer testInt;
+
+        }
+
     }
 
 }

@@ -21,6 +21,9 @@ public class ConstrainTest {
     void testExample() {
         boolean verified = ValidateUtil.checkConstraintResult(ExampleTestBean.testCase());
         Assertions.assertTrue(verified);
+
+        boolean innerTest = ValidateUtil.checkConstraintResult(ExampleTestBean.innerTestCase());
+        Assertions.assertTrue(innerTest);
     }
 
     @Test

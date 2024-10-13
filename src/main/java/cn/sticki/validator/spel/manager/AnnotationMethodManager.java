@@ -13,6 +13,9 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class AnnotationMethodManager {
 
+    private AnnotationMethodManager() {
+    }
+
     private final static ConcurrentHashMap<String, Method> METHOD_CACHE = new ConcurrentHashMap<>();
 
     /**
