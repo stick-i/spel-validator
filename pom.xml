@@ -196,7 +196,7 @@
                 <artifactId>coveralls-maven-plugin</artifactId>
                 <version>4.5.0-M2</version>
                 <configuration>
-                    <jacocoReports>${project.basedir}/spel-validator-test/target/site/jacoco-aggregate/jacoco.xml</jacocoReports>
+                    <jacocoReports>${project.basedir}/spel-validator-test-report/target/site/jacoco-aggregate/jacoco.xml</jacocoReports>
                 </configuration>
             </plugin>
         </plugins>

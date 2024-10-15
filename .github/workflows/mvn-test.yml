@@ -19,4 +19,4 @@ jobs:
           mvn -v
 
       - run: mvn verify
-      - run: mvn clean test jacoco:report coveralls:report -DrepoToken="${{secrets.COVERALLS_TOKEN}}"
+      - run: mvn clean test coveralls:report -DrepoToken="${{secrets.COVERALLS_TOKEN}}" -f pom.xml
