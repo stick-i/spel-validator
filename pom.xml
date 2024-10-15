@@ -14,6 +14,7 @@
         <module>spel-validator-core</module>
         <module>spel-validator-javax</module>
         <module>spel-validator-jakarta</module>
+        <module>spel-validator-test-report</module>
     </modules>
 
     <name>Spel Validator</name>
@@ -79,6 +80,16 @@
             <dependency>
                 <groupId>cn.sticki</groupId>
                 <artifactId>spel-validator-core</artifactId>
+                <version>${spel-validator.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.sticki</groupId>
+                <artifactId>spel-validator-javax</artifactId>
+                <version>${spel-validator.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.sticki</groupId>
+                <artifactId>spel-validator-jakarta</artifactId>
                 <version>${spel-validator.version}</version>
             </dependency>
             <dependency>
@@ -184,6 +195,9 @@
                 <groupId>com.github.hazendaz.maven</groupId>
                 <artifactId>coveralls-maven-plugin</artifactId>
                 <version>4.5.0-M2</version>
+                <configuration>
+                    <jacocoReports>${project.basedir}/spel-validator-test/target/site/jacoco-aggregate/jacoco.xml</jacocoReports>
+                </configuration>
             </plugin>
         </plugins>
     </build>
