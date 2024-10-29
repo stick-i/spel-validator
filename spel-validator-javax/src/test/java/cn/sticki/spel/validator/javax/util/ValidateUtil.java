@@ -1,13 +1,13 @@
 package cn.sticki.spel.validator.javax.util;
 
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.MDC;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 /**
  * 测试验证工具类
@@ -55,25 +55,14 @@ public class ValidateUtil {
         boolean expectException = verifyObject.isExpectException();
 
         // 设置日志上下文
-        String className = object.getClass().getSimpleName();
-        Class<?> enclosingClass = object.getClass().getEnclosingClass();
-        if (enclosingClass != null) {
-            className = enclosingClass.getSimpleName() + "." + className;
-        }
-
-        MDC.put("className", className);
-        MDC.put("fullClassName", abbreviate(object.getClass().getName()));
-        if (object instanceof ID) {
-            MDC.put("id", String.valueOf(((ID) object).getId()));
-        }
-
+        LogContext.setValidateObject(object);
         log.info("Start checking object: {}", object);
 
         int failCount = 0;
         try {
             // 执行约束校验
             Set<ConstraintViolation<Object>> validate = ValidateUtil.validate(object);
-            failCount += calcFailCount(verifyFailedFields, ViolationSet.of(validate));
+            failCount += processVerifyResult(verifyFailedFields, ConstraintViolationSet.of(validate));
         } catch (Exception e) {
             if (expectException) {
                 log.info("Passed, Capture exception {}, message: {}", e.getClass(), e.getMessage());
@@ -95,30 +84,32 @@ public class ValidateUtil {
             log.error("Verification end, number of failures: {}", failCount);
         }
         log.info("------------------------------------------------------------------------");
-        MDC.clear();
+        LogContext.clearValidateObject();
 
         return failCount == 0;
     }
 
     /**
-     * 计算验证字段约束的失败次数
+     * 处理验证结果
      *
      * @param verifyFailedFields 预期失败字段
      * @param violationSet       验证结果
+     * @return 验证失败的次数
      */
-    private static int calcFailCount(Collection<VerifyFailedField> verifyFailedFields, ViolationSet violationSet) {
+    private static int processVerifyResult(Collection<VerifyFailedField> verifyFailedFields, ConstraintViolationSet violationSet) {
+        final String fieldNameLogKey = "fieldName";
         int failCount = 0;
         // 检查结果是否符合预期
         for (VerifyFailedField verifyFailedField : verifyFailedFields) {
             String fieldName = verifyFailedField.getName();
-            MDC.put("fieldName", fieldName);
+            LogContext.set(fieldNameLogKey, fieldName);
             String message = verifyFailedField.getMessage();
 
             log.info("Expected exception information: {}", message == null ? "ignore" : message);
 
             boolean fieldMatch = false, find = false;
 
-            ConstraintViolation<Object> violation = violationSet.getAndRemove(fieldName, message);
+            VerifyFailedField violation = violationSet.getAndRemove(fieldName, message);
             if (violation != null) {
                 find = true;
                 log.info("Real exception information: {}", violation.getMessage());
@@ -141,75 +132,14 @@ public class ValidateUtil {
             }
         }
 
-        MDC.remove("fieldName");
+        LogContext.remove(fieldNameLogKey);
         // 被忽略的字段
-        for (ConstraintViolation<Object> violation : violationSet.getAll()) {
-            log.error("Field [{}] is ignored", violation.getPropertyPath().toString());
+        for (VerifyFailedField violation : violationSet.getAll()) {
+            log.error("Field [{}] is ignored", violation.getName());
             failCount++;
         }
         return failCount;
     }
 
-    public static String abbreviate(String className) {
-        String[] parts = className.split("\\.");
-        StringBuilder abbreviated = new StringBuilder();
-        for (int i = 0; i < parts.length - 1; i++) {
-            abbreviated.append(parts[i].charAt(0)).append(".");
-        }
-        abbreviated.append(parts[parts.length - 1]);
-        return abbreviated.toString();
-    }
-
-    static class ViolationSet {
-
-        private final Map<String, List<ConstraintViolation<Object>>> violationMap;
-
-        public ViolationSet(Set<ConstraintViolation<Object>> validate) {
-            if (validate == null || validate.isEmpty()) {
-                violationMap = Collections.emptyMap();
-                return;
-            }
-            violationMap = validate.stream().collect(
-                    Collectors.groupingBy(violation -> violation.getPropertyPath().toString())
-            );
-        }
-
-        public static ViolationSet of(Set<ConstraintViolation<Object>> validate) {
-            return new ViolationSet(validate);
-        }
-
-        /**
-         * 根据字段和期望的错误信息来获取字段约束结果
-         *
-         * @param fieldName     字段名
-         * @param expectMessage 期望的错误信息
-         * @return 字段约束结果，当 expectMessage 不为null时，会优先匹配具有相同message的数据
-         */
-        public ConstraintViolation<Object> getAndRemove(String fieldName, String expectMessage) {
-            List<ConstraintViolation<Object>> violationList = violationMap.get(fieldName);
-            if (violationList == null || violationList.isEmpty()) {
-                return null;
-            }
-            if (violationList.size() == 1 || expectMessage == null) {
-                ConstraintViolation<Object> violation = violationList.get(0);
-                violationMap.remove(fieldName);
-                return violation;
-            }
-            // 当存在多个约束时，优先匹配具有相同message的数据
-            for (ConstraintViolation<Object> violation : violationList) {
-                if (expectMessage.equals(violation.getMessage())) {
-                    violationList.remove(violation);
-                    return violation;
-                }
-            }
-
-            return violationList.remove(0);
-        }
-
-        public Set<ConstraintViolation<Object>> getAll() {
-            return violationMap.values().stream().flatMap(List::stream).collect(Collectors.toSet());
-        }
-
-    }
 
 }

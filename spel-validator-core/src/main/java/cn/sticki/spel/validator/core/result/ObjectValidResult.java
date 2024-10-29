@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class ObjectValidResult {
 
-    private final ArrayList<FieldError> errors = new ArrayList<>();
+    private final List<FieldError> errors = new ArrayList<>();
 
     public boolean hasError() {
         return !errors.isEmpty();
