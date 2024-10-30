@@ -1,6 +1,7 @@
 package cn.sticki.spel.validator.javax.util;
 
-import javax.validation.ConstraintViolation;
+import cn.sticki.spel.validator.core.result.FieldError;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -14,33 +15,19 @@ import java.util.stream.Collectors;
  */
 public class ConstraintViolationSet {
 
-    private static final ConstraintViolationSet EMPTY = new ConstraintViolationSet(Collections.emptyList());
+    private final Map<String, List<FieldError>> verifyMap;
 
-    private final Map<String, List<VerifyFailedField>> verifyMap;
-
-    public ConstraintViolationSet(Collection<VerifyFailedField> failedFields) {
-        if (failedFields == null || failedFields.isEmpty()) {
+    public ConstraintViolationSet(Collection<FieldError> fieldErrors) {
+        if (fieldErrors == null || fieldErrors.isEmpty()) {
             verifyMap = Collections.emptyMap();
             return;
         }
 
-        this.verifyMap = failedFields.stream().collect(Collectors.groupingBy(VerifyFailedField::getName));
+        this.verifyMap = fieldErrors.stream().collect(Collectors.groupingBy(FieldError::getFieldName));
     }
 
-    public static ConstraintViolationSet of(Set<ConstraintViolation<Object>> validate) {
-        if (validate == null || validate.isEmpty()) {
-            return EMPTY;
-        }
-        List<VerifyFailedField> list = validate.stream().map(ConstraintViolationSet::convert).collect(Collectors.toList());
-        return new ConstraintViolationSet(list);
-    }
-
-    public static ConstraintViolationSet of(List<VerifyFailedField> validate) {
-        return new ConstraintViolationSet(validate);
-    }
-
-    private static VerifyFailedField convert(ConstraintViolation<Object> violation) {
-        return VerifyFailedField.of(violation.getPropertyPath().toString(), violation.getMessage());
+    public static ConstraintViolationSet of(List<FieldError> fieldErrors) {
+        return new ConstraintViolationSet(fieldErrors);
     }
 
     /**
@@ -50,20 +37,20 @@ public class ConstraintViolationSet {
      * @param expectMessage 期望的错误信息
      * @return 字段约束结果，当 expectMessage 不为null时，会优先匹配具有相同message的数据
      */
-    public VerifyFailedField getAndRemove(String fieldName, String expectMessage) {
-        List<VerifyFailedField> violationList = verifyMap.get(fieldName);
+    public FieldError getAndRemove(String fieldName, String expectMessage) {
+        List<FieldError> violationList = verifyMap.get(fieldName);
         if (violationList == null || violationList.isEmpty()) {
             return null;
         }
         if (violationList.size() == 1 || expectMessage == null) {
-            VerifyFailedField violation = violationList.get(0);
+            FieldError violation = violationList.get(0);
             verifyMap.remove(fieldName);
             return violation;
         }
         // 当存在多个约束时，优先匹配具有相同message的数据。
         // 否则当一个字段有多个约束条件时，无法匹配到期望的约束。
-        for (VerifyFailedField violation : violationList) {
-            if (expectMessage.equals(violation.getMessage())) {
+        for (FieldError violation : violationList) {
+            if (expectMessage.equals(violation.getErrorMessage())) {
                 violationList.remove(violation);
                 return violation;
             }
@@ -75,7 +62,7 @@ public class ConstraintViolationSet {
     /**
      * 获取所有的约束违反字段
      */
-    public Set<VerifyFailedField> getAll() {
+    public Set<FieldError> getAll() {
         return verifyMap.values().stream().flatMap(List::stream).collect(Collectors.toSet());
     }
 

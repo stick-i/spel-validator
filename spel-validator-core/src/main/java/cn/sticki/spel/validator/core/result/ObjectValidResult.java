@@ -15,6 +15,8 @@ public class ObjectValidResult {
 
     private final List<FieldError> errors = new ArrayList<>();
 
+    public static final ObjectValidResult EMPTY = new ObjectValidResult();
+
     public boolean hasError() {
         return !errors.isEmpty();
     }
@@ -54,6 +56,12 @@ public class ObjectValidResult {
     public void addFieldResult(FieldValidResult result) {
         if (!result.isSuccess()) {
             errors.add(new FieldError(result.getFieldName(), result.getMessage()));
+        }
+    }
+
+    public void addFieldError(List<FieldError> fieldErrorList) {
+        if (fieldErrorList != null && !fieldErrorList.isEmpty()) {
+            errors.addAll(fieldErrorList);
         }
     }
 }

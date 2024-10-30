@@ -29,4 +29,7 @@ public class FieldError {
         this.errorMessage = errorMessage;
     }
 
+    public static FieldError of(String fieldName, String errorMessage) {
+        return new FieldError(fieldName, errorMessage);
+    }
 }
