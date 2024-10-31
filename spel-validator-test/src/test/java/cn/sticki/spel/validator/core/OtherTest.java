@@ -1,5 +1,6 @@
-package cn.sticki.spel.validator.javax;
+package cn.sticki.spel.validator.core;
 
+import cn.sticki.spel.validator.core.constrain.SpelAssert;
 import cn.sticki.spel.validator.core.exception.SpelArgumentException;
 import cn.sticki.spel.validator.core.exception.SpelParserException;
 import cn.sticki.spel.validator.core.manager.AnnotationMethodManager;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 import java.util.OptionalInt;
 
 /**
- * 其他测试，无实际意义，用于提高代码覆盖率
+ * 一些边边角角的测试
  *
  * @author 阿杆
  * @version 1.0
@@ -33,8 +34,11 @@ public class OtherTest {
 
     @Test
     void testAnnotationMethodManager() {
-        Method abc = AnnotationMethodManager.get(SpelValid.class, "abc");
+        Method abc = AnnotationMethodManager.get(SpelAssert.class, "abc");
         Assertions.assertNull(abc);
+
+        Method assertTrue = AnnotationMethodManager.get(SpelAssert.class, "assertTrue");
+        Assertions.assertNotNull(assertTrue);
     }
 
     @Test

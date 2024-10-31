@@ -1,9 +1,8 @@
-package cn.sticki.spel.validator.javax.bean;
+package cn.sticki.spel.validator.core.bean;
 
 import cn.sticki.spel.validator.core.constrain.SpelNotBlank;
-import cn.sticki.spel.validator.javax.SpelValid;
-import cn.sticki.spel.validator.javax.util.VerifyFailedField;
-import cn.sticki.spel.validator.javax.util.VerifyObject;
+import cn.sticki.spel.validator.test.util.VerifyFailedField;
+import cn.sticki.spel.validator.test.util.VerifyObject;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -17,7 +16,6 @@ import java.util.List;
  * @since 2024/6/17
  */
 @Data
-@SpelValid
 public class SpelNotBlankTestBean {
 
     @SpelNotBlank
@@ -60,7 +58,6 @@ public class SpelNotBlankTestBean {
     }
 
     @Data
-    @SpelValid
     public static class TestBean2 {
 
         @SpelNotBlank

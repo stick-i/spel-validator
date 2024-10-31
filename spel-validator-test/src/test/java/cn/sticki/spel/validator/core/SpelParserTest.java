@@ -1,4 +1,4 @@
-package cn.sticki.spel.validator.javax;
+package cn.sticki.spel.validator.core;
 
 import cn.sticki.spel.validator.core.exception.SpelParserException;
 import cn.sticki.spel.validator.core.parse.SpelParser;

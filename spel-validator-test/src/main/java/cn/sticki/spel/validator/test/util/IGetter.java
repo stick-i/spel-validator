@@ -1,4 +1,4 @@
-package cn.sticki.spel.validator.javax.util;
+package cn.sticki.spel.validator.test.util;
 
 /**
  * getter，用于获取对象的属性值

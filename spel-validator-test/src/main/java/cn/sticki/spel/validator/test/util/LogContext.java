@@ -1,4 +1,4 @@
-package cn.sticki.spel.validator.javax.util;
+package cn.sticki.spel.validator.test.util;
 
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;

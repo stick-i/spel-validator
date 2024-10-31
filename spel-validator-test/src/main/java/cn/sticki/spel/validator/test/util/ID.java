@@ -1,4 +1,4 @@
-package cn.sticki.spel.validator.javax.util;
+package cn.sticki.spel.validator.test.util;
 
 /**
  * ID接口，用于给测试用例标号，方便查看测试结果

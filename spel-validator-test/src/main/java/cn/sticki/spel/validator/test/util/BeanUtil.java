@@ -1,4 +1,4 @@
-package cn.sticki.spel.validator.javax.util;
+package cn.sticki.spel.validator.test.util;
 
 import java.lang.invoke.SerializedLambda;
 import java.lang.reflect.Method;
@@ -11,11 +11,6 @@ import java.lang.reflect.Method;
  * @since 2024/6/13
  */
 public class BeanUtil {
-
-    public static void main(String[] args) {
-        String e = getFieldName(Object::getClass);
-        System.out.println(e);
-    }
 
     /**
      * 获取字段名称

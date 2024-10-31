@@ -31,6 +31,11 @@
         <!-- ===== for test ===== -->
 
         <dependency>
+            <groupId>cn.sticki</groupId>
+            <artifactId>spel-validator-test</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>

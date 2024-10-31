@@ -1,10 +1,9 @@
-package cn.sticki.spel.validator.javax.bean;
+package cn.sticki.spel.validator.core.bean;
 
 import cn.sticki.spel.validator.core.constrain.SpelNotEmpty;
-import cn.sticki.spel.validator.javax.SpelValid;
-import cn.sticki.spel.validator.javax.util.ID;
-import cn.sticki.spel.validator.javax.util.VerifyFailedField;
-import cn.sticki.spel.validator.javax.util.VerifyObject;
+import cn.sticki.spel.validator.test.util.ID;
+import cn.sticki.spel.validator.test.util.VerifyFailedField;
+import cn.sticki.spel.validator.test.util.VerifyObject;
 import lombok.Builder;
 import lombok.Data;
 
@@ -24,7 +23,6 @@ public class SpelNotEmptyTestBean {
      */
     @Data
     @Builder
-    @SpelValid
     public static class ParamTestBean implements ID {
 
         private int id;
@@ -85,7 +83,6 @@ public class SpelNotEmptyTestBean {
      */
     @Data
     @Builder
-    @SpelValid
     static class TypeTestBean {
 
         @SpelNotEmpty

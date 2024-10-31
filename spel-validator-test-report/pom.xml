@@ -33,6 +33,11 @@
             <groupId>cn.sticki</groupId>
             <artifactId>spel-validator-javax</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>cn.sticki</groupId>
+            <artifactId>spel-validator-test</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

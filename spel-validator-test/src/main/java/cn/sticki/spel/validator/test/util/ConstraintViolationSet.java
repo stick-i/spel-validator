@@ -1,4 +1,4 @@
-package cn.sticki.spel.validator.javax.util;
+package cn.sticki.spel.validator.test.util;
 
 import cn.sticki.spel.validator.core.result.FieldError;
 

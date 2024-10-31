@@ -1,9 +1,9 @@
-package cn.sticki.spel.validator.javax.bean;
+package cn.sticki.spel.validator.core.bean;
 
 import cn.sticki.spel.validator.core.constrain.SpelMin;
-import cn.sticki.spel.validator.javax.util.ID;
-import cn.sticki.spel.validator.javax.util.VerifyFailedField;
-import cn.sticki.spel.validator.javax.util.VerifyObject;
+import cn.sticki.spel.validator.test.util.ID;
+import cn.sticki.spel.validator.test.util.VerifyFailedField;
+import cn.sticki.spel.validator.test.util.VerifyObject;
 import lombok.Builder;
 import lombok.Data;
 
