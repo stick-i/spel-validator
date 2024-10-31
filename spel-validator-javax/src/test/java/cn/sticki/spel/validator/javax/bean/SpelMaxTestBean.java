@@ -1,7 +1,6 @@
 package cn.sticki.spel.validator.javax.bean;
 
 import cn.sticki.spel.validator.core.constrain.SpelMax;
-import cn.sticki.spel.validator.javax.SpelValid;
 import cn.sticki.spel.validator.javax.util.ID;
 import cn.sticki.spel.validator.javax.util.VerifyFailedField;
 import cn.sticki.spel.validator.javax.util.VerifyObject;
@@ -27,7 +26,7 @@ public class SpelMaxTestBean {
      */
     @Data
     @Builder
-    @SpelValid
+    // @SpelValid
     public static class ParamTestBean implements ID {
 
         private int id;

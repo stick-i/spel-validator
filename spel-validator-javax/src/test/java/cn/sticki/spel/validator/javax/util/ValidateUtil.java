@@ -34,11 +34,11 @@ public class ValidateUtil {
      *
      * @return 校验结果
      */
-    public static ObjectValidResult validate(Object obj) {
+    public static ObjectValidResult validate(Object obj, String[] spelGroups) {
         // 如果对象没有使用 SpelValid 注解，则直接调用验证执行器进行验证
         // 这种情况下，只会验证本框架提供的约束注解
         if (!obj.getClass().isAnnotationPresent(SpelValid.class)) {
-            return SpelValidExecutor.validateObject(obj);
+            return SpelValidExecutor.validateObject(obj, spelGroups);
         }
 
         // 通过 @Valid 的方式进行验证
@@ -74,6 +74,7 @@ public class ValidateUtil {
      */
     public static boolean checkConstraintResult(VerifyObject verifyObject) {
         Object object = verifyObject.getObject();
+        String[] spelGroups = verifyObject.getSpelGroups();
         Collection<VerifyFailedField> verifyFailedFields = verifyObject.getVerifyFailedFields();
         boolean expectException = verifyObject.isExpectException();
 
@@ -84,7 +85,7 @@ public class ValidateUtil {
         int failCount = 0;
         try {
             // 执行约束校验
-            ObjectValidResult validResult = ValidateUtil.validate(object);
+            ObjectValidResult validResult = ValidateUtil.validate(object, spelGroups);
             failCount += processVerifyResult(verifyFailedFields, ConstraintViolationSet.of(validResult.getErrors()));
         } catch (Exception e) {
             if (expectException) {
@@ -163,6 +164,5 @@ public class ValidateUtil {
         }
         return failCount;
     }
-
 
 }

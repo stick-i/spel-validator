@@ -1,7 +1,6 @@
 package cn.sticki.spel.validator.javax.bean;
 
 import cn.sticki.spel.validator.core.constrain.SpelAssert;
-import cn.sticki.spel.validator.javax.SpelValid;
 import cn.sticki.spel.validator.javax.util.ID;
 import cn.sticki.spel.validator.javax.util.VerifyFailedField;
 import cn.sticki.spel.validator.javax.util.VerifyObject;
@@ -20,7 +19,7 @@ import java.util.List;
 public class SpelAssertTestBean {
 
     @Data
-    @SpelValid(spelGroups = "#this.group")
+    // @SpelValid(spelGroups = "#this.group")
     public static class ParamTestBean implements ID {
 
         private int id;
@@ -58,7 +57,7 @@ public class SpelAssertTestBean {
                 bean,
                 VerifyFailedField.of(ParamTestBean::getTest2),
                 VerifyFailedField.of(ParamTestBean::getTest4, "test4")
-        ));
+        ).setGroups("#this.group"));
 
         ParamTestBean bean2 = new ParamTestBean();
         bean2.setId(2);
@@ -68,7 +67,7 @@ public class SpelAssertTestBean {
                 bean2,
                 VerifyFailedField.of(ParamTestBean::getTest2),
                 VerifyFailedField.of(ParamTestBean::getTest5, "group1")
-        ));
+        ).setGroups("#this.group"));
 
         ParamTestBean bean3 = new ParamTestBean();
         bean3.setId(3);
@@ -77,7 +76,7 @@ public class SpelAssertTestBean {
         list.add(VerifyObject.of(
                 bean3,
                 VerifyFailedField.of(ParamTestBean::getTest2)
-        ));
+        ).setGroups("#this.group"));
 
         ParamTestBean bean4 = new ParamTestBean();
         bean4.setId(4);
@@ -88,13 +87,13 @@ public class SpelAssertTestBean {
                 VerifyFailedField.of(ParamTestBean::getTest2),
                 VerifyFailedField.of(ParamTestBean::getTest4, "test4"),
                 VerifyFailedField.of(ParamTestBean::getTest6, "group2")
-        ));
+        ).setGroups("#this.group"));
 
         return list;
     }
 
     @Data
-    @SpelValid
+    // @SpelValid
     public static class EmptyTestBean {
 
         @SpelAssert(condition = "true", assertTrue = "")

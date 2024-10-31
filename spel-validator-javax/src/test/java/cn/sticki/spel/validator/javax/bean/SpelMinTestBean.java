@@ -1,7 +1,6 @@
 package cn.sticki.spel.validator.javax.bean;
 
 import cn.sticki.spel.validator.core.constrain.SpelMin;
-import cn.sticki.spel.validator.javax.SpelValid;
 import cn.sticki.spel.validator.javax.util.ID;
 import cn.sticki.spel.validator.javax.util.VerifyFailedField;
 import cn.sticki.spel.validator.javax.util.VerifyObject;
@@ -27,7 +26,7 @@ public class SpelMinTestBean {
      */
     @Data
     @Builder
-    @SpelValid
+    // @SpelValid
     public static class ParamTestBean implements ID {
 
         private int id;
@@ -164,7 +163,7 @@ public class SpelMinTestBean {
      */
     @Data
     @Builder
-    @SpelValid
+    // @SpelValid
     public static class RepeatableTestBean implements ID {
 
         private int id;
@@ -240,7 +239,7 @@ public class SpelMinTestBean {
      */
     @Data
     @Builder
-    @SpelValid
+    // @SpelValid
     public static class ParamTestBean2 implements ID {
 
         private int id;
@@ -311,7 +310,7 @@ public class SpelMinTestBean {
      */
     @Data
     @Builder
-    @SpelValid
+    // @SpelValid
     public static class ValueTypeTestBean implements ID {
 
         private int id;
@@ -513,7 +512,7 @@ public class SpelMinTestBean {
      */
     @Data
     @Builder
-    @SpelValid
+    // @SpelValid
     public static class NotSupportValueTypeTestBean implements ID {
 
         private int id;

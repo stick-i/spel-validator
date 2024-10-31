@@ -15,6 +15,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * spel 相关注解的执行器，对使用了 {@link SpelConstraint} 进行标记的注解执行校验。
@@ -72,7 +73,29 @@ public class SpelValidExecutor {
      * @return 对象校验结果
      */
     @NotNull
+    public static ObjectValidResult validateObject(@NotNull Object verifiedObject, String[] validateGroups) {
+        if (validateGroups == null) {
+            return validateObject(verifiedObject);
+        }
+        // 获取分组信息
+        Set<Object> groups = Arrays.stream(validateGroups).map(it -> SpelParser.parse(it, verifiedObject)).collect(Collectors.toSet());
+        return validateObject(verifiedObject, groups);
+    }
+
+    /**
+     * 验证对象
+     * <p>
+     * 如果对象中有任意使用了 spel 约束注解的字段，则会对该字段进行校验。
+     *
+     * @param verifiedObject 被校验的对象
+     * @param validateGroups 分组信息，只有同组的注解才会被校验
+     * @return 对象校验结果
+     */
+    @NotNull
     public static ObjectValidResult validateObject(@NotNull Object verifiedObject, @NotNull Set<Object> validateGroups) {
+        Objects.requireNonNull(verifiedObject);
+        Objects.requireNonNull(validateGroups);
+
         long startTime = System.nanoTime();
         log.debug("Spel validate start, class [{}], groups [{}]", verifiedObject.getClass().getName(), validateGroups);
         log.debug("Verified object [{}]", verifiedObject);

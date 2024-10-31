@@ -1,6 +1,7 @@
 package cn.sticki.spel.validator.javax.util;
 
 import lombok.Data;
+import org.intellij.lang.annotations.Language;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -29,6 +30,12 @@ public class VerifyObject {
      * 是否期望抛出异常
      */
     private boolean expectException;
+
+    /**
+     * spel 分组参数，当 object 未使用 @SpelValid 注解时，该参数生效
+     */
+    @Language("spel")
+    private String[] spelGroups;
 
     private VerifyObject() {
     }
@@ -105,6 +112,11 @@ public class VerifyObject {
         verifyObject.setVerifyFailedFields(verifyFailedFields);
         verifyObject.setExpectException(expectException);
         return verifyObject;
+    }
+
+    public VerifyObject setGroups(@Language("spel") String... spelGroups) {
+        this.spelGroups = spelGroups;
+        return this;
     }
 
 }

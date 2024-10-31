@@ -8,9 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.util.Arrays;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * {@link SpelValid} 的实际校验器
@@ -41,11 +38,8 @@ public class SpelValidator implements ConstraintValidator<SpelValid, Object> {
             return true;
         }
 
-        // 获取分组信息
-        Set<Object> groups = Arrays.stream(spelValid.spelGroups()).map(it -> SpelParser.parse(it, value)).collect(Collectors.toSet());
-
         // 校验对象
-        ObjectValidResult validateObjectResult = SpelValidExecutor.validateObject(value, groups);
+        ObjectValidResult validateObjectResult = SpelValidExecutor.validateObject(value, spelValid.spelGroups());
 
         // 构建错误信息
         buildConstraintViolation(validateObjectResult, context);
