@@ -1,6 +1,6 @@
 package cn.sticki.spel.validator.javax.bean;
 
-import cn.sticki.spel.validator.core.constrain.SpelNotNull;
+import cn.sticki.spel.validator.constrain.SpelNotNull;
 import cn.sticki.spel.validator.javax.SpelValid;
 import cn.sticki.spel.validator.test.util.ID;
 import cn.sticki.spel.validator.test.util.VerifyFailedField;

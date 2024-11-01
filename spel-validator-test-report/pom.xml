@@ -9,7 +9,6 @@
         <version>0.4.0-beta</version>
     </parent>
 
-    <!-- 此模板仅用于聚合覆盖率报告 -->
     <artifactId>spel-validator-test-report</artifactId>
 
     <properties>
@@ -26,17 +25,17 @@
 
         <dependency>
             <groupId>cn.sticki</groupId>
+            <artifactId>spel-validator-constrain</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.sticki</groupId>
             <artifactId>spel-validator-jakarta</artifactId>
         </dependency>
 
         <dependency>
             <groupId>cn.sticki</groupId>
             <artifactId>spel-validator-javax</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>cn.sticki</groupId>
-            <artifactId>spel-validator-test</artifactId>
         </dependency>
     </dependencies>
 

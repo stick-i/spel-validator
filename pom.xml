@@ -12,6 +12,7 @@
 
     <modules>
         <module>spel-validator-core</module>
+        <module>spel-validator-constrain</module>
         <module>spel-validator-javax</module>
         <module>spel-validator-jakarta</module>
         <module>spel-validator-test-report</module>
@@ -81,6 +82,11 @@
             <dependency>
                 <groupId>cn.sticki</groupId>
                 <artifactId>spel-validator-core</artifactId>
+                <version>${spel-validator.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.sticki</groupId>
+                <artifactId>spel-validator-constrain</artifactId>
                 <version>${spel-validator.version}</version>
             </dependency>
             <dependency>

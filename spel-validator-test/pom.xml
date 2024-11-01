@@ -16,24 +16,20 @@
             <groupId>cn.sticki</groupId>
             <artifactId>spel-validator-core</artifactId>
         </dependency>
-        <!-- ===== for test ===== -->
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>javax.el</artifactId>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <scope>test</scope>
         </dependency>
         <!-- <dependency> -->
         <!--     <groupId>org.hibernate.validator</groupId> -->

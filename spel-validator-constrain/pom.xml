@@ -9,7 +9,7 @@
         <version>0.4.0-beta</version>
     </parent>
 
-    <artifactId>spel-validator-jakarta</artifactId>
+    <artifactId>spel-validator-constrain</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -20,13 +20,7 @@
     <dependencies>
         <dependency>
             <groupId>cn.sticki</groupId>
-            <artifactId>spel-validator-constrain</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.hibernate.validator</groupId>
-            <artifactId>hibernate-validator</artifactId>
-            <version>8.0.1.Final</version>
+            <artifactId>spel-validator-core</artifactId>
         </dependency>
 
         <dependency>
@@ -35,4 +29,5 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
 </project>

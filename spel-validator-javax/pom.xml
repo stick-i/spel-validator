@@ -20,7 +20,7 @@
     <dependencies>
         <dependency>
             <groupId>cn.sticki</groupId>
-            <artifactId>spel-validator-core</artifactId>
+            <artifactId>spel-validator-constrain</artifactId>
         </dependency>
 
         <dependency>
@@ -28,28 +28,9 @@
             <artifactId>hibernate-validator</artifactId>
         </dependency>
 
-        <!-- ===== for test ===== -->
-
         <dependency>
             <groupId>cn.sticki</groupId>
             <artifactId>spel-validator-test</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>javax.el</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
