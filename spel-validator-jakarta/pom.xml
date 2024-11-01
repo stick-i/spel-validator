@@ -12,9 +12,10 @@
     <artifactId>spel-validator-jakarta</artifactId>
 
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
     </properties>
 
     <dependencies>
@@ -26,7 +27,6 @@
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>8.0.1.Final</version>
         </dependency>
 
         <dependency>

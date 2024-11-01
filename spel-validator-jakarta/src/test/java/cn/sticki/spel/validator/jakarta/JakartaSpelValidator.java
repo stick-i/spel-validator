@@ -1,17 +1,16 @@
-package cn.sticki.spel.validator.javax.util;
+package cn.sticki.spel.validator.jakarta;
 
 import cn.sticki.spel.validator.core.SpelValidExecutor;
 import cn.sticki.spel.validator.core.result.FieldError;
 import cn.sticki.spel.validator.core.result.ObjectValidResult;
-import cn.sticki.spel.validator.javax.SpelValid;
 import cn.sticki.spel.validator.test.util.AbstractSpelValidator;
 import cn.sticki.spel.validator.test.util.VerifyObject;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.messageinterpolation.ParameterMessageInterpolator;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -24,9 +23,9 @@ import java.util.stream.Collectors;
  * @since 2024/6/13
  */
 @Slf4j
-public class JavaxSpelValidator extends AbstractSpelValidator {
+public class JakartaSpelValidator extends AbstractSpelValidator {
 
-    private static final JavaxSpelValidator INSTANCE = new JavaxSpelValidator();
+    private static final JakartaSpelValidator INSTANCE = new JakartaSpelValidator();
 
     @SuppressWarnings("resource")
     private static final Validator validator = Validation.byDefaultProvider()
@@ -62,7 +61,7 @@ public class JavaxSpelValidator extends AbstractSpelValidator {
             return ObjectValidResult.EMPTY;
         }
         ObjectValidResult validResult = new ObjectValidResult();
-        List<FieldError> list = validate.stream().map(JavaxSpelValidator::convert).collect(Collectors.toList());
+        List<FieldError> list = validate.stream().map(JakartaSpelValidator::convert).collect(Collectors.toList());
         validResult.addFieldError(list);
         return validResult;
     }
