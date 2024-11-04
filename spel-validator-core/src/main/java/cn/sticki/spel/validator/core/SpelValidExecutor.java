@@ -3,6 +3,7 @@ package cn.sticki.spel.validator.core;
 import cn.sticki.spel.validator.core.exception.SpelNotSupportedTypeException;
 import cn.sticki.spel.validator.core.exception.SpelValidatorException;
 import cn.sticki.spel.validator.core.manager.AnnotationMethodManager;
+import cn.sticki.spel.validator.core.manager.ValidatorInstanceManager;
 import cn.sticki.spel.validator.core.parse.SpelParser;
 import cn.sticki.spel.validator.core.result.FieldValidResult;
 import cn.sticki.spel.validator.core.result.ObjectValidResult;
@@ -28,6 +29,9 @@ import java.util.stream.Collectors;
 @Slf4j
 public class SpelValidExecutor {
 
+    private SpelValidExecutor() {
+    }
+
     private static final String MESSAGE = "message";
 
     private static final String CONDITION = "condition";
@@ -43,11 +47,6 @@ public class SpelValidExecutor {
      * 字段注解缓存
      */
     private static final ConcurrentHashMap<Field, List<Annotation>> FIELD_ANNOTATION_CACHE = new ConcurrentHashMap<>();
-
-    /**
-     * 校验器实例管理器，避免重复创建校验器实例。
-     */
-    private static final ConcurrentHashMap<Annotation, SpelConstraintValidator<?>> VALIDATOR_INSTANCE_CACHE = new ConcurrentHashMap<>();
 
     /**
      * 验证对象
@@ -109,7 +108,7 @@ public class SpelValidExecutor {
             List<Annotation> spelConstraintAnnotations = getSpelConstraintAnnotations(field);
             for (Annotation annotation : spelConstraintAnnotations) {
                 // 获取验证器实例
-                SpelConstraintValidator<? extends Annotation> validator = getValidatorInstance(annotation);
+                SpelConstraintValidator<? extends Annotation> validator = ValidatorInstanceManager.getInstance(annotation);
                 // 执行校验
                 FieldValidResult validationResult = validateFieldAnnotation(annotation, validator, verifiedObject, field, validateGroups);
                 if (validationResult != null) {
@@ -321,22 +320,6 @@ public class SpelValidExecutor {
                 result.setFieldName(verifiedField.getName());
             }
         }
-    }
-
-    /**
-     * 获取校验器实例，当实例不存在时会创建一个新的实例。
-     */
-    @NotNull
-    private static SpelConstraintValidator<? extends Annotation> getValidatorInstance(Annotation annotation) {
-        return VALIDATOR_INSTANCE_CACHE.computeIfAbsent(annotation, key -> {
-            try {
-                Class<? extends Annotation> annoClazz = annotation.annotationType();
-                Class<? extends SpelConstraintValidator<?>> validatorClass = annoClazz.getAnnotation(SpelConstraint.class).validatedBy();
-                return validatorClass.getDeclaredConstructor().newInstance();
-            } catch (Exception e) {
-                throw new SpelValidatorException("Failed to create validator instance, annotation [" + annotation.annotationType().getName() + "]", e);
-            }
-        });
     }
 
     /**
