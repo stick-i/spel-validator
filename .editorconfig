@@ -4,7 +4,7 @@ end_of_line = crlf
 indent_size = 4
 indent_style = space
 insert_final_newline = false
-max_line_length = 120
+max_line_length = 150
 tab_width = 4
 ij_continuation_indent_size = 8
 ij_formatter_off_tag = @formatter:off
@@ -35,7 +35,6 @@ ij_css_use_double_quotes = true
 ij_css_value_alignment = do_not_align
 
 [*.java]
-max_line_length = 150
 ij_smart_tabs = true
 ij_visual_guides = 100
 ij_java_align_consecutive_assignments = false
