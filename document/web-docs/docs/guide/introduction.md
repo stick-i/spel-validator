@@ -1,14 +1,12 @@
 # 介绍
 
-SpEL Validator 是基于 Spring Expression Language 的参数校验包，也是 javax.validation 的扩展增强包，用于简化参数校验，它几乎支持所有场景下的参数校验。
+SpEL Validator 是基于 Spring Expression Language 的参数校验包，也是 jakarta.validation-api 的扩展增强包，用于简化参数校验，它几乎支持所有场景下的参数校验。
 
 设计的初衷是为了解决一些需要判断另一个字段的值来决定当前字段是否校验的场景。
 
 ::: tip
 
-本组件的目的不是代替 `javax.validation` 的校验注解，而是作为一个扩展，方便某些场景下的参数校验。
-
-原则上来说，能够使用 `javax.validation` 处理的场景就不应该使用 `spel-validator` 。
+本组件的目的不是代替 `jakarta.validation-api` 的校验注解，而是作为一个扩展，方便某些场景下的参数校验。
 
 :::
 

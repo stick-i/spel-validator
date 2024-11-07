@@ -62,8 +62,8 @@
 
 ## 如何对实体类单独进行校验
 
-正常情况下，只需要触发 javax.validation 的校验，就会顺带触发 spel.validator 的校验。
-这一点可以参考下`cn.sticki.spel.validator.javax.util.JavaxSpelValidator#validate`的实现：
+正常情况下，只需要触发 jakarta.validation-api 的校验，就会顺带触发 spel.validator 的校验。
+这一点可以参考下源码的测试工具`cn.sticki.spel.validator.jakarta.JakartaSpelValidator.validate`的实现，大概是下面这个样子：
 
 ```java
     private static final Validator validator = Validation.byDefaultProvider()
@@ -74,7 +74,7 @@
     /**
      * 参数校验
      * <p>
-     * 调用此方法会触发 javax.validation.constraints.* 的校验，类似于使用 @Valid 注解
+     * 调用此方法会触发 jakarta.validation.constraints.* 的校验，类似于使用 @Valid 注解
      *
      * @return 校验结果，如果校验通过则返回空列表
      */

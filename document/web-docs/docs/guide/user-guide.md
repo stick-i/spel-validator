@@ -2,36 +2,36 @@
 
 ::: warning
 
-本组件的目的不是代替 `javax.validation` 的校验注解，而是作为一个扩展，方便某些场景下的参数校验。
+本组件的目的不是代替 `jakarta.validation-api` 的校验注解，而是作为一个扩展，方便某些场景下的参数校验。
 
-原则上来说，能够使用 `javax.validation` 处理的场景就不应该使用 `spel-validator` 。
+原则上来说，能够使用 `jakarta.validation-api` 处理的场景就不应该使用 `spel-validator` 。
 
 :::
 
 ## 支持的版本
 
-- JDK8+
+| 组件                       | JDK | SpringBoot |
+|--------------------------|-----|------------|
+| spel-validator-core      | 8+  | 2.x, 3.x   |
+| spel-validator-constrain | 8+  | 2.x, 3.x   |
+| spel-validator-javax     | 8+  | 2.x        |
+| spel-validator-jakarta   | 11+ | 3.x        |
+
+一般情况下，您只需要考虑使用 `-javax` 或 `-jakarta` 这两个版本即可。
 
 ## 添加依赖
 
 Latest Version:
 [![Maven Central](https://img.shields.io/maven-central/v/cn.sticki/spel-validator.svg)](https://central.sonatype.com/search?q=g:cn.sticki%20a:spel-validator)
 
-大多数情况下，你只需要添加以下两个依赖：
+根据项目的实际情况，引入 `spel-validator-javax` 或 `spel-validator-jakarta` ：
 
 ```xml
 <dependencys>
   <dependency>
     <groupId>cn.sticki</groupId>
-    <artifactId>spel-validator</artifactId>
-    <version>Latest Version</version>
-  </dependency>
-
-  <!-- 基于 javax.validation 标准的校验器实现类 -->
-  <dependency>
-    <groupId>org.hibernate.validator</groupId>
-    <artifactId>hibernate-validator</artifactId>
-    <version>6.2.5.Final</version>
+    <artifactId>spel-validator-jakarta</artifactId>
+    <version>0.4.0-beta</version>
   </dependency>
 </dependencys>
 ```
@@ -54,7 +54,6 @@ Latest Version:
 需要满足以下两个条件，才会对带注解的元素进行校验：
 
 1. 在接口参数上使用 `@Valid` 或 `@Validated` 注解
-2. 在实体类上使用 `@SpelValid` 注解
 
 ```java
 @RestController
@@ -67,7 +66,11 @@ public class ExampleController {
   }
 
 }
+```
 
+2. 在实体类上使用 `@SpelValid` 注解
+
+```java
 @Data
 @SpelValid /*添加启动注解*/
 public class SimpleExampleParamVo {
@@ -79,7 +82,7 @@ public class SimpleExampleParamVo {
 
 如果只满足第二个条件，那么不会对任何元素进行校验。
 
-这是因为 `@SpelValid` 注解是基于 `javax.validation.Constraint` 实现的。
+这是因为 `@SpelValid` 注解是基于 `jakarta.validation.Constraint` 实现的。
 这就意味着，`@SpelValid` 和 `@NotNull`、`@NotEmpty`、`@NotBlank` 等注解一样，
 需要在 `@Valid` 或 `@Validated` 注解的支持下才会生效。
 
@@ -91,7 +94,7 @@ public class SimpleExampleParamVo {
 
 `@SpelValid` 注解包含一个属性 `condition`，支持 SpEL 表达式，计算结果必须为 `boolean` 类型。
 
-当 **表达式的算结果为true** 时，表示开启校验，默认情况下是开启的。
+当 **表达式的算结果为true** 时，表示开启校验，默认情况下也是开启的。
 
 ```java
 @Data
@@ -108,16 +111,16 @@ public class SimpleExampleParamVo {
 
 目前支持的约束注解有：
 
-|       注解        |       说明        | 对标 javax.validation |
-|:---------------:|:---------------:|:-------------------:|
-|  `@SpelAssert`  |     逻辑断言校验      |    `@AssertTrue`    |
-| `@SpelNotNull`  |    非 null 校验    |     `@NotNull`      |
-| `@SpelNotEmpty` | 集合、字符串、数组大小非空校验 |     `@NotEmpty`     |
-| `@SpelNotBlank` |    字符串非空串校验     |     `@NotBlank`     |
-|   `@SpelNull`   |   必须为 null 校验   |       `@Null`       |
-|   `@SpelSize`   |  集合、字符串、数组长度校验  |       `@Size`       |
-|   `@SpelMin`    |      即将支持       |       `@Min`        |
-|   `@SpelMax`    |      即将支持       |       `@Max`        |
+|       注解        |       说明        | 对标 jakarta.validation-api |
+|:---------------:|:---------------:|:-------------------------:|
+|  `@SpelAssert`  |     逻辑断言校验      |       `@AssertTrue`       |
+| `@SpelNotNull`  |    非 null 校验    |        `@NotNull`         |
+| `@SpelNotEmpty` | 集合、字符串、数组大小非空校验 |        `@NotEmpty`        |
+| `@SpelNotBlank` |    字符串非空串校验     |        `@NotBlank`        |
+|   `@SpelNull`   |   必须为 null 校验   |          `@Null`          |
+|   `@SpelSize`   |  集合、字符串、数组长度校验  |          `@Size`          |
+|   `@SpelMin`    |      即将支持       |          `@Min`           |
+|   `@SpelMax`    |      即将支持       |          `@Max`           |
 
 所有约束注解都包含三个默认的属性：
 
@@ -178,9 +181,9 @@ public class SimpleExampleParamVo {
 
 ::: tip 为什么 @SpelValid 注解上的 spelGroups 属性不叫 groups？
 
-因为 `@SpelValid` 注解是基于 `javax.validation.Constraint` 实现的，而 `Constraint` 中已经有一个 `groups` 属性了，故命名为 `spelGroups`。
+因为 `@SpelValid` 注解是基于 `jakarta.validation.Constraint` 实现的，而 `Constraint` 中已经有一个 `groups` 属性了，故命名为 `spelGroups`。
 
-在使用 `@SpelValid` 的时候，你可以同时使用 `groups` 和 `spelGroups` 属性，但是 `groups` 属性只能用于 `javax.validation` 的分组校验。
+在使用 `@SpelValid` 的时候，你可以同时使用 `groups` 和 `spelGroups` 属性，但是 `groups` 属性只能用于 `jakarta.validation-api` 的分组校验。
 `@SpelValid` 和 `@NotNull`、`@NotEmpty` 等注解是兄弟关系，它的 `groups` 属性同样受上层 `@Valid` 或 `@Validated` 注解的影响。
 
 :::
@@ -284,7 +287,7 @@ public class TestParamVo2 {
 
 ## 处理约束异常
 
-当校验失败时，本组件会将异常信息上报到 `javax.validation` 的异常体系中。
+当校验失败时，本组件会将异常信息上报到 `jakarta.validation-api` 的异常体系中。
 
 正常情况下，你只需要处理 `org.springframework.web.bind.MethodArgumentNotValidException`
 和 `org.springframework.validation.BindException` 这两个校验异常类就好了 ，而无需额外处理本组件的异常信息。
@@ -364,9 +367,9 @@ public class ParamTestBean {
 
 ![img.png](../image/user-g-business-exception.png)
 
-由于本组件的特殊性，所有抛出的异常信息最终都会被我们下层的校验器捕获，然后包一层 `javax.validation.ValidationException` 再抛出。
+由于本组件的特殊性，所有抛出的异常信息最终都会被我们下层的校验器捕获，然后包一层 `jakarta.validation.ValidationException` 再抛出。
 
-要从框架层面去解决这个问题，只能够脱离 `javax.validation` 的规范和 `hibernate` 的执行器来进行校验，
+要从框架层面去解决这个问题，只能够脱离 `jakarta.validation-api` 的规范和 `hibernate` 的执行器来进行校验，
 目前看来这样做的成本比较大，且会带来一些其他的影响，故暂时不考虑这样做。
 
 ### 解决方案
