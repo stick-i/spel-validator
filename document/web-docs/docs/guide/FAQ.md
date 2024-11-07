@@ -59,3 +59,29 @@
 - 20线程，30循环，共9000次此请求，总耗时约为 1190ms，平均每个请求耗时约0.13ms，其中解析SpEL表达式的总耗时为 390ms，占比约33%。
 
 这样看来，目前的性能表现还算可以接受，但还有优化空间，后续会继续优化。
+
+## 如何对实体类单独进行校验
+
+正常情况下，只需要触发 jakarta.validation-api 的校验，就会顺带触发 spel.validator 的校验。
+这一点可以参考下源码的测试工具`cn.sticki.spel.validator.jakarta.JakartaSpelValidator.validate`的实现，大概是下面这个样子：
+
+```java
+    private static final Validator validator = Validation.byDefaultProvider()
+        .configure()
+        .messageInterpolator(new ParameterMessageInterpolator())
+        .buildValidatorFactory().getValidator();
+
+    /**
+     * 参数校验
+     * <p>
+     * 调用此方法会触发 jakarta.validation.constraints.* 的校验，类似于使用 @Valid 注解
+     *
+     * @return 校验结果，如果校验通过则返回空列表
+     */
+    public static <T> Set<ConstraintViolation<T>> validate(T obj) {
+        return validator.validate(obj);
+    }
+```
+
+如果你的实体类中只有 spel.validator 的校验注解，或者你只想触发 spel.validator 的校验，
+那更简单，你只需要调用 `cn.sticki.spel.validator.core.SpelValidExecutor#validateObject` 即可触发校验。

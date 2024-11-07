@@ -1,6 +1,15 @@
 name: run mvn test
 
-on: [ push, pull_request, workflow_dispatch ]
+on:
+  push:
+    branches:
+      - 'v*'
+  pull_request:
+    branches:
+      - 'v*'
+      - 'main'
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
 
 jobs:
   run-mvn-test:
@@ -11,7 +20,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: '8'
+          java-version: '11'
           cache: maven
 
       - run: |
@@ -19,4 +28,4 @@ jobs:
           mvn -v
 
       - run: mvn verify
-      - run: mvn clean test jacoco:report coveralls:report -DrepoToken="${{secrets.COVERALLS_TOKEN}}"
+      - run: mvn clean test coveralls:report -DrepoToken="${{secrets.COVERALLS_TOKEN}}" -f pom.xml

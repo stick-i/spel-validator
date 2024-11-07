@@ -1,7 +1,7 @@
 # 自定义约束注解
 
 ::: tip
-如果你使用过 `javax.validation` 的自定义约束注解，那么你会发现 `SpEL Validator` 的自定义约束注解几乎与 `javax.validation` 一致。
+如果你使用过 `jakarta.validation-api` 的自定义约束注解，那么你会发现 `SpEL Validator` 的自定义约束注解几乎与 `jakarta.validation-api` 一致。
 :::
 
 下面以 `@SpelNotBlank` 为例，展示如何实现自定义约束注解。
