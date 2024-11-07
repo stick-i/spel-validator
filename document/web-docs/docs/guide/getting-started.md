@@ -7,7 +7,7 @@
 ## 添加依赖
 
 Latest Version:
-[![Maven Central](https://img.shields.io/maven-central/v/cn.sticki/spel-validator.svg)](https://central.sonatype.com/search?q=g:cn.sticki%20a:spel-validator)
+[![Maven Central](https://img.shields.io/maven-central/v/cn.sticki/spel-validator-root.svg)](https://central.sonatype.com/search?q=g:cn.sticki%20a:spel-validator-root)
 
 ```xml
 <dependencys>

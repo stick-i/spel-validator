@@ -22,7 +22,7 @@
 ## 添加依赖
 
 Latest Version:
-[![Maven Central](https://img.shields.io/maven-central/v/cn.sticki/spel-validator.svg)](https://central.sonatype.com/search?q=g:cn.sticki%20a:spel-validator)
+[![Maven Central](https://img.shields.io/maven-central/v/cn.sticki/spel-validator-root.svg)](https://central.sonatype.com/search?q=g:cn.sticki%20a:spel-validator-root)
 
 根据项目的实际情况，引入 `spel-validator-javax` 或 `spel-validator-jakarta` ：
 
