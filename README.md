@@ -1,7 +1,7 @@
 # SpEL Validator
 
 [![Coverage Status](https://coveralls.io/repos/github/stick-i/spel-validator/badge.svg?branch=main)](https://coveralls.io/github/stick-i/spel-validator?branch=main)
-[![Maven Central](https://img.shields.io/maven-central/v/cn.sticki/spel-validator.svg)](https://central.sonatype.com/search?q=g:cn.sticki%20a:spel-validator)
+[![Maven Central](https://img.shields.io/maven-central/v/cn.sticki/spel-validator-root.svg)](https://central.sonatype.com/search?q=g:cn.sticki%20a:spel-validator-root)
 [![license](https://img.shields.io/github/license/stick-i/spel-validator)](https://github.com/stick-i/spel-validator/blob/main/LICENSE)
 
 一个强大的 Java 参数校验包，基于 SpEL 实现，扩展自 javax.validation 包，用于简化参数校验，几乎支持所有场景下的参数校验。
@@ -73,7 +73,7 @@ JDK8+
 - 添加依赖
 
   Latest Version:
-  [![Maven Central](https://img.shields.io/maven-central/v/cn.sticki/spel-validator.svg)](https://central.sonatype.com/search?q=g:cn.sticki%20a:spel-validator)
+  [![Maven Central](https://img.shields.io/maven-central/v/cn.sticki/spel-validator-root.svg)](https://central.sonatype.com/search?q=g:cn.sticki%20a:spel-validator-root)
   ```xml
   <dependency>
       <groupId>cn.sticki</groupId>
