@@ -9,26 +9,24 @@
 Latest Version:
 [![Maven Central](https://img.shields.io/maven-central/v/cn.sticki/spel-validator-root.svg)](https://central.sonatype.com/search?q=g:cn.sticki%20a:spel-validator-root)
 
+### SpringBoot 2.x
+
 ```xml
-<dependencys>
   <dependency>
     <groupId>cn.sticki</groupId>
-    <artifactId>spel-validator</artifactId>
-    <version>Latest Version</version>
+    <artifactId>spel-validator-javax</artifactId>
+    <version>0.4.0-beta</version>
   </dependency>
+```
 
-  <dependency>
-    <groupId>org.hibernate.validator</groupId>
-    <artifactId>hibernate-validator</artifactId>
-    <version>6.2.5.Final</version>
-  </dependency>
+### SpringBoot 3.x
 
+```xml
   <dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-web</artifactId>
-    <version>${spring-boot-starter-web.version}</version>
+    <groupId>cn.sticki</groupId>
+    <artifactId>spel-validator-jakarta</artifactId>
+    <version>0.4.0-beta</version>
   </dependency>
-</dependencys>
 ```
 
 ## 添加启动注解
