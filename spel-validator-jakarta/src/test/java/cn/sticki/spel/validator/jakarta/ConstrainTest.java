@@ -1,6 +1,7 @@
 package cn.sticki.spel.validator.jakarta;
 
 import cn.sticki.spel.validator.jakarta.bean.ExampleTestBean;
+import cn.sticki.spel.validator.jakarta.bean.ParentClassTestBean;
 import cn.sticki.spel.validator.jakarta.bean.SpelValidTestBean;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -32,4 +33,9 @@ public class ConstrainTest {
         Assertions.assertTrue(verified);
     }
 
+    @Test
+    void testParentClass() {
+        boolean verified = JakartaSpelValidator.check(ParentClassTestBean.paramTestCase());
+        Assertions.assertTrue(verified);
+    }
 }
