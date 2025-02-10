@@ -1,6 +1,6 @@
 {
     "name": "spel-validator",
-    "version": "0.4.0-beta",
+    "version": "0.4.1-beta",
     "description": "一个强大的 Java 参数校验包，基于 SpEL 实现，扩展自 jakarta.validation-api 包，几乎支持所有场景下的参数校验。",
     "license": "Apache-2.0",
     "type": "module",
