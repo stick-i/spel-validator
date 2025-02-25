@@ -90,6 +90,39 @@ public class SimpleExampleParamVo {
 
 所以，如果需要使用 `SpEL Validator` 进行校验，需要同时满足上述两个条件。
 
+::: tip
+
+如果你使用 `@Validated` 的话，那么你也可以这样使用：
+
+```java
+@Validated // 此处开启了支持参数的约束校验
+@RestController
+@RequestMapping
+public class TestController {
+
+    @PostMapping
+    public void test(@RequestBody @Validated/*此处开启了对象内的校验*/ @SpelValid/*此处开启了对象内的spel校验*/ TestParamVo param) {
+    }
+
+}
+
+@Data // 这里不再需要额外添加 @SpelValid 注解
+public class TestParamVo {
+
+  @SpelNotNull
+  private Integer id;
+
+  @SpelNotNull
+  private String name;
+
+  @NotNull
+  private String phone;
+
+}
+```
+
+:::
+
 ### 设置开启条件
 
 `@SpelValid` 注解包含一个属性 `condition`，支持 SpEL 表达式，计算结果必须为 `boolean` 类型。
@@ -225,6 +258,47 @@ public class GroupExampleParamVo {
    */
   @SpelNotNull
   private Integer other;
+
+}
+```
+
+使用示例2：
+
+```java
+@Validated // 注意这里
+@RestController
+@RequestMapping("/test/group")
+public class GroupTestController {
+
+  @PostMapping("/addUser")
+  public void addUser(@RequestBody @Validated @SpelValid(spelGroups = GroupTestParamVo.Group.ADD) GroupTestParamVo add) {
+  }
+
+  @PostMapping("/updateUser")
+  public void updateUser(@RequestBody @Validated @SpelValid(spelGroups = GroupTestParamVo.Group.UPDATE) GroupTestParamVo update) {
+  }
+
+}
+
+@Data
+public class GroupTestParamVo {
+
+  @SpelNotNull(group = {Group.UPDATE})
+  private Integer id;
+
+  @SpelNotNull(group = {Group.UPDATE, Group.ADD})
+  private String name;
+
+  @NotNull
+  private String phone;
+
+  public static class Group {
+
+    public static final String ADD = "'add'"; // SpEL表达式中的字符串需要使用单引号包裹，否则会被识别为变量
+
+    public static final String UPDATE = "'audio'";
+
+  }
 
 }
 ```

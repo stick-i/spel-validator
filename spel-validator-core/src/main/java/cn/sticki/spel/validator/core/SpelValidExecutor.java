@@ -127,15 +127,18 @@ public class SpelValidExecutor {
      */
     @NotNull
     private static List<Field> getSpelConstraintFields(@NotNull Class<?> clazz) {
-        // 获取类的字段
         return FIELD_CACHE.computeIfAbsent(clazz, aClass -> {
             List<Field> list = new ArrayList<>();
-            Field[] fields = aClass.getDeclaredFields();
-            for (Field field : fields) {
-                field.setAccessible(true);
-                if (!getSpelConstraintAnnotations(field).isEmpty()) {
-                    list.add(field);
+            while (aClass != null) {
+                Field[] fields = aClass.getDeclaredFields();
+                for (Field field : fields) {
+                    field.setAccessible(true);
+                    if (!getSpelConstraintAnnotations(field).isEmpty()) {
+                        list.add(field);
+                    }
                 }
+                // 获取父类，继续处理
+                aClass = aClass.getSuperclass();
             }
             return Collections.unmodifiableList(list);
         });
