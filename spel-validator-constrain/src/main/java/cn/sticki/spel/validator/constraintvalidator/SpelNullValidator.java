@@ -17,7 +17,7 @@ public class SpelNullValidator implements SpelConstraintValidator<SpelNull> {
 
     @Override
     public FieldValidResult isValid(SpelNull annotation, Object obj, Field field) throws IllegalAccessException {
-        return new FieldValidResult(field.get(obj) == null);
+        return FieldValidResult.of(field.get(obj) == null);
     }
 
 }

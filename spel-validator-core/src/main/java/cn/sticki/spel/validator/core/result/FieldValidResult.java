@@ -37,22 +37,29 @@ public class FieldValidResult {
      */
     private Object[] args;
 
-    public FieldValidResult(boolean success) {
-        this.success = success;
+    public static FieldValidResult of(boolean success) {
+        return of(success, "");
     }
 
-    public FieldValidResult(boolean success, @NotNull String message) {
-        this.success = success;
-        this.message = message;
+    public static FieldValidResult of(boolean success, @NotNull String message) {
+        return of(success, message, "", null);
     }
 
-    public FieldValidResult(boolean success, Object... args) {
-        this.success = success;
-        this.args = args;
+    public static FieldValidResult of(boolean success, Object... args) {
+        return of(success, "", "", args);
+    }
+
+    public static FieldValidResult of(boolean success, @NotNull String message, String fieldName, Object[] args) {
+        FieldValidResult result = new FieldValidResult();
+        result.success = success;
+        result.fieldName = fieldName;
+        result.message = message;
+        result.args = args;
+        return result;
     }
 
     public static FieldValidResult success() {
-        return new FieldValidResult(true);
+        return of(true);
     }
 
 }

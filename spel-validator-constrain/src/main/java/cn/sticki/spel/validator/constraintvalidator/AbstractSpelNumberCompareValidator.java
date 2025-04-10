@@ -34,7 +34,7 @@ public abstract class AbstractSpelNumberCompareValidator<T extends Annotation> i
             // todo 目前对Double的边界值处理不太友好，message的展示类似为：不能小于等于 NaN。后续考虑去掉对Double Float类型的支持，或者对边界值抛出异常。
             // 构建错误信息
             // String replacedMessage = errorMessage.replace("{value}", String.valueOf(numberValue));
-            return new FieldValidResult(false, numberValue);
+            return FieldValidResult.of(false, numberValue);
         }
 
         return FieldValidResult.success();
