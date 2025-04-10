@@ -38,7 +38,7 @@ public @interface SpelSize {
     /**
      * 校验失败时的错误消息。
      */
-    String message() default "长度必须在 {min} 和 {max} 之间";
+    String message() default "{cn.sticki.spel.validator.constraint.Size.message}";
 
     /**
      * 约束开启条件，必须为合法的SpEL表达式，计算结果必须为boolean类型。

@@ -25,16 +25,16 @@ public abstract class AbstractSpelNumberCompareValidator<T extends Annotation> i
             return FieldValidResult.success();
         }
         // 计算表达式的值，基本数据类型会自动装箱
-        Object minValue = SpelParser.parse(spel, obj);
-        if (!(minValue instanceof Number)) {
+        Object numberValue = SpelParser.parse(spel, obj);
+        if (!(numberValue instanceof Number)) {
             throw new SpelParserException("Expression [" + spel + "] calculate result must be Number.");
         }
         // 比较大小，其中一个是Not-a-Number (NaN）默认失败
-        if (!this.compare(fieldValue, (Number) minValue)) {
+        if (!this.compare(fieldValue, (Number) numberValue)) {
             // todo 目前对Double的边界值处理不太友好，message的展示类似为：不能小于等于 NaN。后续考虑去掉对Double Float类型的支持，或者对边界值抛出异常。
             // 构建错误信息
-            String replacedMessage = errorMessage.replace("{value}", String.valueOf(minValue));
-            return new FieldValidResult(false, replacedMessage);
+            // String replacedMessage = errorMessage.replace("{value}", String.valueOf(numberValue));
+            return new FieldValidResult(false, numberValue);
         }
 
         return FieldValidResult.success();

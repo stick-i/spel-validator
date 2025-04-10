@@ -4,12 +4,14 @@ import cn.sticki.spel.validator.core.exception.SpelNotSupportedTypeException;
 import cn.sticki.spel.validator.core.exception.SpelValidatorException;
 import cn.sticki.spel.validator.core.manager.AnnotationMethodManager;
 import cn.sticki.spel.validator.core.manager.ValidatorInstanceManager;
+import cn.sticki.spel.validator.core.message.ValidatorMessageInterpolator;
 import cn.sticki.spel.validator.core.parse.SpelParser;
 import cn.sticki.spel.validator.core.result.FieldValidResult;
 import cn.sticki.spel.validator.core.result.ObjectValidResult;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.springframework.context.i18n.LocaleContextHolder;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -47,6 +49,8 @@ public class SpelValidExecutor {
      * 字段注解缓存
      */
     private static final ConcurrentHashMap<Field, List<Annotation>> FIELD_ANNOTATION_CACHE = new ConcurrentHashMap<>();
+
+    private static final ValidatorMessageInterpolator MESSAGE_INTERPOLATOR = new ValidatorMessageInterpolator();
 
     /**
      * 验证对象
@@ -313,15 +317,15 @@ public class SpelValidExecutor {
      * 自动填充校验结果的错误信息
      */
     private static void autoFillValidResult(@NotNull FieldValidResult result, @NotNull Annotation annotation, @NotNull Field verifiedField) {
-        if (!result.isSuccess()) {
-            // 错误信息收集
-            if (result.getMessage().isEmpty()) {
-                String message = getAnnotationValue(annotation, MESSAGE);
-                result.setMessage(message);
-            }
-            if (result.getFieldName().isEmpty()) {
-                result.setFieldName(verifiedField.getName());
-            }
+        if (result.isSuccess()) {
+            return;
+        }
+        // 错误信息收集
+        String message = result.getMessage().isEmpty() ? getAnnotationValue(annotation, MESSAGE) : result.getMessage();
+        String interpolateMessage = MESSAGE_INTERPOLATOR.interpolate(message, LocaleContextHolder.getLocale(), result.getArgs());
+        result.setMessage(interpolateMessage);
+        if (result.getFieldName().isEmpty()) {
+            result.setFieldName(verifiedField.getName());
         }
     }
 

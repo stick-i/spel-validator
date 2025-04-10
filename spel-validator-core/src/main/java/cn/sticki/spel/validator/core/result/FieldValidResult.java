@@ -32,6 +32,11 @@ public class FieldValidResult {
     @NotNull
     private String fieldName = "";
 
+    /**
+     * 用于错误信息的占位符替换参数
+     */
+    private Object[] args;
+
     public FieldValidResult(boolean success) {
         this.success = success;
     }
@@ -39,6 +44,11 @@ public class FieldValidResult {
     public FieldValidResult(boolean success, @NotNull String message) {
         this.success = success;
         this.message = message;
+    }
+
+    public FieldValidResult(boolean success, Object... args) {
+        this.success = success;
+        this.args = args;
     }
 
     public static FieldValidResult success() {
