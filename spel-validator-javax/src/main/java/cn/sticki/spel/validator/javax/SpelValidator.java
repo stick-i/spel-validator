@@ -1,10 +1,12 @@
 package cn.sticki.spel.validator.javax;
 
+import cn.sticki.spel.validator.core.SpelValidContext;
 import cn.sticki.spel.validator.core.SpelValidExecutor;
 import cn.sticki.spel.validator.core.parse.SpelParser;
 import cn.sticki.spel.validator.core.result.FieldError;
 import cn.sticki.spel.validator.core.result.ObjectValidResult;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.i18n.LocaleContextHolder;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -38,8 +40,14 @@ public class SpelValidator implements ConstraintValidator<SpelValid, Object> {
             return true;
         }
 
+        // 设置上下文
+        SpelValidContext spelValidContext = SpelValidContext.builder()
+                .locale(LocaleContextHolder.getLocale())
+                .validateGroups(SpelValidExecutor.parseValidateGroups(spelValid.spelGroups()))
+                .build();
+
         // 校验对象
-        ObjectValidResult validateObjectResult = SpelValidExecutor.validateObject(value, spelValid.spelGroups());
+        ObjectValidResult validateObjectResult = SpelValidExecutor.validateObject(value, spelValidContext);
 
         // 构建错误信息
         buildConstraintViolation(validateObjectResult, context);

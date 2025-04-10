@@ -23,15 +23,15 @@ public class ValidatorMessageInterpolator {
 
     // private static final Pattern DOLLAR = Pattern.compile("\\$", Pattern.LITERAL);
 
+    /**
+     * 解析消息中的key，并从资源包中获取对应的多语言消息
+     *
+     * @return the interpolated message.
+     */
     public String interpolate(String message, Locale locale, Object... args) {
         return interpolateMessage(message, locale, args);
     }
 
-    /**
-     * 解析消息中的key，并从资源包中获取对应的多语言消息
-     * <p>
-     * @return the interpolated message.
-     */
     private String interpolateMessage(String message, Locale locale, Object... args) {
         if (message.indexOf('{') < 0) {
             return replaceEscapedLiterals(message);

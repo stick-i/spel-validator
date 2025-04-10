@@ -9,9 +9,9 @@ import cn.sticki.spel.validator.core.parse.SpelParser;
 import cn.sticki.spel.validator.core.result.FieldValidResult;
 import cn.sticki.spel.validator.core.result.ObjectValidResult;
 import lombok.extern.slf4j.Slf4j;
+import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.context.i18n.LocaleContextHolder;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -60,10 +60,9 @@ public class SpelValidExecutor {
      * @param verifiedObject 被校验的对象
      * @return 对象校验结果
      */
-    @SuppressWarnings("unused")
     @NotNull
     public static ObjectValidResult validateObject(@NotNull Object verifiedObject) {
-        return validateObject(verifiedObject, Collections.emptySet());
+        return validateObject(verifiedObject, SpelValidContext.getDefault());
     }
 
     /**
@@ -76,31 +75,46 @@ public class SpelValidExecutor {
      * @return 对象校验结果
      */
     @NotNull
-    public static ObjectValidResult validateObject(@NotNull Object verifiedObject, String[] validateGroups) {
-        if (validateGroups == null) {
-            return validateObject(verifiedObject);
-        }
-        // 获取分组信息
-        Set<Object> groups = Arrays.stream(validateGroups).map(it -> SpelParser.parse(it, verifiedObject)).collect(Collectors.toSet());
-        return validateObject(verifiedObject, groups);
+    public static ObjectValidResult validateObject(@NotNull Object verifiedObject, String... validateGroups) {
+        SpelValidContext context = SpelValidContext.builder()
+                .validateGroups(parseValidateGroups(verifiedObject, validateGroups))
+                .build();
+        return validateObject(verifiedObject, context);
     }
 
     /**
-     * 验证对象
-     * <p>
-     * 如果对象中有任意使用了 spel 约束注解的字段，则会对该字段进行校验。
+     * 通过 Spel 表达式解析分组信息
      *
      * @param verifiedObject 被校验的对象
-     * @param validateGroups 分组信息，只有同组的注解才会被校验
-     * @return 对象校验结果
+     * @param validateGroups 待解析的分组信息
+     * @return 解析后的分组信息集合
      */
     @NotNull
-    public static ObjectValidResult validateObject(@NotNull Object verifiedObject, @NotNull Set<Object> validateGroups) {
+    public static Set<Object> parseValidateGroups(@NotNull Object verifiedObject, String... validateGroups) {
         Objects.requireNonNull(verifiedObject);
-        Objects.requireNonNull(validateGroups);
+        if (validateGroups == null) {
+            return Collections.emptySet();
+        }
+        // 解析分组信息
+        return Arrays.stream(validateGroups).map(it -> SpelParser.parse(it, verifiedObject)).collect(Collectors.toSet());
+    }
+
+    /**
+     * 验证对象
+     * <p>
+     * 如果对象中有任意使用了 spel 约束注解的字段，则会对该字段进行校验。
+     *
+     * @param verifiedObject 被校验的对象
+     * @param context        上下文信息
+     * @return 对象校验结果
+     */
+    @NotNull
+    public static ObjectValidResult validateObject(@NotNull Object verifiedObject, @NotNull SpelValidContext context) {
+        Objects.requireNonNull(verifiedObject);
+        Objects.requireNonNull(context);
 
         long startTime = System.nanoTime();
-        log.debug("Spel validate start, class [{}], groups [{}]", verifiedObject.getClass().getName(), validateGroups);
+        log.debug("Spel validate start, class [{}], context [{}]", verifiedObject.getClass().getName(), context);
         log.debug("Verified object [{}]", verifiedObject);
 
         ObjectValidResult validResult = new ObjectValidResult();
@@ -114,7 +128,7 @@ public class SpelValidExecutor {
                 // 获取验证器实例
                 SpelConstraintValidator<? extends Annotation> validator = ValidatorInstanceManager.getInstance(annotation);
                 // 执行校验
-                FieldValidResult validationResult = validateFieldAnnotation(annotation, validator, verifiedObject, field, validateGroups);
+                FieldValidResult validationResult = validateFieldAnnotation(annotation, validator, verifiedObject, field, context);
                 if (validationResult != null) {
                     validResult.addFieldResult(validationResult);
                 }
@@ -183,10 +197,10 @@ public class SpelValidExecutor {
     /**
      * 对任意的注解执行校验，当注解不是合法的约束注解时，将返回null。
      *
-     * @param annotation        注解数组，数组内的注解必须为同一类型
-     * @param verifiedObject    被校验的对象
-     * @param verifiedField     被校验的字段，必须存在于被校验的对象中
-     * @param validateGroups    分组信息
+     * @param annotation     注解数组，数组内的注解必须为同一类型
+     * @param verifiedObject 被校验的对象
+     * @param verifiedField  被校验的字段，必须存在于被校验的对象中
+     * @param context        分组信息
      * @return 校验结果
      */
     private static @Nullable FieldValidResult validateFieldAnnotation(
@@ -194,7 +208,7 @@ public class SpelValidExecutor {
             @NotNull SpelConstraintValidator<? extends Annotation> validator,
             @NotNull Object verifiedObject,
             @NotNull Field verifiedField,
-            @NotNull Set<Object> validateGroups
+            @NotNull SpelValidContext context
     ) {
         log.debug("===> Find target annotation [{}], verifiedField [{}]", annotation.annotationType().getSimpleName(), verifiedField.getName());
         log.debug("===> Annotation object [{}]", annotation);
@@ -209,13 +223,13 @@ public class SpelValidExecutor {
 
         // 匹配分组
         Set<Object> annoGroups = parseGroups(annotation, verifiedObject);
-        if (!annoGroups.isEmpty() && !matchGroup(validateGroups, annoGroups)) {
+        if (!matchGroup(context.getValidateGroups(), annoGroups)) {
             log.debug("===> Group not matched, skip validate. annotation groups [{}]", annoGroups);
             return null;
         }
 
         // 判断condition条件是否成立
-        String condition = getAnnotationValue(annotation, CONDITION);
+        @Language("spel") String condition = getAnnotationValue(annotation, CONDITION);
         if (!condition.isEmpty() && !SpelParser.parse(condition, verifiedObject, Boolean.class)) {
             log.debug("===> Condition not valid, skip validate. condition [{}]", condition);
             return null;
@@ -223,6 +237,7 @@ public class SpelValidExecutor {
 
         // 执行校验
         FieldValidResult validationResult = doValidate(validator, annotation, verifiedObject, verifiedField);
+        fillValidResult(validationResult, annotation, verifiedField, context.getLocale());
         log.debug("===> Validate result [{}]", validationResult.isSuccess());
         return validationResult;
     }
@@ -242,10 +257,9 @@ public class SpelValidExecutor {
             @NotNull Object verifiedObject,
             @NotNull Field verifiedField
     ) {
-        FieldValidResult result;
         try {
             // noinspection unchecked
-            result = ((SpelConstraintValidator<A>) validator).isValid(annotation, verifiedObject, verifiedField);
+            return ((SpelConstraintValidator<A>) validator).isValid(annotation, verifiedObject, verifiedField);
         } catch (SpelValidatorException e) {
             log.error("Spel validate error: {}; Located in the annotation [{}] of class [{}] field [{}]",
                     e.getMessage(), annotation.annotationType().getName(), verifiedObject.getClass().getName(), verifiedField.getName());
@@ -256,8 +270,6 @@ public class SpelValidExecutor {
                     verifiedField.getName(), verifiedObject.getClass().getName());
             throw new SpelValidatorException("Failed to access field value", e);
         }
-        autoFillValidResult(result, annotation, verifiedField);
-        return result;
     }
 
     /**
@@ -288,16 +300,15 @@ public class SpelValidExecutor {
 
     /**
      * 判断组别是否匹配
+     *
+     * @param validateGroups 需要匹配的组别
+     * @param annoGroups     注解所属的组别
      */
-    @SuppressWarnings("RedundantIfStatement")
     private static boolean matchGroup(@NotNull Set<Object> validateGroups, @NotNull Set<Object> annoGroups) {
-        if (validateGroups.isEmpty()) {
+        if (annoGroups.isEmpty() || validateGroups.isEmpty()) {
             return true;
         }
-        if (validateGroups.stream().anyMatch(annoGroups::contains)) {
-            return true;
-        }
-        return false;
+        return validateGroups.stream().anyMatch(annoGroups::contains);
     }
 
     /**
@@ -307,22 +318,22 @@ public class SpelValidExecutor {
     private static Set<Object> parseGroups(@NotNull Annotation annotation, @NotNull Object value) {
         String[] groups = getAnnotationValue(annotation, GROUP);
         Set<Object> parsedGroups = new HashSet<>();
-        for (String group : groups) {
+        for (@Language("spel") String group : groups) {
             parsedGroups.add(SpelParser.parse(group, value));
         }
         return parsedGroups;
     }
 
     /**
-     * 自动填充校验结果的错误信息
+     * 填充校验结果的错误信息
      */
-    private static void autoFillValidResult(@NotNull FieldValidResult result, @NotNull Annotation annotation, @NotNull Field verifiedField) {
+    private static void fillValidResult(@NotNull FieldValidResult result, @NotNull Annotation annotation, @NotNull Field verifiedField, Locale locale) {
         if (result.isSuccess()) {
             return;
         }
-        // 错误信息收集
+        // 获取错误信息
         String message = result.getMessage().isEmpty() ? getAnnotationValue(annotation, MESSAGE) : result.getMessage();
-        String interpolateMessage = MESSAGE_INTERPOLATOR.interpolate(message, LocaleContextHolder.getLocale(), result.getArgs());
+        String interpolateMessage = MESSAGE_INTERPOLATOR.interpolate(message, locale, result.getArgs());
         result.setMessage(interpolateMessage);
         if (result.getFieldName().isEmpty()) {
             result.setFieldName(verifiedField.getName());

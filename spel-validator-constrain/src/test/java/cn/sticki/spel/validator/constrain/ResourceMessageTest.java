@@ -17,10 +17,22 @@ import java.util.Locale;
 public class ResourceMessageTest {
 
     @Test
-    void test() {
-        String message = ResourceBundleMessageResolver.getMessage("cn.sticki.spel.validator.constraint.AssertFalse.message", Locale.getDefault(), 1, 2);
-        log.info("message: {}", message);
-        Assertions.assertFalse(message.isEmpty());
+    void testRead() {
+        String message = ResourceBundleMessageResolver.getMessage("cn.sticki.spel.validator.constraint.AssertFalse.message", Locale.CHINA);
+        Assertions.assertEquals("只能为false", message);
+    }
+
+    @Test
+    void testReadWithLocale() {
+        String key = "cn.sticki.spel.validator.constraint.Size.message";
+        String message = ResourceBundleMessageResolver.getMessage(key, Locale.CHINA, 1, 2);
+        Assertions.assertEquals("个数必须在1和2之间", message);
+
+        message = ResourceBundleMessageResolver.getMessage(key, Locale.US, 1, 2);
+        Assertions.assertEquals("size must be between 1 and 2", message);
+
+        message = ResourceBundleMessageResolver.getMessage(key, Locale.JAPAN, 1, 2);
+        Assertions.assertEquals("1 から 2 の間のサイズにしてください", message);
     }
 
 }
