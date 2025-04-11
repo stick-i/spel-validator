@@ -40,14 +40,13 @@ public class SpelValidator implements ConstraintValidator<SpelValid, Object> {
             return true;
         }
 
-        // 设置上下文
+        // 构建上下文
         SpelValidContext spelValidContext = SpelValidContext.builder()
                 .locale(LocaleContextHolder.getLocale())
-                .validateGroups(SpelValidExecutor.parseValidateGroups(spelValid.spelGroups()))
                 .build();
 
         // 校验对象
-        ObjectValidResult validateObjectResult = SpelValidExecutor.validateObject(value, spelValidContext);
+        ObjectValidResult validateObjectResult = SpelValidExecutor.validateObject(value, spelValid.spelGroups(), spelValidContext);
 
         // 构建错误信息
         buildConstraintViolation(validateObjectResult, context);

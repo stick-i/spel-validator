@@ -1,5 +1,6 @@
 package cn.sticki.spel.validator.test.util;
 
+import cn.sticki.spel.validator.core.SpelValidContext;
 import lombok.Data;
 import org.intellij.lang.annotations.Language;
 
@@ -32,10 +33,19 @@ public class VerifyObject {
     private boolean expectException;
 
     /**
-     * spel 分组参数，当 object 未使用 @SpelValid 注解时，该参数生效
+     * spel 分组参数
+     * <p>
+     * 当待验证的对象未使用 @SpelValid 注解时，会使用执行器 {@link cn.sticki.spel.validator.core.SpelValidExecutor} 直接进行校验，此时该参数生效
      */
     @Language("spel")
     private String[] spelGroups;
+
+    /**
+     * 校验上下文
+     * <p>
+     * 当待验证的对象未使用 @SpelValid 注解时，会使用执行器 {@link cn.sticki.spel.validator.core.SpelValidExecutor} 直接进行校验，此时该参数生效
+     */
+    private SpelValidContext context = SpelValidContext.getDefault();
 
     private VerifyObject() {
     }
@@ -116,6 +126,11 @@ public class VerifyObject {
 
     public VerifyObject setGroups(@Language("spel") String... spelGroups) {
         this.spelGroups = spelGroups;
+        return this;
+    }
+
+    public VerifyObject setContext(SpelValidContext context) {
+        this.context = context;
         return this;
     }
 
