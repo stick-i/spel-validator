@@ -55,7 +55,7 @@ public class ObjectValidResult {
      */
     public void addFieldResult(FieldValidResult result) {
         if (!result.isSuccess()) {
-            errors.add(new FieldError(result.getFieldName(), result.getMessage()));
+            errors.add(FieldError.of(result.getFieldName(), result.getMessage()));
         }
     }
 

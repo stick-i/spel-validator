@@ -28,7 +28,7 @@ public @interface SpelAssert {
     /**
      * 校验失败时的错误消息
      */
-    String message() default "不允许的值";
+    String message() default "{cn.sticki.spel.validator.constraint.AssertTrue.message}";
 
     /**
      * 约束开启条件，必须为合法的SpEL表达式，计算结果必须为boolean类型。

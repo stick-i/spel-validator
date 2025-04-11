@@ -63,7 +63,7 @@ public class OtherTest {
     @Test
     void testObjectValidResult() {
         ArrayList<FieldValidResult> list = new ArrayList<>();
-        list.add(new FieldValidResult(false, "test"));
+        list.add(FieldValidResult.of(false, "test"));
 
         ObjectValidResult result = new ObjectValidResult();
         Assertions.assertFalse(result.hasError());

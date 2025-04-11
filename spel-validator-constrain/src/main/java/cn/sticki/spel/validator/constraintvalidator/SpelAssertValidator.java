@@ -23,7 +23,7 @@ public class SpelAssertValidator implements SpelConstraintValidator<SpelAssert> 
             throw new SpelArgumentException("assertTrue must not be empty");
         }
 
-        return new FieldValidResult(SpelParser.parse(annotation.assertTrue(), obj, Boolean.class));
+        return FieldValidResult.of(SpelParser.parse(annotation.assertTrue(), obj, Boolean.class));
     }
 
 }

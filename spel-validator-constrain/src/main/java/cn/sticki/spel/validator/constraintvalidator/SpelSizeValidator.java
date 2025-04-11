@@ -34,10 +34,7 @@ public class SpelSizeValidator implements SpelConstraintValidator<SpelSize> {
         Integer max = SpelParser.parse(annotation.max(), obj, Integer.class);
 
         if (size < min || size > max) {
-            // 构建错误信息
-            String message = annotation.message();
-            message = message.replace("{min}", String.valueOf(min)).replace("{max}", String.valueOf(max));
-            return new FieldValidResult(false, message);
+            return FieldValidResult.of(false,  min, max);
         }
 
         return FieldValidResult.success();

@@ -3,6 +3,7 @@ package cn.sticki.spel.validator.javax;
 import org.intellij.lang.annotations.Language;
 
 import javax.validation.Constraint;
+import javax.validation.constraints.NotNull;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -77,6 +78,7 @@ public @interface SpelValid {
     @Language("SpEL")
     String[] spelGroups() default {};
 
+    @NotNull
     String message() default "";
 
     Class<?>[] groups() default {};

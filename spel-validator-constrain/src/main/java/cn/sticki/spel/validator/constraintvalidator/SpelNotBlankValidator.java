@@ -23,7 +23,7 @@ public class SpelNotBlankValidator implements SpelConstraintValidator<SpelNotBla
     @Override
     public FieldValidResult isValid(SpelNotBlank annotation, Object obj, Field field) throws IllegalAccessException {
         CharSequence fieldValue = (CharSequence) field.get(obj);
-        return new FieldValidResult(StringUtils.hasText(fieldValue));
+        return FieldValidResult.of(StringUtils.hasText(fieldValue));
     }
 
     @Override
