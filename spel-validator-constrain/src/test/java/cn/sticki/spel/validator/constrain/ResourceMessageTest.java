@@ -1,6 +1,8 @@
 package cn.sticki.spel.validator.constrain;
 
+import cn.sticki.spel.validator.constrain.bean.I18nTestBean;
 import cn.sticki.spel.validator.core.message.ResourceBundleMessageResolver;
+import cn.sticki.spel.validator.test.util.BaseSpelValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -35,4 +37,12 @@ public class ResourceMessageTest {
         Assertions.assertEquals("1 から 2 の間のサイズにしてください", message);
     }
 
+    @Test
+    void testI18n() {
+        boolean test1 = BaseSpelValidator.check(I18nTestBean.testUs());
+        Assertions.assertTrue(test1, "I18nTestBean.test1() failed");
+
+        boolean test2 = BaseSpelValidator.check(I18nTestBean.testZh());
+        Assertions.assertTrue(test2, "I18nTestBean.test2() failed");
+    }
 }
