@@ -33,6 +33,15 @@ public class ResourceBundleMessageResolver {
     }
 
     /**
+     * 重置资源包
+     */
+    public static void resetBasenames() {
+        MESSAGE_SOURCE.setBasenames(
+                DEFAULT_VALIDATION_MESSAGES
+        );
+    }
+
+    /**
      * 添加资源包
      *
      * @param basename 资源包名称

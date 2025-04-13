@@ -223,14 +223,11 @@
                             </execution>
                         </executions>
                     </plugin>
-                    <!-- GPG -->
+                    <!-- GPG 签名插件配置 -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
                         <version>1.6</version>
-                        <configuration>
-                            <executable>E:\_Gpg4win\GnuPG\bin\gpg.exe</executable>
-                        </configuration>
                         <executions>
                             <execution>
                                 <phase>verify</phase>
@@ -246,7 +243,6 @@
                         <version>0.4.0</version>
                         <extensions>true</extensions>
                         <configuration>
-                            <!-- 这里的serverId是在settings.xml中配置的 -->
                             <publishingServerId>sonatype-sticki</publishingServerId>
                             <tokenAuth>true</tokenAuth>
                         </configuration>

@@ -1,0 +1,40 @@
+name: Release to Maven Central
+
+on:
+  push:
+    tags:
+      - 'v*'  # 仅发布以 v 开头的标签，比如 v1.0.0
+
+jobs:
+  deploy:
+    name: Deploy to Maven Central
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4 # Document: https://github.com/marketplace/actions/setup-java-jdk
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }} # GPG private key to import. Default is empty string.
+          gpg-passphrase: GPG_PASSPHRASE # Environment variable name for the GPG private key passphrase. Default is GPG_PASSPHRASE.
+          server-id: sonatype-sticki
+          server-username: MAVEN_USERNAME # Environment variable name for the username for authentication to the Apache Maven repository. Default is GITHUB_ACTOR.
+          server-password: MAVEN_CENTRAL_TOKEN # Environment variable name for password or token for authentication to the Apache Maven repository. Default is GITHUB_TOKEN.
+
+      - name: Configure GPG for loopback mode
+        run: |
+          echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
+          echo "use-agent" >> ~/.gnupg/gpg.conf
+          echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
+          gpgconf --kill gpg-agent
+
+      - name: Build and Deploy
+        run: mvn -B clean deploy -P release
+        env:
+          MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
