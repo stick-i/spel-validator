@@ -1,0 +1,31 @@
+name: Release to Maven Central
+
+on:
+  push:
+    tags:
+      - 'v*'  # 仅发布以 v 开头的标签，比如 v1.0.0
+  # 手动触发部署
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy to Maven Central
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
+          server-id: sonatype-sticki
+          server-username: ${{ secrets.OSSRH_USERNAME }}
+          server-password: ${{ secrets.OSSRH_PASSWORD }}
+
+      - name: Build and Deploy
+        run: mvn -B clean deploy -P release -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }}

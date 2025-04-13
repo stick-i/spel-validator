@@ -32,17 +32,34 @@ public class FieldValidResult {
     @NotNull
     private String fieldName = "";
 
-    public FieldValidResult(boolean success) {
-        this.success = success;
+    /**
+     * 用于错误信息的占位符替换参数
+     */
+    private Object[] args;
+
+    public static FieldValidResult of(boolean success) {
+        return of(success, "");
     }
 
-    public FieldValidResult(boolean success, @NotNull String message) {
-        this.success = success;
-        this.message = message;
+    public static FieldValidResult of(boolean success, @NotNull String message) {
+        return of(success, message, "", null);
+    }
+
+    public static FieldValidResult of(boolean success, Object... args) {
+        return of(success, "", "", args);
+    }
+
+    public static FieldValidResult of(boolean success, @NotNull String message, String fieldName, Object[] args) {
+        FieldValidResult result = new FieldValidResult();
+        result.success = success;
+        result.fieldName = fieldName;
+        result.message = message;
+        result.args = args;
+        return result;
     }
 
     public static FieldValidResult success() {
-        return new FieldValidResult(true);
+        return of(true);
     }
 
 }

@@ -1,5 +1,6 @@
 package cn.sticki.spel.validator.javax.util;
 
+import cn.sticki.spel.validator.core.SpelValidContext;
 import cn.sticki.spel.validator.core.SpelValidExecutor;
 import cn.sticki.spel.validator.core.result.FieldError;
 import cn.sticki.spel.validator.core.result.ObjectValidResult;
@@ -49,11 +50,11 @@ public class JavaxSpelValidator extends AbstractSpelValidator {
      * @return 校验结果
      */
     @Override
-    public ObjectValidResult validate(Object obj, String[] spelGroups) {
+    public ObjectValidResult validate(Object obj, String[] spelGroups, SpelValidContext context) {
         // 如果对象没有使用 SpelValid 注解，则直接调用验证执行器进行验证
         // 这种情况下，只会验证本框架提供的约束注解
         if (!obj.getClass().isAnnotationPresent(SpelValid.class)) {
-            return SpelValidExecutor.validateObject(obj, spelGroups);
+            return SpelValidExecutor.validateObject(obj, spelGroups, context);
         }
 
         // 通过 @Valid 的方式进行验证

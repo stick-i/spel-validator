@@ -1,5 +1,6 @@
 package cn.sticki.spel.validator.test.util;
 
+import cn.sticki.spel.validator.core.SpelValidContext;
 import cn.sticki.spel.validator.core.SpelValidExecutor;
 import cn.sticki.spel.validator.core.result.ObjectValidResult;
 
@@ -19,18 +20,9 @@ public class BaseSpelValidator extends AbstractSpelValidator {
         return INSTANCE.checkConstraintResult(verifyObjectList);
     }
 
-    /**
-     * 参数校验
-     * <p>
-     * 调用此方法会触发约束校验
-     *
-     * @param obj        待验证对象
-     * @param spelGroups spel 分组参数
-     * @return 校验结果
-     */
     @Override
-    public ObjectValidResult validate(Object obj, String[] spelGroups) {
-        return SpelValidExecutor.validateObject(obj, spelGroups);
+    public ObjectValidResult validate(Object obj, String[] spelGroups, SpelValidContext context) {
+        return SpelValidExecutor.validateObject(obj, spelGroups, context);
     }
 
 }

@@ -1,5 +1,6 @@
 package cn.sticki.spel.validator.test.util;
 
+import cn.sticki.spel.validator.core.SpelValidContext;
 import cn.sticki.spel.validator.core.result.FieldError;
 import cn.sticki.spel.validator.core.result.ObjectValidResult;
 import lombok.extern.slf4j.Slf4j;
@@ -24,9 +25,10 @@ public abstract class AbstractSpelValidator {
      *
      * @param obj        待验证对象
      * @param spelGroups spel 分组参数
+     * @param context    验证上下文
      * @return 校验结果
      */
-    public abstract ObjectValidResult validate(Object obj, String[] spelGroups);
+    public abstract ObjectValidResult validate(Object obj, String[] spelGroups, SpelValidContext context);
 
     /**
      * 验证约束结果是否符合预期
@@ -47,6 +49,7 @@ public abstract class AbstractSpelValidator {
     public boolean checkConstraintResult(VerifyObject verifyObject) {
         Object object = verifyObject.getObject();
         String[] spelGroups = verifyObject.getSpelGroups();
+        SpelValidContext context = verifyObject.getContext();
         Collection<VerifyFailedField> verifyFailedFields = verifyObject.getVerifyFailedFields();
         boolean expectException = verifyObject.isExpectException();
 
@@ -57,7 +60,7 @@ public abstract class AbstractSpelValidator {
         int failCount = 0;
         try {
             // 执行约束校验
-            ObjectValidResult validResult = validate(object, spelGroups);
+            ObjectValidResult validResult = validate(object, spelGroups, context);
             failCount += processVerifyResult(verifyFailedFields, ConstraintViolationSet.of(validResult.getErrors()));
         } catch (Exception e) {
             if (expectException) {
