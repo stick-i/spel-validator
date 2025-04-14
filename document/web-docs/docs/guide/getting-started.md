@@ -15,7 +15,7 @@ Latest Version:
   <dependency>
     <groupId>cn.sticki</groupId>
     <artifactId>spel-validator-javax</artifactId>
-    <version>0.5.0-beta</version>
+    <version>Latest Version</version>
   </dependency>
 ```
 
@@ -25,7 +25,7 @@ Latest Version:
   <dependency>
     <groupId>cn.sticki</groupId>
     <artifactId>spel-validator-jakarta</artifactId>
-    <version>0.5.0-beta</version>
+    <version>Latest Version</version>
   </dependency>
 ```
 
