@@ -37,6 +37,8 @@ public class MessageInterpolatorTest {
         message = "{test.info}\\\\";
         interpolate = messageInterpolator.interpolate(message, Locale.getDefault());
         Assertions.assertEquals(originalMessage + "\\", interpolate);
+
+        ResourceBundleMessageResolver.resetBasenames();
     }
 
     @Test
@@ -49,6 +51,8 @@ public class MessageInterpolatorTest {
         ResourceBundleMessageResolver.addBasenames("testMessages2");
         interpolate = messageInterpolator.interpolate(message, Locale.getDefault(), 1, 2);
         Assertions.assertEquals("size must be between 1 and 2 (test2)", interpolate);
+
+        ResourceBundleMessageResolver.resetBasenames();
     }
 
 }
