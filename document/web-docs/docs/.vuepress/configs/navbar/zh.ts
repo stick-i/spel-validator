@@ -11,6 +11,7 @@ export const navbarZh: NavbarOptions = [
             '/guide/spel.md',
             '/guide/custom.md',
             '/guide/i18n.md',
+            '/guide/principle.md',
             '/guide/FAQ.md',
         ],
     },
