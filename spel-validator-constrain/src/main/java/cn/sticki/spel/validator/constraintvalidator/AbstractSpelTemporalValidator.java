@@ -78,107 +78,25 @@ public abstract class AbstractSpelTemporalValidator<T extends Annotation> implem
      * @return 比较结果：负数表示temporal在now之前，0表示相等，正数表示temporal在now之后
      */
     protected int compareTemporal(Object temporal, Object now) {
-        if (temporal instanceof Instant && now instanceof Instant) {
-            return ((Instant) temporal).compareTo((Instant) now);
-        }
-
-        if (temporal instanceof LocalDate && now instanceof LocalDate) {
-            return ((LocalDate) temporal).compareTo((LocalDate) now);
-        }
-
-        if (temporal instanceof LocalDateTime && now instanceof LocalDateTime) {
-            return ((LocalDateTime) temporal).compareTo((LocalDateTime) now);
-        }
-
-        if (temporal instanceof LocalTime && now instanceof LocalTime) {
-            return ((LocalTime) temporal).compareTo((LocalTime) now);
-        }
-
-        if (temporal instanceof OffsetDateTime && now instanceof OffsetDateTime) {
-            return ((OffsetDateTime) temporal).compareTo((OffsetDateTime) now);
-        }
-
-        if (temporal instanceof OffsetTime && now instanceof OffsetTime) {
-            return ((OffsetTime) temporal).compareTo((OffsetTime) now);
-        }
-
-        if (temporal instanceof ZonedDateTime && now instanceof ZonedDateTime) {
-            return ((ZonedDateTime) temporal).compareTo((ZonedDateTime) now);
-        }
-
-        if (temporal instanceof Year && now instanceof Year) {
-            return ((Year) temporal).compareTo((Year) now);
-        }
-
-        if (temporal instanceof YearMonth && now instanceof YearMonth) {
-            return ((YearMonth) temporal).compareTo((YearMonth) now);
-        }
-
-        if (temporal instanceof MonthDay && now instanceof MonthDay) {
-            return ((MonthDay) temporal).compareTo((MonthDay) now);
-        }
-
-        if (temporal instanceof Date && now instanceof Date) {
-            return ((Date) temporal).compareTo((Date) now);
-        }
-
-        if (temporal instanceof Calendar && now instanceof Calendar) {
-            return ((Calendar) temporal).compareTo((Calendar) now);
-        }
-
-        // 对于 ChronoLocalDate, ChronoLocalDateTime, ChronoZonedDateTime
-        if (temporal instanceof ChronoLocalDate && now instanceof ChronoLocalDate) {
+        // 这个类型下面有不同的实现类，特殊处理下
+        if (temporal instanceof ChronoLocalDate) {
             return ((ChronoLocalDate) temporal).compareTo((ChronoLocalDate) now);
         }
 
-        if (temporal instanceof ChronoLocalDateTime && now instanceof ChronoLocalDateTime) {
-            return ((ChronoLocalDateTime<?>) temporal).compareTo((ChronoLocalDateTime<?>) now);
+        // 检查类型是否一致
+        if (temporal.getClass() != now.getClass()) {
+            throw new IllegalArgumentException("Cannot compare different types: " +
+                    temporal.getClass().getName() + " and " + now.getClass().getName());
         }
 
-        if (temporal instanceof ChronoZonedDateTime && now instanceof ChronoZonedDateTime) {
-            return ((ChronoZonedDateTime<?>) temporal).compareTo((ChronoZonedDateTime<?>) now);
+        if (temporal instanceof Comparable) {
+            // 因为前面已经检查了 temporal.getClass() == now.getClass()，
+            // 所以这里的 a.compareTo(b) 是类型安全的。
+            //noinspection unchecked
+            return ((Comparable<Object>) temporal).compareTo(now);
         }
 
-        // 如果类型不匹配，尝试转换为Instant进行比较
-        return compareAsInstant(temporal, now);
-    }
-
-    /**
-     * 将时间对象转换为Instant进行比较
-     */
-    private int compareAsInstant(Object temporal, Object now) {
-        Instant temporalInstant = toInstant(temporal);
-        Instant nowInstant = toInstant(now);
-        return temporalInstant.compareTo(nowInstant);
-    }
-
-    /**
-     * 将时间对象转换为Instant
-     */
-    private Instant toInstant(Object temporal) {
-        if (temporal instanceof Instant) {
-            return (Instant) temporal;
-        }
-        if (temporal instanceof LocalDateTime) {
-            return ((LocalDateTime) temporal).atZone(ZoneId.systemDefault()).toInstant();
-        }
-        if (temporal instanceof LocalDate) {
-            return ((LocalDate) temporal).atStartOfDay(ZoneId.systemDefault()).toInstant();
-        }
-        if (temporal instanceof OffsetDateTime) {
-            return ((OffsetDateTime) temporal).toInstant();
-        }
-        if (temporal instanceof ZonedDateTime) {
-            return ((ZonedDateTime) temporal).toInstant();
-        }
-        if (temporal instanceof Date) {
-            return ((Date) temporal).toInstant();
-        }
-        if (temporal instanceof Calendar) {
-            return ((Calendar) temporal).toInstant();
-        }
-
-        throw new IllegalArgumentException("Unsupported temporal type: " + temporal.getClass());
+        throw new IllegalArgumentException("Unsupported non-comparable temporal type: " + temporal.getClass().getName());
     }
 
     /**
@@ -225,12 +143,6 @@ public abstract class AbstractSpelTemporalValidator<T extends Annotation> implem
         // 对于 ChronoLocalDate, ChronoLocalDateTime, ChronoZonedDateTime
         if (temporal instanceof ChronoLocalDate) {
             return LocalDate.now();
-        }
-        if (temporal instanceof ChronoLocalDateTime) {
-            return LocalDateTime.now();
-        }
-        if (temporal instanceof ChronoZonedDateTime) {
-            return ZonedDateTime.now();
         }
 
         throw new IllegalArgumentException("Unsupported temporal type: " + temporal.getClass());

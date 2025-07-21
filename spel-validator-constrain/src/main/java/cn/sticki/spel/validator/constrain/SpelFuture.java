@@ -17,6 +17,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * <p>
  * 支持的类型有：
  * <ul>
+ *     <li>{@link java.util.Date}</li>
+ *     <li>{@link java.util.Calendar}</li>
  *     <li>{@link java.time.Instant}</li>
  *     <li>{@link java.time.LocalDate}</li>
  *     <li>{@link java.time.LocalDateTime}</li>
@@ -31,8 +33,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  *     <li>{@link java.time.chrono.JapaneseDate}</li>
  *     <li>{@link java.time.chrono.MinguoDate}</li>
  *     <li>{@link java.time.chrono.ThaiBuddhistDate}</li>
- *     <li>{@link java.util.Date}</li>
- *     <li>{@link java.util.Calendar}</li>
  * </ul>
  *
  * @author 阿杆
