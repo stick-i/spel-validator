@@ -9,6 +9,7 @@
         <version>0.5.1-beta</version>
     </parent>
 
+    <name>Spel Validator Core</name>
     <artifactId>spel-validator-core</artifactId>
 
     <properties>
