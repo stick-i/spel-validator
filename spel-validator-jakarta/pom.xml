@@ -9,6 +9,7 @@
         <version>0.5.1-beta</version>
     </parent>
 
+    <name>Spel Validator Jakarta</name>
     <artifactId>spel-validator-jakarta</artifactId>
 
     <properties>

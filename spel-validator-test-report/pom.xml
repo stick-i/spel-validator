@@ -9,6 +9,7 @@
         <version>0.5.1-beta</version>
     </parent>
 
+    <name>Spel Validator Test Report</name>
     <artifactId>spel-validator-test-report</artifactId>
 
     <properties>
