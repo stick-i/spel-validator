@@ -167,7 +167,7 @@ export default defineUserConfig({
         // only enable shiki plugin in production mode
         !isProd ? [] :
                 shikiPlugin({
-                    langs: ['bash', 'diff', 'json', 'md', 'xml', 'java'],
+                    langs: ['bash', 'diff', 'json', 'md', 'xml', 'java', 'properties'],
                     theme: 'dark-plus',
                     lineNumbers: 10,
                 }),

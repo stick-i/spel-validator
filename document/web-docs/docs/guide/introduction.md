@@ -12,7 +12,25 @@ SpEL Validator 是基于 Spring Expression Language 的参数校验包，也是 
 
 ## 它是如何工作的？
 
-待补充。
+简单来说，它按照以下步骤工作：
+
+```md
+@Valid/@Validated
+   ↓
+@SpelValid                <- 激活 SpelValidator
+   ↓
+SpelValidator#isValid()   <- 调用 SpelValidExecutor
+   ↓
+SpelValidExecutor         <- 扫描字段、解析表达式、调用具体约束的校验器
+   ↓
+SpelConstraintValidator   <- 执行约束校验
+   ↓
+FieldError                <- 错误信息收集
+   ↓
+ConstraintViolation       <- 转换为标准校验框架支持的结构
+```
+
+详细的说明，可以参考章节 [工作原理](principle.md)。
 
 ## 它解决了什么问题？
 

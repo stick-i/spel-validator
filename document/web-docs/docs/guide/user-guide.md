@@ -27,26 +27,19 @@ Latest Version:
 根据项目的实际情况，引入 `spel-validator-javax` 或 `spel-validator-jakarta` ：
 
 ```xml
-<dependencys>
+  <dependency>
+    <groupId>cn.sticki</groupId>
+    <artifactId>spel-validator-javax</artifactId>
+    <version>Latest Version</version>
+  </dependency>
+```
+
+```xml
   <dependency>
     <groupId>cn.sticki</groupId>
     <artifactId>spel-validator-jakarta</artifactId>
-    <version>0.5.2-beta</version>
+    <version>Latest Version</version>
   </dependency>
-</dependencys>
-```
-
-如果你的项目中没有任何对于Spring的依赖，那么你需要额外添加一个对SpEL的依赖：
-
-```xml
-<dependencys>
-  <!-- SpEL 依赖项 -->
-  <dependency>
-    <groupId>org.springframework</groupId>
-    <artifactId>spring-expression</artifactId>
-    <version>${spring.version}</version>
-  </dependency>
-</dependencys>
 ```
 
 ## 开启约束校验
@@ -78,30 +71,34 @@ public class SimpleExampleParamVo {
 }
 ```
 
-如果只满足第一个条件，那么只会对带 `@NotNull`、`@NotEmpty`、`@NotBlank` 等注解的元素进行校验。
+如果只满足第一个条件，那么只会对带 `@NotNull`、`@NotEmpty`、`@Max` 等注解的元素进行校验。
 
 如果只满足第二个条件，那么不会对任何元素进行校验。
 
 这是因为 `@SpelValid` 注解是基于 `jakarta.validation.Constraint` 实现的。
-这就意味着，`@SpelValid` 和 `@NotNull`、`@NotEmpty`、`@NotBlank` 等注解一样，
-需要在 `@Valid` 或 `@Validated` 注解的支持下才会生效。
+也就是说，**`@SpelValid` 和 `@NotNull`、`@NotEmpty`、`@Max` 等注解是同等级的，在使用上也是一致的，
+需要在 `@Valid` 或 `@Validated` 注解的支持下才会生效。**
 
-而 `SpEL Validator` 提供的约束注解又是在 `@SpelValid` 的内部进行校验的，只有在 `@SpelValid` 注解生效的情况下才会执行约束校验。
+而本组件提供的约束注解又是在 `@SpelValid` 的内部进行校验的，必须在 `@SpelValid` 注解生效的情况下才会执行约束校验。
 
-所以，如果需要使用 `SpEL Validator` 进行校验，需要同时满足上述两个条件。
+所以，如果需要使用 `SpelNotNull`、`SpelSize` 等注解进行字段校验，需要同时满足上述两个条件。
 
 ::: tip
 
 如果你使用 `@Validated` 的话，那么你也可以这样使用：
 
 ```java
-@Validated // 此处开启了支持参数的约束校验
+@Validated // ** 此处开启了对方法参数的约束校验，使下面参数中的 @SpelValid 注解生效 **
 @RestController
 @RequestMapping
 public class TestController {
 
+  /**
+   * 参数中的 @Validated 开启了对象内的校验，使对象内的 @NotNull 注解生效
+   * 而 @SpelValid 注解则是开启了对象内的 SpEL 校验，使对象内的 @SpelNotNull 注解生效
+   */
     @PostMapping
-    public void test(@RequestBody @Validated/*此处开启了对象内的校验*/ @SpelValid/*此处开启了对象内的spel校验*/ TestParamVo param) {
+    public void test(@RequestBody @Validated @SpelValid TestParamVo param) {
     }
 
 }
@@ -144,21 +141,21 @@ public class SimpleExampleParamVo {
 
 目前支持的约束注解有：
 
-|       注解        |       说明        | 对标 jakarta.validation-api |
-|:---------------:|:---------------:|:-------------------------:|
-|  `@SpelAssert`  |     逻辑断言校验      |       `@AssertTrue`       |
-| `@SpelNotNull`  |    非 null 校验    |        `@NotNull`         |
-| `@SpelNotEmpty` | 集合、字符串、数组大小非空校验 |        `@NotEmpty`        |
-| `@SpelNotBlank` |    字符串非空串校验     |        `@NotBlank`        |
-|   `@SpelNull`   |   必须为 null 校验   |          `@Null`          |
-|   `@SpelSize`   |  集合、字符串、数组长度校验  |          `@Size`          |
-|   `@SpelMin`    |      即将支持       |          `@Min`           |
-|   `@SpelMax`    |      即将支持       |          `@Max`           |
+|       注解        | 对标 jakarta.validation-api |       说明        |
+|:---------------:|:-------------------------:|:---------------:|
+|  `@SpelAssert`  |       `@AssertTrue`       |     逻辑断言校验      |
+| `@SpelNotNull`  |        `@NotNull`         |    非 null 校验    |
+| `@SpelNotEmpty` |        `@NotEmpty`        | 集合、字符串、数组大小非空校验 |
+| `@SpelNotBlank` |        `@NotBlank`        |    字符串非空串校验     |
+|   `@SpelNull`   |          `@Null`          |   必须为 null 校验   |
+|   `@SpelSize`   |          `@Size`          |  集合、字符串、数组长度校验  |
+|   `@SpelMin`    |          `@Min`           |     允许的最小值      |
+|   `@SpelMax`    |          `@Max`           |     允许的最大值      |
 
 所有约束注解都包含三个默认的属性：
 
 - `condition`：约束开启条件，支持 SpEL 表达式，表达式的计算结果必须为 `boolean` 类型，当 **计算结果为true** 时，才会对带注解的元素进行校验，默认情况下开启。
-- `message`：校验失败时的提示信息。
+- `message`：校验失败时的提示信息，支持多语言key，使用方式参考 [国际化消息](i18n.md)。
 - `group`：分组条件，支持 SpEL 表达式，当分组条件满足时，才会对带注解的元素进行校验。具体使用方式参考 [分组校验](#分组校验)。
 
 在需要校验的字段上使用 `@SpelNotNull` 等约束注解。
