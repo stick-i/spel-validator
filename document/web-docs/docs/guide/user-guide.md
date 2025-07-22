@@ -31,7 +31,7 @@ Latest Version:
   <dependency>
     <groupId>cn.sticki</groupId>
     <artifactId>spel-validator-jakarta</artifactId>
-    <version>0.5.0-beta</version>
+    <version>0.5.2-beta</version>
   </dependency>
 </dependencys>
 ```

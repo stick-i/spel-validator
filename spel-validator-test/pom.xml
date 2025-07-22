@@ -6,7 +6,7 @@
     <parent>
         <groupId>cn.sticki</groupId>
         <artifactId>spel-validator-root</artifactId>
-        <version>0.5.1-beta</version>
+        <version>0.5.2-beta</version>
     </parent>
 
     <name>Spel Validator Test</name>
