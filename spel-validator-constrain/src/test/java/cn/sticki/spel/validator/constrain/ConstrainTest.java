@@ -91,4 +91,48 @@ public class ConstrainTest {
         Assertions.assertTrue(paramTest, "spelMax param test failed");
     }
 
+    @Test
+    void testSpelFuture() {
+        boolean paramTest = BaseSpelValidator.check(SpelFutureTestBean.paramTestCase());
+        boolean typeTest = BaseSpelValidator.check(SpelFutureTestBean.typeTestCase());
+        boolean repeatableTest = BaseSpelValidator.check(SpelFutureTestBean.repeatableTestCase());
+
+        Assertions.assertTrue(paramTest, "spelFuture param test failed");
+        Assertions.assertTrue(typeTest, "spelFuture type test failed");
+        Assertions.assertTrue(repeatableTest, "spelFuture repeatable test failed");
+    }
+
+    @Test
+    void testSpelFutureOrPresent() {
+        boolean paramTest = BaseSpelValidator.check(SpelFutureOrPresentTestBean.paramTestCase());
+        boolean typeTest = BaseSpelValidator.check(SpelFutureOrPresentTestBean.typeTestCase());
+        boolean repeatableTest = BaseSpelValidator.check(SpelFutureOrPresentTestBean.repeatableTestCase());
+
+        Assertions.assertTrue(paramTest, "spelFutureOrPresent param test failed");
+        Assertions.assertTrue(typeTest, "spelFutureOrPresent type test failed");
+        Assertions.assertTrue(repeatableTest, "spelFutureOrPresent repeatable test failed");
+    }
+
+    @Test
+    void testSpelPast() {
+        boolean paramTest = BaseSpelValidator.check(SpelPastTestBean.paramTestCase());
+        boolean typeTest = BaseSpelValidator.check(SpelPastTestBean.typeTestCase());
+        boolean repeatableTest = BaseSpelValidator.check(SpelPastTestBean.repeatableTestCase());
+
+        Assertions.assertTrue(paramTest, "spelPast param test failed");
+        Assertions.assertTrue(typeTest, "spelPast type test failed");
+        Assertions.assertTrue(repeatableTest, "spelPast repeatable test failed");
+    }
+
+    @Test
+    void testSpelPastOrPresent() {
+        boolean paramTest = BaseSpelValidator.check(SpelPastOrPresentTestBean.paramTestCase());
+        boolean typeTest = BaseSpelValidator.check(SpelPastOrPresentTestBean.typeTestCase());
+        boolean repeatableTest = BaseSpelValidator.check(SpelPastOrPresentTestBean.repeatableTestCase());
+
+        Assertions.assertTrue(paramTest, "spelPastOrPresent param test failed");
+        Assertions.assertTrue(typeTest, "spelPastOrPresent type test failed");
+        Assertions.assertTrue(repeatableTest, "spelPastOrPresent repeatable test failed");
+    }
+
 }
