@@ -141,16 +141,20 @@ public class SimpleExampleParamVo {
 
 目前支持的约束注解有：
 
-|       注解        | 对标 jakarta.validation-api |       说明        |
-|:---------------:|:-------------------------:|:---------------:|
-|  `@SpelAssert`  |       `@AssertTrue`       |     逻辑断言校验      |
-| `@SpelNotNull`  |        `@NotNull`         |    非 null 校验    |
-| `@SpelNotEmpty` |        `@NotEmpty`        | 集合、字符串、数组大小非空校验 |
-| `@SpelNotBlank` |        `@NotBlank`        |    字符串非空串校验     |
-|   `@SpelNull`   |          `@Null`          |   必须为 null 校验   |
-|   `@SpelSize`   |          `@Size`          |  集合、字符串、数组长度校验  |
-|   `@SpelMin`    |          `@Min`           |     允许的最小值      |
-|   `@SpelMax`    |          `@Max`           |     允许的最大值      |
+|           注解           | 对标 jakarta.validation-api |       说明        |
+|:----------------------:|:-------------------------:|:---------------:|
+|     `@SpelAssert`      |       `@AssertTrue`       |     逻辑断言校验      |
+|     `@SpelNotNull`     |        `@NotNull`         |    非 null 校验    |
+|    `@SpelNotEmpty`     |        `@NotEmpty`        | 集合、字符串、数组大小非空校验 |
+|    `@SpelNotBlank`     |        `@NotBlank`        |    字符串非空串校验     |
+|      `@SpelNull`       |          `@Null`          |   必须为 null 校验   |
+|      `@SpelSize`       |          `@Size`          |  集合、字符串、数组长度校验  |
+|       `@SpelMin`       |          `@Min`           |     允许的最小值      |
+|       `@SpelMax`       |          `@Max`           |     允许的最大值      |
+|     `@SpelFuture`      |         `@Future`         |    时间必须是未来时间    |
+| `@SpelFutureOrPresent` |    `@FutureOrPresent`     |  时间必须是未来或当前时间   |
+|      `@SpelPast`       |          `@Past`          |    时间必须是过去时间    |
+|  `@SpelPastOrPresent`  |     `@PastOrPresent`      |  时间必须是过去或当前时间   |
 
 所有约束注解都包含三个默认的属性：
 
@@ -293,7 +297,7 @@ public class GroupTestParamVo {
 
     public static final String ADD = "'add'"; // SpEL表达式中的字符串需要使用单引号包裹，否则会被识别为变量
 
-    public static final String UPDATE = "'audio'";
+    public static final String UPDATE = "'update'";
 
   }
 
