@@ -139,22 +139,12 @@ public class SimpleExampleParamVo {
 
 ## 使用约束注解
 
-目前支持的约束注解有：
+组件内自带常用的约束注解，包含 断言、非空、长度、数值、时间 等校验注解，基本能满足大多数的校验需求。
+例如：`@SpelNotNull`、`@SpelSize`、`@SpelMin`、`@SpelMax`、`@SpelFuture` 等注解。
 
-|           注解           | 对标 jakarta.validation-api |       说明        |
-|:----------------------:|:-------------------------:|:---------------:|
-|     `@SpelAssert`      |       `@AssertTrue`       |     逻辑断言校验      |
-|     `@SpelNotNull`     |        `@NotNull`         |    非 null 校验    |
-|    `@SpelNotEmpty`     |        `@NotEmpty`        | 集合、字符串、数组大小非空校验 |
-|    `@SpelNotBlank`     |        `@NotBlank`        |    字符串非空串校验     |
-|      `@SpelNull`       |          `@Null`          |   必须为 null 校验   |
-|      `@SpelSize`       |          `@Size`          |  集合、字符串、数组长度校验  |
-|       `@SpelMin`       |          `@Min`           |     允许的最小值      |
-|       `@SpelMax`       |          `@Max`           |     允许的最大值      |
-|     `@SpelFuture`      |         `@Future`         |    时间必须是未来时间    |
-| `@SpelFutureOrPresent` |    `@FutureOrPresent`     |  时间必须是未来或当前时间   |
-|      `@SpelPast`       |          `@Past`          |    时间必须是过去时间    |
-|  `@SpelPastOrPresent`  |     `@PastOrPresent`      |  时间必须是过去或当前时间   |
+> 完整的注解列表，可以参考 [注解查阅](annotation-guide.md)。
+> 
+> 如需自定义约束注解，请参考 [自定义约束注解](custom.md)。
 
 所有约束注解都包含三个默认的属性：
 
