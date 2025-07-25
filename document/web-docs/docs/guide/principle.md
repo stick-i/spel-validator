@@ -54,7 +54,7 @@ ObjectValidResult result = SpelValidExecutor.validateObject(obj, spelGroups, con
 执行器 `SpelValidExecutor` 是 SpEL Validator 的核心引擎，它会：
 
 1. 找出被校验类的所有字段
-2. 找出字段上有哪些 `@SpelConstraint` 标注的注解（如 `@SpelSize`, `@SpelNotNull`）
+2. 找出字段上有哪些 `@SpelConstraint` 标注的注解（如 `@SpelSize`, `@SpelNotNull`, `@SpelFuture` 等）
 3. 根据分组和 `condition` 决定是否执行注解
 4. 执行注解对应的 `SpelConstraintValidator`
 5. 收集错误结果，支持国际化 + 参数插值
