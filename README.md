@@ -97,6 +97,10 @@ JDK8+
 - 微信: sticki6
 - 公众号: 程序员阿杆
 
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=stick-i/spel-validator&type=Date)](https://www.star-history.com/#stick-i/spel-validator&Date)
+
 ## 💰 捐赠支持
 
 | 微信赞赏                                                 | 支付宝赞赏                                            |
