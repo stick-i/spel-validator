@@ -92,6 +92,17 @@ public class ConstrainTest {
     }
 
     @Test
+    void testSpelDigits() {
+        boolean paramTest = BaseSpelValidator.check(SpelDigitsTestBean.paramTestCase());
+        boolean paramTest2 = BaseSpelValidator.check(SpelDigitsTestBean.paramTest2Case());
+        boolean repeatableTest = BaseSpelValidator.check(SpelDigitsTestBean.repeatableTestCase());
+
+        Assertions.assertTrue(paramTest, "spelDigits param test failed");
+        Assertions.assertTrue(paramTest2, "spelDigits param test2 failed");
+        Assertions.assertTrue(repeatableTest, "spelDigits repeatable test failed");
+    }
+
+    @Test
     void testSpelFuture() {
         boolean paramTest = BaseSpelValidator.check(SpelFutureTestBean.paramTestCase());
         boolean typeTest = BaseSpelValidator.check(SpelFutureTestBean.typeTestCase());
