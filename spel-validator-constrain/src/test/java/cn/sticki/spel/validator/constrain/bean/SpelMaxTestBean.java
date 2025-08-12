@@ -69,4 +69,67 @@ public class SpelMaxTestBean {
         return result;
     }
 
+    /**
+     * inclusive 参数测试
+     */
+    @Data
+    @Builder
+    public static class InclusiveTestBean implements ID {
+
+        private int id;
+
+        private int max;
+
+        // inclusive=true (默认)
+        @SpelMax(value = "#this.max")
+        private Long testInclusiveTrue;
+
+        // inclusive=false
+        @SpelMax(value = "#this.max", inclusive = false)
+        private Long testInclusiveFalse;
+
+    }
+
+    /**
+     * inclusive 参数测试
+     */
+    public static List<VerifyObject> inclusiveTestCase() {
+        ArrayList<VerifyObject> result = new ArrayList<>();
+
+        // inclusive=true，边界值应该通过
+        result.add(VerifyObject.of(
+                InclusiveTestBean.builder().id(1).max(100).testInclusiveTrue(100L).build()
+        ));
+
+        // inclusive=true，小于边界值应该通过
+        result.add(VerifyObject.of(
+                InclusiveTestBean.builder().id(2).max(100).testInclusiveTrue(99L).build()
+        ));
+
+        // inclusive=true，大于边界值应该失败
+        result.add(VerifyObject.of(
+                InclusiveTestBean.builder().id(3).max(100).testInclusiveTrue(101L).build(),
+                VerifyFailedField.of(InclusiveTestBean::getTestInclusiveTrue)
+        ));
+
+        // inclusive=false，边界值应该失败
+        result.add(VerifyObject.of(
+                InclusiveTestBean.builder().id(4).max(100).testInclusiveFalse(100L).build(),
+                VerifyFailedField.of(InclusiveTestBean::getTestInclusiveFalse)
+        ));
+
+        // inclusive=false，小于边界值应该通过
+        result.add(VerifyObject.of(
+                InclusiveTestBean.builder().id(5).max(100).testInclusiveFalse(99L).build()
+        ));
+
+        // inclusive=false，大于边界值应该失败
+        result.add(VerifyObject.of(
+                InclusiveTestBean.builder().id(6).max(100).testInclusiveFalse(101L).build(),
+                VerifyFailedField.of(InclusiveTestBean::getTestInclusiveFalse)
+        ));
+
+        return result;
+    }
+
 }

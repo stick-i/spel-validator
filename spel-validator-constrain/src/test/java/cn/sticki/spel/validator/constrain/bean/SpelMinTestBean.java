@@ -537,4 +537,67 @@ public class SpelMinTestBean {
         return result;
     }
 
+    /**
+     * inclusive 参数测试
+     */
+    @Data
+    @Builder
+    public static class InclusiveTestBean implements ID {
+
+        private int id;
+
+        private int min;
+
+        // inclusive=true (默认)
+        @SpelMin(value = "#this.min")
+        private Long testInclusiveTrue;
+
+        // inclusive=false
+        @SpelMin(value = "#this.min", inclusive = false)
+        private Long testInclusiveFalse;
+
+    }
+
+    /**
+     * inclusive 参数测试
+     */
+    public static List<VerifyObject> inclusiveTestCase() {
+        ArrayList<VerifyObject> result = new ArrayList<>();
+
+        // inclusive=true，边界值应该通过
+        result.add(VerifyObject.of(
+                InclusiveTestBean.builder().id(1).min(10).testInclusiveTrue(10L).build()
+        ));
+
+        // inclusive=true，大于边界值应该通过
+        result.add(VerifyObject.of(
+                InclusiveTestBean.builder().id(2).min(10).testInclusiveTrue(11L).build()
+        ));
+
+        // inclusive=true，小于边界值应该失败
+        result.add(VerifyObject.of(
+                InclusiveTestBean.builder().id(3).min(10).testInclusiveTrue(9L).build(),
+                VerifyFailedField.of(InclusiveTestBean::getTestInclusiveTrue)
+        ));
+
+        // inclusive=false，边界值应该失败
+        result.add(VerifyObject.of(
+                InclusiveTestBean.builder().id(4).min(10).testInclusiveFalse(10L).build(),
+                VerifyFailedField.of(InclusiveTestBean::getTestInclusiveFalse)
+        ));
+
+        // inclusive=false，大于边界值应该通过
+        result.add(VerifyObject.of(
+                InclusiveTestBean.builder().id(5).min(10).testInclusiveFalse(11L).build()
+        ));
+
+        // inclusive=false，小于边界值应该失败
+        result.add(VerifyObject.of(
+                InclusiveTestBean.builder().id(6).min(10).testInclusiveFalse(9L).build(),
+                VerifyFailedField.of(InclusiveTestBean::getTestInclusiveFalse)
+        ));
+
+        return result;
+    }
+
 }

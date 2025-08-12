@@ -76,19 +76,36 @@ public class ConstrainTest {
         boolean paramTest2 = BaseSpelValidator.check(SpelMinTestBean.paramTest2Case());
         boolean valueTypeTest = BaseSpelValidator.check(SpelMinTestBean.valueTypeTestCase());
         boolean notSupportTypeTest = BaseSpelValidator.check(SpelMinTestBean.notSupportTypeTestCase());
+        boolean inclusiveTest = BaseSpelValidator.check(SpelMinTestBean.inclusiveTestCase());
 
         Assertions.assertTrue(paramTest, "spelMin param test failed");
         Assertions.assertTrue(repeatableTest, "spelMin repeatable test failed");
         Assertions.assertTrue(paramTest2, "spelMin param test2 failed");
         Assertions.assertTrue(valueTypeTest, "spelMin valueType test failed");
         Assertions.assertTrue(notSupportTypeTest, "spelMin notSupportType test failed");
+        Assertions.assertTrue(inclusiveTest, "spelMin inclusive test failed");
     }
 
     @Test
     void testSpelMax() {
         boolean paramTest = BaseSpelValidator.check(SpelMaxTestBean.paramTestCase());
+        boolean inclusiveTest = BaseSpelValidator.check(SpelMaxTestBean.inclusiveTestCase());
 
         Assertions.assertTrue(paramTest, "spelMax param test failed");
+        Assertions.assertTrue(inclusiveTest, "spelMax inclusive test failed");
+    }
+
+    @Test
+    void testSpelDigits() {
+        boolean paramTest = BaseSpelValidator.check(SpelDigitsTestBean.paramTestCase());
+        boolean paramTest2 = BaseSpelValidator.check(SpelDigitsTestBean.paramTest2Case());
+        boolean repeatableTest = BaseSpelValidator.check(SpelDigitsTestBean.repeatableTestCase());
+        boolean edgeCaseTest = BaseSpelValidator.check(SpelDigitsTestBean.edgeCaseTestCase());
+
+        Assertions.assertTrue(paramTest, "spelDigits param test failed");
+        Assertions.assertTrue(paramTest2, "spelDigits param test2 failed");
+        Assertions.assertTrue(repeatableTest, "spelDigits repeatable test failed");
+        Assertions.assertTrue(edgeCaseTest, "spelDigits edge case test failed");
     }
 
     @Test
