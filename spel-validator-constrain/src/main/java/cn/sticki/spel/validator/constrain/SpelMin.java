@@ -59,7 +59,7 @@ public @interface SpelMin {
      * 表达式的计算结果必须为 {@link Number} 类型。
      */
     @Language("SpEL")
-    String value() default "0";
+    String value();
 
     /**
      * 指定边界值是否被包含在内。

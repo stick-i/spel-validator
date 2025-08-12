@@ -36,7 +36,7 @@ public class SpelMinTestBean {
         private int min;
 
         // 默认参数
-        @SpelMin
+        @SpelMin(value = "0")
         private Integer test;
 
         // 变量参数
@@ -244,22 +244,22 @@ public class SpelMinTestBean {
 
         private int id;
 
-        @SpelMin
+        @SpelMin(value = "0")
         private int testInt;
 
-        @SpelMin
+        @SpelMin(value = "0")
         private long testLong;
 
-        @SpelMin
+        @SpelMin(value = "0")
         private double testDouble;
 
-        @SpelMin
+        @SpelMin(value = "0")
         private float testFloat;
 
-        @SpelMin
+        @SpelMin(value = "0")
         private byte testByte;
 
-        @SpelMin
+        @SpelMin(value = "0")
         private short testShort;
 
     }
@@ -520,7 +520,7 @@ public class SpelMinTestBean {
         @SpelMin(value = "#this.testList")
         private Integer test;
 
-        @SpelMin
+        @SpelMin(value = "0")
         private List<String> testList;
 
     }
