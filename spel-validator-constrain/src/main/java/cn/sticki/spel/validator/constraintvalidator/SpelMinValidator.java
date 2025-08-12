@@ -23,8 +23,7 @@ public class SpelMinValidator extends AbstractSpelNumberCompareValidator<SpelMin
 
     @Override
     public FieldValidResult isValid(SpelMin annotation, Object obj, Field field) throws IllegalAccessException {
-        Number fieldValue = (Number) field.get(obj);
-        return super.isValid(annotation, fieldValue, annotation.value(), obj);
+        return super.isValid(annotation, field.get(obj), annotation.value(), obj);
     }
 
 }

@@ -15,7 +15,11 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 /**
  * 被标记的元素值必须大于或等于指定的最小值。{@code null} 元素被认为是有效的。
  * <p>
- * 支持所有 {@link Number} 类型及它们的基本数据类型。
+ * 支持的类型有：
+ * <ul>
+ *     <li>所有 {@link Number} 类型及它们的基本数据类型</li>
+ *     <li>使用 {@link CharSequence} 表示的数字</li>
+ * </ul>
  *
  * @author oddfar、阿杆
  * @version 1.0
