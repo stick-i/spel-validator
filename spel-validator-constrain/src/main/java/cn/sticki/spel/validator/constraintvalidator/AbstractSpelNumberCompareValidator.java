@@ -19,7 +19,15 @@ import java.util.Set;
  */
 public abstract class AbstractSpelNumberCompareValidator<T extends Annotation> implements SpelConstraintValidator<T> {
 
-    public FieldValidResult isValid(Number fieldValue, String spel, String errorMessage, Object obj) {
+    /**
+     * 校验数值是否满足约束条件。
+     *
+     * @param fieldValue 当前元素的值
+     * @param spel       SpEL表达式
+     * @param obj        被校验的对象实例
+     * @return 校验结果
+     */
+    public FieldValidResult isValid(T anno, Number fieldValue, String spel, Object obj) {
         // 元素为null是被允许的
         if (fieldValue == null) {
             return FieldValidResult.success();
@@ -30,10 +38,9 @@ public abstract class AbstractSpelNumberCompareValidator<T extends Annotation> i
             throw new SpelParserException("Expression [" + spel + "] calculate result must be Number.");
         }
         // 比较大小，其中一个是Not-a-Number (NaN）默认失败
-        if (!this.compare(fieldValue, (Number) numberValue)) {
+        if (!this.compare(anno, fieldValue, (Number) numberValue)) {
             // todo 目前对Double的边界值处理不太友好，message的展示类似为：不能小于等于 NaN。后续考虑去掉对Double Float类型的支持，或者对边界值抛出异常。
             // 构建错误信息
-            // String replacedMessage = errorMessage.replace("{value}", String.valueOf(numberValue));
             return FieldValidResult.of(false, numberValue);
         }
 
@@ -47,7 +54,7 @@ public abstract class AbstractSpelNumberCompareValidator<T extends Annotation> i
      * @param compareValue 比较的值，最大值或最小值
      * @return 成功时返回true，失败时返回false
      */
-    protected abstract boolean compare(Number fieldValue, Number compareValue);
+    protected abstract boolean compare(T anno, Number fieldValue, Number compareValue);
 
     static final Set<Class<?>> SUPPORT_TYPE;
 

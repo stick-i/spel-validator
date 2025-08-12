@@ -61,6 +61,15 @@ public @interface SpelMax {
     @Language("SpEL")
     String value() default "0";
 
+    /**
+     * 指定边界值是否被包含在内。
+     * <p>
+     * 当为 true 时，验证 value <= max；当为 false 时，验证 value < max。
+     * <p>
+     * 默认为 true。
+     */
+    boolean inclusive() default true;
+
     @Documented
     @Target(FIELD)
     @Retention(RUNTIME)
