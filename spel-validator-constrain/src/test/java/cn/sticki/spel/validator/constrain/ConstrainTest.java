@@ -100,10 +100,12 @@ public class ConstrainTest {
         boolean paramTest = BaseSpelValidator.check(SpelDigitsTestBean.paramTestCase());
         boolean paramTest2 = BaseSpelValidator.check(SpelDigitsTestBean.paramTest2Case());
         boolean repeatableTest = BaseSpelValidator.check(SpelDigitsTestBean.repeatableTestCase());
+        boolean edgeCaseTest = BaseSpelValidator.check(SpelDigitsTestBean.edgeCaseTestCase());
 
         Assertions.assertTrue(paramTest, "spelDigits param test failed");
         Assertions.assertTrue(paramTest2, "spelDigits param test2 failed");
         Assertions.assertTrue(repeatableTest, "spelDigits repeatable test failed");
+        Assertions.assertTrue(edgeCaseTest, "spelDigits edge case test failed");
     }
 
     @Test

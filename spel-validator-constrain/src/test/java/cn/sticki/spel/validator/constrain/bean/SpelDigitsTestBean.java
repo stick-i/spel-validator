@@ -165,6 +165,110 @@ public class SpelDigitsTestBean {
                 VerifyFailedField.of(ParamTestBean::getTestString)
         ));
 
+        // 负数测试 - 符合位数要求
+        result.add(VerifyObject.of(
+                ParamTestBean.builder().id(9).condition(true).maxInteger(3).maxFraction(2)
+                        .testBigDecimal(new BigDecimal("-123.34"))
+                        .testBigInteger(new BigInteger("-123"))
+                        .testDouble(-12.34)
+                        .testFloat(-12.34f)
+                        .testInteger(-123)
+                        .testLong(-123L)
+                        .testString("-12.34")
+                        .build()
+        ));
+
+        // 负数测试 - 超出整数位数限制
+        result.add(VerifyObject.of(
+                ParamTestBean.builder().id(10).condition(true).maxInteger(2).maxFraction(2)
+                        .testBigDecimal(new BigDecimal("-123.45"))
+                        .testBigInteger(new BigInteger("-123"))
+                        .testDouble(-123.45)
+                        .testFloat(-123.45f)
+                        .testInteger(-123)
+                        .testLong(-123L)
+                        .testString("-123.45")
+                        .build(),
+                VerifyFailedField.of(
+                        ParamTestBean::getTestBigDecimal,
+                        ParamTestBean::getTestBigInteger,
+                        ParamTestBean::getTestDouble,
+                        ParamTestBean::getTestFloat,
+                        ParamTestBean::getTestInteger,
+                        ParamTestBean::getTestLong,
+                        ParamTestBean::getTestString
+                )
+        ));
+
+        // 负数测试 - 超出小数位数限制
+        result.add(VerifyObject.of(
+                ParamTestBean.builder().id(11).condition(true).maxInteger(3).maxFraction(1)
+                        .testBigDecimal(new BigDecimal("-12.345"))
+                        .testDouble(-12.345)
+                        .testFloat(-12.345f)
+                        .testString("-12.345")
+                        .build(),
+                VerifyFailedField.of(
+                        ParamTestBean::getTestBigDecimal,
+                        ParamTestBean::getTestDouble,
+                        ParamTestBean::getTestFloat,
+                        ParamTestBean::getTestString
+                )
+        ));
+
+        // 特殊字符串格式测试
+        result.add(VerifyObject.of(
+                ParamTestBean.builder().id(12).condition(true).maxInteger(3).maxFraction(2)
+                        .testString("12.34.56")  // 多个小数点
+                        .build(),
+                VerifyFailedField.of(ParamTestBean::getTestString)
+        ));
+
+        // 字符串包含非数字字符
+        result.add(VerifyObject.of(
+                ParamTestBean.builder().id(13).condition(true).maxInteger(3).maxFraction(2)
+                        .testString("12.3a")
+                        .build(),
+                VerifyFailedField.of(ParamTestBean::getTestString)
+        ));
+
+        // 只有小数点的字符串
+        result.add(VerifyObject.of(
+                ParamTestBean.builder().id(14).condition(true).maxInteger(3).maxFraction(2)
+                        .testString(".")
+                        .build(),
+                VerifyFailedField.of(ParamTestBean::getTestString)
+        ));
+
+        // 只有负号的字符串
+        result.add(VerifyObject.of(
+                ParamTestBean.builder().id(15).condition(true).maxInteger(3).maxFraction(2)
+                        .testString("-")
+                        .build(),
+                VerifyFailedField.of(ParamTestBean::getTestString)
+        ));
+
+        // 科学计数法字符串
+        result.add(VerifyObject.of(
+                ParamTestBean.builder().id(16).condition(true).maxInteger(3).maxFraction(0)
+                        .testString("1.23E2")  // 123.0
+                        .build()
+        ));
+
+        // 前导零测试
+        result.add(VerifyObject.of(
+                ParamTestBean.builder().id(17).condition(true).maxInteger(1).maxFraction(2)
+                        .testString("001.23")
+                        .build()
+        ));
+
+        // 尾随零测试
+        result.add(VerifyObject.of(
+                ParamTestBean.builder().id(18).condition(true).maxInteger(3).maxFraction(1)
+                        .testString("12.300")
+                        .build()
+        ));
+
         return result;
     }
 
@@ -304,6 +408,120 @@ public class SpelDigitsTestBean {
                 RepeatableTestBean.builder().id(6).condition1(true).condition2(true).test(new BigDecimal("1234.567")).build(),
                 VerifyFailedField.of(RepeatableTestBean::getTest, "condition1"),
                 VerifyFailedField.of(RepeatableTestBean::getTest, "condition2")
+        ));
+
+        return result;
+    }
+
+    /**
+     * 边界值和异常情况测试
+     */
+    @Data
+    @Builder
+    public static class EdgeCaseTestBean implements ID {
+
+        private int id;
+
+        private int maxInteger;
+
+        private int maxFraction;
+
+        @SpelDigits(integer = "#this.maxInteger", fraction = "#this.maxFraction")
+        private String testString;
+
+        @SpelDigits(integer = "#this.maxInteger", fraction = "#this.maxFraction")
+        private BigDecimal testBigDecimal;
+
+    }
+
+    /**
+     * 边界值和异常情况测试用例
+     */
+    public static List<VerifyObject> edgeCaseTestCase() {
+        ArrayList<VerifyObject> result = new ArrayList<>();
+
+        // integer 为负数的情况 - 应该抛出异常
+        result.add(VerifyObject.of(
+                EdgeCaseTestBean.builder().id(1).maxInteger(-1).maxFraction(2)
+                        .testString("12.34")
+                        .build(),
+                true
+        ));
+
+        // fraction 为负数的情况 - 应该抛出异常
+        result.add(VerifyObject.of(
+                EdgeCaseTestBean.builder().id(2).maxInteger(3).maxFraction(-1)
+                        .testString("12.34")
+                        .build(),
+                true
+        ));
+
+        // integer 和 fraction 都为负数的情况
+        result.add(VerifyObject.of(
+                EdgeCaseTestBean.builder().id(3).maxInteger(-2).maxFraction(-1)
+                        .testString("12.34")
+                        .build(),
+                true
+        ));
+
+        // integer 为 0 的情况
+        result.add(VerifyObject.of(
+                EdgeCaseTestBean.builder().id(4).maxInteger(0).maxFraction(2)
+                        .testString("0.12")
+                        .build(),
+                VerifyFailedField.of(EdgeCaseTestBean::getTestString)
+        ));
+
+        // fraction 为 0 的情况 - 只允许整数
+        result.add(VerifyObject.of(
+                EdgeCaseTestBean.builder().id(5).maxInteger(3).maxFraction(0)
+                        .testString("123")
+                        .testBigDecimal(new BigDecimal("123"))
+                        .build()
+        ));
+
+        // fraction 为 0 但有小数的情况
+        result.add(VerifyObject.of(
+                EdgeCaseTestBean.builder().id(6).maxInteger(3).maxFraction(0)
+                        .testString("12.3")
+                        .testBigDecimal(new BigDecimal("12.3"))
+                        .build(),
+                VerifyFailedField.of(
+                        EdgeCaseTestBean::getTestString,
+                        EdgeCaseTestBean::getTestBigDecimal
+                )
+        ));
+
+        // 极大的 integer 和 fraction 值
+        result.add(VerifyObject.of(
+                EdgeCaseTestBean.builder().id(7).maxInteger(Integer.MAX_VALUE).maxFraction(Integer.MAX_VALUE)
+                        .testString("123.456")
+                        .testBigDecimal(new BigDecimal("123.456"))
+                        .build()
+        ));
+
+        // 空白字符串测试
+        result.add(VerifyObject.of(
+                EdgeCaseTestBean.builder().id(8).maxInteger(3).maxFraction(2)
+                        .testString("   ")  // 只有空格
+                        .build(),
+                VerifyFailedField.of(EdgeCaseTestBean::getTestString)
+        ));
+
+        // 包含空格的数字字符串
+        result.add(VerifyObject.of(
+                EdgeCaseTestBean.builder().id(9).maxInteger(3).maxFraction(2)
+                        .testString(" 12.34 ")  // 前后有空格
+                        .build(),
+                VerifyFailedField.of(EdgeCaseTestBean::getTestString)
+        ));
+
+        // 数字中间有空格
+        result.add(VerifyObject.of(
+                EdgeCaseTestBean.builder().id(10).maxInteger(3).maxFraction(2)
+                        .testString("12 .34")  // 中间有空格
+                        .build(),
+                VerifyFailedField.of(EdgeCaseTestBean::getTestString)
         ));
 
         return result;
