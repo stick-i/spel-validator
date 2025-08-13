@@ -140,7 +140,7 @@ public class SimpleExampleParamVo {
 ## 使用约束注解
 
 组件内自带常用的约束注解，包含 断言、非空、长度、数值、时间 等校验注解，基本能满足大多数的校验需求。
-例如：`@SpelNotNull`、`@SpelSize`、`@SpelMin`、`@SpelMax`、`@SpelFuture` 等注解。
+例如：`@SpelNotNull`、`@SpelSize`、`@SpelMin`、`@SpelMax`、`@SpelDigits`、`@SpelFuture` 等注解。
 
 > 完整的注解列表，可以参考 [注解查阅](annotation-guide.md)。
 > 
@@ -169,6 +169,20 @@ public class SimpleExampleParamVo {
 
 }
 ```
+
+### 版本更新说明
+
+**0.6.0-beta 版本新增功能：**
+
+1. **新增 `@SpelDigits` 注解**：用于校验数字的整数部分和小数部分位数
+2. **`@SpelMin` 和 `@SpelMax` 支持 `CharSequence` 类型**：可以对字符串形式的数字进行范围校验
+3. **`@SpelMin` 和 `@SpelMax` 新增 `inclusive` 参数**：支持配置边界值是否包含在内
+4. **`@SpelMin` 和 `@SpelMax` 的 `value` 参数改为必填**：移除了默认值，提高使用的明确性
+
+::: warning 破坏性变更
+从 0.6.0-beta 版本开始，`@SpelMin` 和 `@SpelMax` 注解的 `value` 参数变为必填，不再提供默认值。
+如果你从旧版本升级，需要为所有使用这两个注解的地方显式指定 `value` 值。
+:::
 
 
 ## 引用上下文字段

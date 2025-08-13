@@ -18,7 +18,7 @@ export const sidebarZh: SidebarOptions = {
     },
     {
       text: '其他',
-      children: ['/guide/annotation-guide.md', '/guide/FAQ.md'],
+      children: ['/guide/annotation-guide.md', '/guide/changelog.md', '/guide/FAQ.md'],
     },
   ],
 }

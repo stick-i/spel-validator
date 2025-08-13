@@ -18,7 +18,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * 支持的类型有：
  * <ul>
  *     <li>所有 {@link Number} 类型及它们的基本数据类型</li>
- *     <li>使用 {@link CharSequence} 表示的数字</li>
+ *     <li>使用 {@link CharSequence} 表示的数字，支持科学计数法</li>
  * </ul>
  *
  * @author oddfar、阿杆
