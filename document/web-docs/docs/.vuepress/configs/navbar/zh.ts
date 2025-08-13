@@ -1,5 +1,5 @@
-import {version} from '../meta'
-import type {NavbarOptions} from "@vuepress/theme-default";
+import { version } from '../meta'
+import type { NavbarOptions } from "@vuepress/theme-default";
 
 export const navbarZh: NavbarOptions = [
     {
@@ -20,6 +20,10 @@ export const navbarZh: NavbarOptions = [
         children: [
             {
                 text: '更新日志',
+                link: '/guide/changelog.html',
+            },
+            {
+                text: 'GitHub Releases',
                 link: 'https://github.com/stick-i/spel-validator/releases',
             },
         ],

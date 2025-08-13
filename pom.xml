@@ -7,7 +7,7 @@
 
     <groupId>cn.sticki</groupId>
     <artifactId>spel-validator-root</artifactId>
-    <version>0.5.2-beta</version>
+    <version>0.6.0-beta</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -65,7 +65,6 @@
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <spel-validator.version>0.5.2-beta</spel-validator.version>
         <spring.version>5.3.31</spring.version>
         <javax-el.version>3.0.0</javax-el.version>
         <jakarta-el.version>4.0.2</jakarta-el.version>
@@ -81,27 +80,27 @@
             <dependency>
                 <groupId>cn.sticki</groupId>
                 <artifactId>spel-validator-core</artifactId>
-                <version>${spel-validator.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>cn.sticki</groupId>
                 <artifactId>spel-validator-constrain</artifactId>
-                <version>${spel-validator.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>cn.sticki</groupId>
                 <artifactId>spel-validator-javax</artifactId>
-                <version>${spel-validator.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>cn.sticki</groupId>
                 <artifactId>spel-validator-jakarta</artifactId>
-                <version>${spel-validator.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>cn.sticki</groupId>
                 <artifactId>spel-validator-test</artifactId>
-                <version>${spel-validator.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>

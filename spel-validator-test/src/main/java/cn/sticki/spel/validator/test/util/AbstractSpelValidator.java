@@ -67,7 +67,7 @@ public abstract class AbstractSpelValidator {
                 log.info("Passed, Capture exception {}, message: {}", e.getClass(), e.getMessage());
                 expectException = false;
             } else {
-                log.error("Failed, Capture exception {}, message: {}", e.getClass(), e.getMessage());
+                log.error("Failed, Capture exception {}, message: {}", e.getClass(), e.getMessage(), e);
                 failCount++;
             }
         }

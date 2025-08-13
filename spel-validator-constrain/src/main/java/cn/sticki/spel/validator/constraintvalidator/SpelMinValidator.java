@@ -16,13 +16,14 @@ import java.lang.reflect.Field;
 public class SpelMinValidator extends AbstractSpelNumberCompareValidator<SpelMin> {
 
     @Override
-    protected boolean compare(Number fieldValue, Number compareValue) {
-        return NumberComparatorUtil.compare(fieldValue, compareValue, NumberComparatorUtil.LESS_THAN) >= 0;
+    protected boolean compare(SpelMin anno, Number fieldValue, Number compareValue) {
+        int compareResult = NumberComparatorUtil.compare(fieldValue, compareValue, NumberComparatorUtil.LESS_THAN);
+        return anno.inclusive() ? compareResult >= 0 : compareResult > 0;
     }
 
     @Override
     public FieldValidResult isValid(SpelMin annotation, Object obj, Field field) throws IllegalAccessException {
-        return super.isValid((Number) field.get(obj), annotation.value(), annotation.message(), obj);
+        return super.isValid(annotation, field.get(obj), annotation.value(), obj);
     }
 
 }

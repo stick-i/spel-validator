@@ -1,6 +1,6 @@
 package cn.sticki.spel.validator.constrain;
 
-import cn.sticki.spel.validator.constraintvalidator.SpelMinValidator;
+import cn.sticki.spel.validator.constraintvalidator.SpelDigitsValidator;
 import cn.sticki.spel.validator.core.SpelConstraint;
 import org.intellij.lang.annotations.Language;
 
@@ -13,29 +13,31 @@ import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * 被标记的元素值必须大于或等于指定的最小值。{@code null} 元素被认为是有效的。
+ * 被标记的元素值必须是指定范围内的数字。
  * <p>
  * 支持的类型有：
  * <ul>
  *     <li>所有 {@link Number} 类型及它们的基本数据类型</li>
  *     <li>使用 {@link CharSequence} 表示的数字，支持科学计数法</li>
  * </ul>
+ * <p>
+ * {@code null} 元素被认为是有效的。
  *
- * @author oddfar、阿杆
+ * @author 阿杆
  * @version 1.0
- * @since 2024/8/25
+ * @since 2025/8/10
  */
 @Documented
 @Retention(RUNTIME)
 @Target(FIELD)
-@Repeatable(SpelMin.List.class)
-@SpelConstraint(validatedBy = SpelMinValidator.class)
-public @interface SpelMin {
+@Repeatable(SpelDigits.List.class)
+@SpelConstraint(validatedBy = SpelDigitsValidator.class)
+public @interface SpelDigits {
 
     /**
      * 校验失败时的错误消息。
      */
-    String message() default "{cn.sticki.spel.validator.constraint.Min.message}";
+    String message() default "{cn.sticki.spel.validator.constraint.Digits.message}";
 
     /**
      * 约束开启条件，必须为合法的SpEL表达式，计算结果必须为boolean类型。
@@ -58,28 +60,28 @@ public @interface SpelMin {
     String[] group() default {};
 
     /**
-     * 指定元素最小值。必须为合法的SpEL表达式，
+     * 整数部分的最大位数。必须为合法的SpEL表达式，
      * <p>
-     * 表达式的计算结果必须为 {@link Number} 类型。
+     * 表达式的计算结果必须为非负整数。
      */
     @Language("SpEL")
-    String value();
+    String integer();
 
     /**
-     * 指定边界值是否被包含在内。
+     * 小数部分的最大位数。必须为合法的SpEL表达式，
      * <p>
-     * 当为 true 时，验证 value >= min；当为 false 时，验证 value > min。
-     * <p>
-     * 默认为 true。
+     * 表达式的计算结果必须为非负整数。
      */
-    boolean inclusive() default true;
+    @Language("SpEL")
+    String fraction();
 
     @Documented
     @Target(FIELD)
     @Retention(RUNTIME)
     @interface List {
 
-        SpelMin[] value();
+        SpelDigits[] value();
 
     }
+
 }

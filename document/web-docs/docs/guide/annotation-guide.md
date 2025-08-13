@@ -20,8 +20,9 @@
 |    `@SpelNotEmpty`     |        `@NotEmpty`        | 集合、字符串、数组非空校验 |
 |    `@SpelNotBlank`     |        `@NotBlank`        |   字符串非空串校验    |
 |      `@SpelSize`       |          `@Size`          | 集合、字符串、数组长度校验 |
-|       `@SpelMin`       |          `@Min`           |    数值最小值校验    |
-|       `@SpelMax`       |          `@Max`           |    数值最大值校验    |
+|       `@SpelMin`       |   `@Min`、`@DecimalMin`    |    数值最小值校验    |
+|       `@SpelMax`       |   `@Max`、`@DecimalMax`    |    数值最大值校验    |
+|     `@SpelDigits`      |         `@Digits`         |   数字位数约束校验    |
 |     `@SpelFuture`      |         `@Future`         |   时间必须是未来时间   |
 | `@SpelFutureOrPresent` |    `@FutureOrPresent`     | 时间必须是未来或当前时间  |
 |      `@SpelPast`       |          `@Past`          |   时间必须是过去时间   |
@@ -240,11 +241,15 @@ public class SizeExampleVo {
 
 **功能说明**：被标记的元素值必须大于或等于指定的最小值。`null` 元素被认为是有效的。
 
-**支持类型**：所有 `Number` 类型及它们的基本数据类型
+**支持类型**：
+
+- 所有 `Number` 类型及它们的基本数据类型
+- 使用 `CharSequence` 表示的数字，支持科学计数法
 
 **特有属性**：
 
-- **`value`**：指定元素最小值，必须为合法的 SpEL 表达式，计算结果必须为 `Number` 类型。默认值为 `"0"`。
+- **`value`**：指定元素最小值，必须为合法的 SpEL 表达式，计算结果必须为 `Number` 类型。**（必填参数）**
+- **`inclusive`**：指定边界值是否被包含在内。当为 `true` 时，验证 `value >= min`；当为 `false` 时，验证 `value > min`。默认为 `true`。
 
 **使用示例**：
 
@@ -261,6 +266,14 @@ public class MinExampleVo {
   @SpelMin(value = "#this.minValue")
   private Double score;
 
+  // 字符串数字校验
+  @SpelMin(value = "0", message = "金额不能为负数")
+  private String amount;
+
+  // 不包含边界值的校验
+  @SpelMin(value = "0", inclusive = false, message = "数量必须大于0")
+  private Integer quantity;
+
   private Double minValue;
 
 }
@@ -270,11 +283,64 @@ public class MinExampleVo {
 
 **功能说明**：被标记的元素值必须小于或等于指定的最大值。`null` 元素被认为是有效的。
 
-**支持类型**：所有 `Number` 类型及它们的基本数据类型
+**支持类型**：
+
+- 所有 `Number` 类型及它们的基本数据类型
+- 使用 `CharSequence` 表示的数字，支持科学计数法
 
 **特有属性**：
 
-- **`value`**：指定元素最大值，必须为合法的 SpEL 表达式，计算结果必须为 `Number` 类型。默认值为 `"0"`。
+- **`value`**：指定元素最大值，必须为合法的 SpEL 表达式，计算结果必须为 `Number` 类型。**（必填参数）**
+- **`inclusive`**：指定边界值是否被包含在内。当为 `true` 时，验证 `value <= max`；当为 `false` 时，验证 `value < max`。默认为 `true`。
+
+**使用示例**：
+
+参考 `@SpelMin`。
+
+## @SpelDigits
+
+**功能说明**：被标记的元素值必须是指定范围内的数字。`null` 元素被认为是有效的。
+
+**支持类型**：
+
+- 所有 `Number` 类型及它们的基本数据类型
+- 使用 `CharSequence` 表示的数字，支持科学计数法
+
+**特有属性**：
+
+- **`integer`**：整数部分的最大位数，必须为合法的 SpEL 表达式，计算结果必须为非负整数。**（必填参数）**
+- **`fraction`**：小数部分的最大位数，必须为合法的 SpEL 表达式，计算结果必须为非负整数。**（必填参数）**
+
+**使用示例**：
+
+```java
+
+@Data
+@SpelValid
+public class DigitsExampleVo {
+
+  // 整数部分最多3位，小数部分最多2位
+  @SpelDigits(integer = "3", fraction = "2", message = "价格格式不正确，整数部分最多3位，小数部分最多2位")
+  private BigDecimal price;
+
+  // 字符串数字校验
+  @SpelDigits(integer = "6", fraction = "0", message = "用户ID必须是6位以内的整数")
+  private String userId;
+
+  // 动态位数限制
+  @SpelDigits(integer = "#this.maxIntegerDigits", fraction = "#this.maxFractionDigits")
+  private Double amount;
+
+  private Integer maxIntegerDigits;
+
+  private Integer maxFractionDigits;
+
+  // 只允许整数（小数部分为0位）
+  @SpelDigits(integer = "10", fraction = "0", message = "必须是整数")
+  private Long count;
+
+}
+```
 
 ## @SpelFuture
 

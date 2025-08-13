@@ -13,9 +13,13 @@ import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * 被标记的元素值必须小于或等于指定的最小值。{@code null} 元素被认为是有效的。
+ * 被标记的元素值必须小于或等于指定的最大值。{@code null} 元素被认为是有效的。
  * <p>
- * 支持所有 {@link Number} 类型及它们的基本数据类型。
+ * 支持的类型有：
+ * <ul>
+ *     <li>所有 {@link Number} 类型及它们的基本数据类型</li>
+ *     <li>使用 {@link CharSequence} 表示的数字，支持科学计数法</li>
+ * </ul>
  *
  * @author 阿杆
  * @version 1.0
@@ -59,7 +63,16 @@ public @interface SpelMax {
      * 表达式的计算结果必须为 {@link Number} 类型。
      */
     @Language("SpEL")
-    String value() default "0";
+    String value();
+
+    /**
+     * 指定边界值是否被包含在内。
+     * <p>
+     * 当为 true 时，验证 value <= max；当为 false 时，验证 value < max。
+     * <p>
+     * 默认为 true。
+     */
+    boolean inclusive() default true;
 
     @Documented
     @Target(FIELD)
