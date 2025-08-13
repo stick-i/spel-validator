@@ -64,6 +64,9 @@ public class SpelMinTestBean {
         @SpelMin(condition = "#this.condition", value = "#this.min")
         private Float testFloat;
 
+        @SpelMin(condition = "#this.condition", value = "#this.min")
+        private String testString;
+
     }
 
     /**
@@ -90,6 +93,7 @@ public class SpelMinTestBean {
                         .testLong(0L)
                         .testDouble((double) (1 / 3))
                         .testFloat((float) (1 / 3))
+                        .testString("0")
                         .build(),
                 VerifyFailedField.of(
                         ParamTestBean::getTest,
@@ -99,7 +103,8 @@ public class SpelMinTestBean {
                         ParamTestBean::getTestShort,
                         ParamTestBean::getTestLong,
                         ParamTestBean::getTestDouble,
-                        ParamTestBean::getTestFloat
+                        ParamTestBean::getTestFloat,
+                        ParamTestBean::getTestString
                 ),
                 VerifyFailedField.of(ParamTestBean::getTestBigDecimal, "testString")
         ));
@@ -116,6 +121,7 @@ public class SpelMinTestBean {
                         .testLong(5L)
                         .testDouble(5d)
                         .testFloat(5f)
+                        .testString("5")
                         .build()
         ));
 
@@ -131,6 +137,7 @@ public class SpelMinTestBean {
                         .testLong(123L)
                         .testDouble((double) (100 / 3))
                         .testFloat((float) (100 / 3))
+                        .testString("123.12")
                         .build()
         ));
 
@@ -152,6 +159,7 @@ public class SpelMinTestBean {
                         .testLong(-123L)
                         .testDouble((double) (-100 / 3))
                         .testFloat((float) (-100 / 3))
+                        .testString("-123.12")
                         .build(),
                 VerifyFailedField.of(ParamTestBean::getTest)
         ));
@@ -595,6 +603,175 @@ public class SpelMinTestBean {
         result.add(VerifyObject.of(
                 InclusiveTestBean.builder().id(6).min(10).testInclusiveFalse(9L).build(),
                 VerifyFailedField.of(InclusiveTestBean::getTestInclusiveFalse)
+        ));
+
+        return result;
+    }
+
+    /**
+     * CharSequence 类型测试
+     */
+    @Data
+    @Builder
+    public static class CharSequenceTestBean implements ID {
+
+        private int id;
+
+        private boolean condition;
+
+        private int min;
+
+        @SpelMin(condition = "#this.condition", value = "#this.min")
+        private String testString;
+
+        @SpelMin(condition = "#this.condition", value = "#this.min")
+        private StringBuilder testStringBuilder;
+
+        @SpelMin(condition = "#this.condition", value = "#this.min")
+        private StringBuffer testStringBuffer;
+
+    }
+
+    /**
+     * CharSequence 类型测试用例
+     */
+    public static List<VerifyObject> charSequenceTestCase() {
+        ArrayList<VerifyObject> result = new ArrayList<>();
+
+        // null 值测试
+        result.add(VerifyObject.of(
+                CharSequenceTestBean.builder().id(1).condition(true).min(5).build(),
+                VerifyFailedField.of()
+        ));
+
+        // 有效数字字符串 - 大于最小值
+        result.add(VerifyObject.of(
+                CharSequenceTestBean.builder().id(2).condition(true).min(5)
+                        .testString("10")
+                        .testStringBuilder(new StringBuilder("10.5"))
+                        .testStringBuffer(new StringBuffer("15"))
+                        .build()
+        ));
+
+        // 有效数字字符串 - 等于最小值
+        result.add(VerifyObject.of(
+                CharSequenceTestBean.builder().id(3).condition(true).min(5)
+                        .testString("5")
+                        .testStringBuilder(new StringBuilder("5.0"))
+                        .testStringBuffer(new StringBuffer("5"))
+                        .build()
+        ));
+
+        // 有效数字字符串 - 小于最小值
+        result.add(VerifyObject.of(
+                CharSequenceTestBean.builder().id(4).condition(true).min(5)
+                        .testString("3")
+                        .testStringBuilder(new StringBuilder("4.9"))
+                        .testStringBuffer(new StringBuffer("0"))
+                        .build(),
+                VerifyFailedField.of(
+                        CharSequenceTestBean::getTestString,
+                        CharSequenceTestBean::getTestStringBuilder,
+                        CharSequenceTestBean::getTestStringBuffer
+                )
+        ));
+
+        // 负数测试
+        result.add(VerifyObject.of(
+                CharSequenceTestBean.builder().id(5).condition(true).min(-10)
+                        .testString("-5")
+                        .testStringBuilder(new StringBuilder("-8.5"))
+                        .testStringBuffer(new StringBuffer("-1"))
+                        .build()
+        ));
+
+        result.add(VerifyObject.of(
+                CharSequenceTestBean.builder().id(6).condition(true).min(-5)
+                        .testString("-10")
+                        .testStringBuilder(new StringBuilder("-6"))
+                        .testStringBuffer(new StringBuffer("-15"))
+                        .build(),
+                VerifyFailedField.of(
+                        CharSequenceTestBean::getTestString,
+                        CharSequenceTestBean::getTestStringBuilder,
+                        CharSequenceTestBean::getTestStringBuffer
+                )
+        ));
+
+        // 小数测试
+        result.add(VerifyObject.of(
+                CharSequenceTestBean.builder().id(7).condition(true).min(0)
+                        .testString("0.1")
+                        .testStringBuilder(new StringBuilder("3.14159"))
+                        .testStringBuffer(new StringBuffer("2.718"))
+                        .build()
+        ));
+
+        result.add(VerifyObject.of(
+                CharSequenceTestBean.builder().id(8).condition(true).min(5)
+                        .testString("4.99")
+                        .testStringBuilder(new StringBuilder("3.14"))
+                        .testStringBuffer(new StringBuffer("0.5"))
+                        .build(),
+                VerifyFailedField.of(
+                        CharSequenceTestBean::getTestString,
+                        CharSequenceTestBean::getTestStringBuilder,
+                        CharSequenceTestBean::getTestStringBuffer
+                )
+        ));
+
+        // 无效数字格式测试
+        result.add(VerifyObject.of(
+                CharSequenceTestBean.builder().id(9).condition(true).min(0)
+                        .testString("abc")
+                        .testStringBuilder(new StringBuilder("12.3.4"))
+                        .testStringBuffer(new StringBuffer("not-a-number"))
+                        .build(),
+                VerifyFailedField.of(
+                        CharSequenceTestBean::getTestString,
+                        CharSequenceTestBean::getTestStringBuilder,
+                        CharSequenceTestBean::getTestStringBuffer
+                )
+        ));
+
+        // 空字符串测试
+        result.add(VerifyObject.of(
+                CharSequenceTestBean.builder().id(10).condition(true).min(0)
+                        .testString("")
+                        .testStringBuilder(new StringBuilder(""))
+                        .testStringBuffer(new StringBuffer(""))
+                        .build(),
+                VerifyFailedField.of(
+                        CharSequenceTestBean::getTestString,
+                        CharSequenceTestBean::getTestStringBuilder,
+                        CharSequenceTestBean::getTestStringBuffer
+                )
+        ));
+
+        // 科学计数法测试
+        result.add(VerifyObject.of(
+                CharSequenceTestBean.builder().id(11).condition(true).min(100)
+                        .testString("1.23E2")  // 123
+                        .testStringBuilder(new StringBuilder("5E1"))  // 50
+                        .testStringBuffer(new StringBuffer("2E2"))  // 200
+                        .build(),
+                VerifyFailedField.of(CharSequenceTestBean::getTestStringBuilder)
+        ));
+
+        // condition 为 false 的测试
+        result.add(VerifyObject.of(
+                CharSequenceTestBean.builder().id(12).condition(false).min(100)
+                        .testString("1")  // 小于最小值，但条件为false，应该通过
+                        .testStringBuilder(new StringBuilder("abc"))  // 无效格式，但条件为false，应该通过
+                        .testStringBuffer(new StringBuffer(""))  // 空字符串，但条件为false，应该通过
+                        .build()
+        ));
+
+        // inclusive=false 测试
+        result.add(VerifyObject.of(
+                CharSequenceTestBean.builder().id(13).condition(true).min(10)
+                        .testString("10.0")  // 等于边界值，inclusive=true 应该通过
+                        .build()
         ));
 
         return result;

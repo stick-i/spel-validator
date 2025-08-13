@@ -77,6 +77,7 @@ public class ConstrainTest {
         boolean valueTypeTest = BaseSpelValidator.check(SpelMinTestBean.valueTypeTestCase());
         boolean notSupportTypeTest = BaseSpelValidator.check(SpelMinTestBean.notSupportTypeTestCase());
         boolean inclusiveTest = BaseSpelValidator.check(SpelMinTestBean.inclusiveTestCase());
+        boolean charSequenceTest = BaseSpelValidator.check(SpelMinTestBean.charSequenceTestCase());
 
         Assertions.assertTrue(paramTest, "spelMin param test failed");
         Assertions.assertTrue(repeatableTest, "spelMin repeatable test failed");
@@ -84,15 +85,18 @@ public class ConstrainTest {
         Assertions.assertTrue(valueTypeTest, "spelMin valueType test failed");
         Assertions.assertTrue(notSupportTypeTest, "spelMin notSupportType test failed");
         Assertions.assertTrue(inclusiveTest, "spelMin inclusive test failed");
+        Assertions.assertTrue(charSequenceTest, "spelMin charSequence test failed");
     }
 
     @Test
     void testSpelMax() {
         boolean paramTest = BaseSpelValidator.check(SpelMaxTestBean.paramTestCase());
         boolean inclusiveTest = BaseSpelValidator.check(SpelMaxTestBean.inclusiveTestCase());
+        boolean charSequenceTest = BaseSpelValidator.check(SpelMaxTestBean.charSequenceTestCase());
 
         Assertions.assertTrue(paramTest, "spelMax param test failed");
         Assertions.assertTrue(inclusiveTest, "spelMax inclusive test failed");
+        Assertions.assertTrue(charSequenceTest, "spelMax charSequence test failed");
     }
 
     @Test
