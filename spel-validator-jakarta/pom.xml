@@ -17,7 +17,6 @@
         <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
-        <kotlin.version>2.2.0</kotlin.version>
     </properties>
 
     <dependencies>
@@ -35,13 +34,6 @@
         <dependency>
             <groupId>cn.sticki</groupId>
             <artifactId>spel-validator-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib-jdk8</artifactId>
-            <version>${kotlin.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

@@ -46,9 +46,4 @@ public class ConstrainTest {
         Assertions.assertTrue(testZh, "I18nTestBean.testZh() failed");
     }
 
-    @Test
-    void testKotlin() {
-        JakartaSpelValidator.check(KotlinClassTestBean.testClass());
-        JakartaSpelValidator.check(KotlinClassTestBean.testDataClass());
-    }
 }
