@@ -57,7 +57,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  */
 @Documented
 @Retention(RUNTIME)
-@Target({METHOD, FIELD, CONSTRUCTOR, PARAMETER, TYPE_USE})
+@Target({METHOD, FIELD, CONSTRUCTOR, PARAMETER, TYPE_USE, TYPE})
 @Constraint(validatedBy = {SpelValidator.class})
 public @interface SpelValid {
 
