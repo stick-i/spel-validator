@@ -1,9 +1,6 @@
 package cn.sticki.spel.validator.jakarta;
 
-import cn.sticki.spel.validator.jakarta.bean.ExampleTestBean;
-import cn.sticki.spel.validator.jakarta.bean.I18nTestBean;
-import cn.sticki.spel.validator.jakarta.bean.ParentClassTestBean;
-import cn.sticki.spel.validator.jakarta.bean.SpelValidTestBean;
+import cn.sticki.spel.validator.jakarta.bean.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -48,4 +45,5 @@ public class ConstrainTest {
         boolean testZh = JakartaSpelValidator.check(I18nTestBean.testZh());
         Assertions.assertTrue(testZh, "I18nTestBean.testZh() failed");
     }
+
 }
