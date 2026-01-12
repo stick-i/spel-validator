@@ -2,6 +2,25 @@
 
 [SpEL Validator Support](https://github.com/stick-i/spel-validator-support) 是一个为 SpEL Validator 框架提供智能开发支持的 IntelliJ IDEA 插件。
 
+## 安装方式
+
+### 方式一：从 JetBrains Marketplace 安装（推荐）
+
+1. 打开 IntelliJ IDEA
+2. 进入 **Settings/Preferences → Plugins**
+3. 搜索 **"SpEL Validator Support"**
+4. 点击 **Install**
+5. 重启 IDEA
+
+### 方式二：手动安装
+
+1. 从 [Releases](https://github.com/stick-i/spel-validator-support/releases) 下载最新的插件 ZIP 文件
+2. 打开 IntelliJ IDEA
+3. 进入 **Settings/Preferences → Plugins**
+4. 点击齿轮图标 → **Install Plugin from Disk**
+5. 选择下载的 ZIP 文件
+6. 重启 IDEA
+
 ## 主要功能
 
 ### 1. SpEL 语言注入
@@ -51,25 +70,6 @@
 
 - IntelliJ IDEA 2023.2 或更高版本
 - 需要启用 Spring 插件以获得完整的 SpEL 语言支持（默认已启用）
-
-## 安装方式
-
-### 方式一：从 JetBrains Marketplace 安装（推荐）
-
-1. 打开 IntelliJ IDEA
-2. 进入 **Settings/Preferences → Plugins**
-3. 搜索 **"SpEL Validator Support"**
-4. 点击 **Install**
-5. 重启 IDEA
-
-### 方式二：手动安装
-
-1. 从 [Releases](https://github.com/stick-i/spel-validator-support/releases) 下载最新的插件 ZIP 文件
-2. 打开 IntelliJ IDEA
-3. 进入 **Settings/Preferences → Plugins**
-4. 点击齿轮图标 → **Install Plugin from Disk**
-5. 选择下载的 ZIP 文件
-6. 重启 IDEA
 
 ## 使用示例
 
