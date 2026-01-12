@@ -1,15 +1,16 @@
-import {createRequire} from 'node:module'
+import { createRequire } from 'node:module'
 import process from 'node:process'
-import {viteBundler} from '@vuepress/bundler-vite'
-import {docsearchPlugin} from '@vuepress/plugin-docsearch'
-import {baiduAnalyticsPlugin} from '@vuepress/plugin-baidu-analytics'
-import {registerComponentsPlugin} from '@vuepress/plugin-register-components'
-import {sitemapPlugin} from '@vuepress/plugin-sitemap'
-import {shikiPlugin} from '@vuepress/plugin-shiki'
-import {defaultTheme} from '@vuepress/theme-default'
-import {defineUserConfig} from 'vuepress'
-import {getDirname, path} from 'vuepress/utils'
-import {head, navbarZh, sidebarZh,} from './configs'
+import { viteBundler } from '@vuepress/bundler-vite'
+import { docsearchPlugin } from '@vuepress/plugin-docsearch'
+import { noticePlugin } from '@vuepress/plugin-notice'
+import { baiduAnalyticsPlugin } from '@vuepress/plugin-baidu-analytics'
+import { registerComponentsPlugin } from '@vuepress/plugin-register-components'
+import { sitemapPlugin } from '@vuepress/plugin-sitemap'
+import { shikiPlugin } from '@vuepress/plugin-shiki'
+import { defaultTheme } from '@vuepress/theme-default'
+import { defineUserConfig } from 'vuepress'
+import { getDirname, path } from 'vuepress/utils'
+import { head, navbarZh, sidebarZh, } from './configs'
 
 const __dirname = getDirname(import.meta.url)
 const require = createRequire(import.meta.url)
@@ -107,6 +108,27 @@ export default defineUserConfig({
 
     // use plugins
     plugins: [
+        noticePlugin({
+            config: [
+                {
+                    path: '/',
+                    title: 'IDEA 插件支持',
+                    content: '<p>SpEL Validator Support 插件已上线！</p><p>提供语法高亮、智能补全、跳转导航、重构支持等功能。</p>',
+                    actions: [
+                        {
+                            text: '了解更多',
+                            link: '/guide/idea-plugin.html',
+                            type: 'primary',
+                        },
+                        {
+                            text: '关闭',
+                            type: 'default',
+                        },
+                    ],
+                    showOnce: false,
+                },
+            ],
+        }),
         docsearchPlugin({
             appId: '8FBM00A6YY',
             apiKey: '9203c0aa6dc18e0c64e839a388178513',

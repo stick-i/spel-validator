@@ -6,11 +6,15 @@
 
 一个强大的 Java 参数校验包，基于 SpEL 实现，扩展自 jakarta.validation-api 包，用于简化参数校验，几乎支持所有场景下的参数校验。
 
+**当前已有IDEA插件支持，强烈推荐您使用插件进行协助开发，开发体验大幅提升。**
+安装方式：打开 IntelliJ IDEA → Settings → Plugins → 搜索 "SpEL Validator Support" → Install
+
 ## 项目地址
 
 - GitHub：https://github.com/stick-i/spel-validator
 - Gitee：https://gitee.com/sticki/spel-validator
 - 项目文档：https://spel-validator.sticki.cn/
+- IDEA插件：https://plugins.jetbrains.com/plugin/29693-spel-validator-support
 
 ## 特点
 

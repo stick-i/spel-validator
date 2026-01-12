@@ -17,6 +17,7 @@
         "@vuepress/plugin-register-components": "2.0.0-rc.37",
         "@vuepress/plugin-shiki": "2.0.0-rc.40",
         "@vuepress/plugin-sitemap": "2.0.0-rc.40",
+        "@vuepress/plugin-notice": "2.0.0-rc.40",
         "@vuepress/theme-default": "2.0.0-rc.40",
         "http-server": "^14.1.1",
         "sass-loader": "^15.0.0",
