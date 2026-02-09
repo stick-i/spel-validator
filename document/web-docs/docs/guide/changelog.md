@@ -1,5 +1,31 @@
 # 更新日志
 
+## v0.6.2-beta (2026-02-09)
+
+### 🐛 问题修复
+
+- 修复 `ChronoLocalDateTime` / `ChronoZonedDateTime` 类型不支持的问题
+- 优化 `SpelParser` 初始化时序下的 BeanResolver 绑定行为，降低并行测试下的时序互踩风险
+
+### ✅ 测试与稳定性
+
+- 新增/补充以下回归测试：
+  - `SpelParserInitTimingTest`
+  - `AbstractSpelTemporalValidatorExceptionTest`（补充 Chrono 时间语义回归用例）
+- `SpelParserInitTimingTest` 增加隔离执行注解，避免并发干扰
+
+
+## v0.6.1-beta (2025-12-19)
+
+### 🎉 新增功能
+
+- 支持在 Kotlin 类上使用 `@SpelValid` 注解，并补充了相关测试用例
+
+### 🔧 工程调整
+
+- 升级发布相关构建插件，完善版本发布流程
+
+
 ## v0.6.0-beta (2025-08-13)
 
 ### 🎉 新增功能
