@@ -34,6 +34,9 @@ public class ResourceBundleMessageResolver {
 
     /**
      * 重置资源包
+     * <p>
+     * 注意：该方法会直接修改全局静态 {@code MESSAGE_SOURCE}。
+     * 在同一 JVM 内会影响所有调用方（包括并发请求和其它测试用例）。
      */
     public static void resetBasenames() {
         MESSAGE_SOURCE.setBasenames(
@@ -43,6 +46,9 @@ public class ResourceBundleMessageResolver {
 
     /**
      * 添加资源包
+     * <p>
+     * 注意：该方法会直接修改全局静态 {@code MESSAGE_SOURCE}，并立即影响全局消息解析行为。
+     * 新增 basename 会排在前面，优先级高于已存在配置。
      *
      * @param basename 资源包名称
      */

@@ -54,6 +54,9 @@ public class SpelSizeTestBean {
         @SpelSize(condition = "#this.condition", min = "#this.min", max = "#this.max")
         private Object[] testArray;
 
+        @SpelSize(condition = "#this.condition", min = "#this.min", max = "#this.max")
+        private int[] testPrimitiveArray;
+
     }
 
     /**
@@ -74,6 +77,7 @@ public class SpelSizeTestBean {
                         .test("")
                         .testString("")
                         .testArray(new Object[0])
+                        .testPrimitiveArray(new int[0])
                         .testList(Collections.emptyList())
                         .testMap(Collections.emptyMap())
                         .testCharSequence("")
@@ -82,7 +86,8 @@ public class SpelSizeTestBean {
                         ParamTestBean::getTestCharSequence,
                         ParamTestBean::getTestList,
                         ParamTestBean::getTestMap,
-                        ParamTestBean::getTestArray
+                        ParamTestBean::getTestArray,
+                        ParamTestBean::getTestPrimitiveArray
                 ),
                 VerifyFailedField.of(ParamTestBean::getTestString, "testString")
         ));
@@ -97,6 +102,7 @@ public class SpelSizeTestBean {
                         .test("123")
                         .testString("123")
                         .testArray(new Object[3])
+                        .testPrimitiveArray(new int[3])
                         .testList(Arrays.asList("1", "2", "3"))
                         .testMap(map)
                         .testCharSequence("123")
@@ -105,7 +111,8 @@ public class SpelSizeTestBean {
                         ParamTestBean::getTestCharSequence,
                         ParamTestBean::getTestList,
                         ParamTestBean::getTestMap,
-                        ParamTestBean::getTestArray
+                        ParamTestBean::getTestArray,
+                        ParamTestBean::getTestPrimitiveArray
                 ),
                 VerifyFailedField.of(ParamTestBean::getTestString, "testString")
         ));
@@ -116,6 +123,7 @@ public class SpelSizeTestBean {
                         .test("123")
                         .testString("123")
                         .testArray(new Object[3])
+                        .testPrimitiveArray(new int[3])
                         .testList(Arrays.asList("1", "2", "3"))
                         .testMap(map)
                         .testCharSequence("123")
@@ -134,6 +142,7 @@ public class SpelSizeTestBean {
                         .test("123")
                         .testString("123")
                         .testArray(new Object[3])
+                        .testPrimitiveArray(new int[3])
                         .testList(Arrays.asList("1", "2", "3"))
                         .testMap(map)
                         .testCharSequence("123")

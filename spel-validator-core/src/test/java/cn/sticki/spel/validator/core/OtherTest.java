@@ -83,6 +83,8 @@ public class OtherTest {
         Assertions.assertEquals(2, CalcLengthUtil.calcFieldSize("ab"));
         Object[] objects = {new Object(), new Object()};
         Assertions.assertEquals(2, CalcLengthUtil.calcFieldSize(objects));
+        int[] primitiveArray = {1, 2, 3};
+        Assertions.assertEquals(3, CalcLengthUtil.calcFieldSize(primitiveArray));
     }
 
     @Test
