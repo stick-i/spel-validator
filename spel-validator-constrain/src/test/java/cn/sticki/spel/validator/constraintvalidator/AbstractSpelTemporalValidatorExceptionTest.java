@@ -7,6 +7,13 @@ import org.junit.jupiter.api.Test;
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.chrono.ChronoLocalDate;
+import java.time.chrono.ChronoLocalDateTime;
+import java.time.chrono.ChronoZonedDateTime;
+import java.time.chrono.JapaneseDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -100,6 +107,67 @@ public class AbstractSpelTemporalValidatorExceptionTest {
 
         assertTrue(exception.getMessage().contains("Unsupported temporal type"));
         assertTrue(exception.getMessage().contains("java.lang.Object"));
+    }
+
+    /**
+     * 测试 ChronoLocalDateTime 和 ChronoZonedDateTime 类型都可以正常获取 now 并参与比较。
+     */
+    @Test
+    public void testGetNowChronoDateTimeTypesSupported() {
+        ChronoLocalDateTime<?> chronoLocalDateTime = JapaneseDate.now().atTime(LocalTime.NOON);
+        Object localDateTimeNow = validator.testGetNow(chronoLocalDateTime);
+
+        assertNotNull(localDateTimeNow);
+        assertInstanceOf(ChronoLocalDateTime.class, localDateTimeNow);
+        assertDoesNotThrow(() -> validator.testCompareTemporal(chronoLocalDateTime, localDateTimeNow));
+
+        ChronoZonedDateTime<?> chronoZonedDateTime = JapaneseDate.now()
+                .atTime(LocalTime.NOON)
+                .atZone(ZoneId.systemDefault());
+        Object zonedDateTimeNow = validator.testGetNow(chronoZonedDateTime);
+
+        assertNotNull(zonedDateTimeNow);
+        assertInstanceOf(ChronoZonedDateTime.class, zonedDateTimeNow);
+        assertDoesNotThrow(() -> validator.testCompareTemporal(chronoZonedDateTime, zonedDateTimeNow));
+    }
+
+    /**
+     * 修复回归：ChronoLocalDateTime 的 now 必须基于真实当前日期时间，不能复用 temporal 自身日期。
+     */
+    @Test
+    public void testGetNowChronoLocalDateTimeShouldUseRealCurrentDate() {
+        ChronoLocalDateTime<?> futureDateTime = JapaneseDate.now()
+                .plus(2, ChronoUnit.DAYS)
+                .atTime(LocalTime.MIN);
+        ChronoLocalDate futureDate = futureDateTime.toLocalDate();
+
+        Object nowObj = validator.testGetNow(futureDateTime);
+        assertInstanceOf(ChronoLocalDateTime.class, nowObj);
+        ChronoLocalDateTime<?> now = (ChronoLocalDateTime<?>) nowObj;
+
+        // 若 now 错误地复用了 temporal 日期，这里会相等并导致未来时间误判
+        assertNotEquals(futureDate, now.toLocalDate());
+        assertTrue(validator.testCompareTemporal(futureDateTime, now) > 0);
+    }
+
+    /**
+     * 修复回归：ChronoZonedDateTime 的 now 必须基于真实当前时刻，且保持同一时区。
+     */
+    @Test
+    public void testGetNowChronoZonedDateTimeShouldUseRealCurrentDate() {
+        ChronoZonedDateTime<?> futureDateTime = JapaneseDate.now()
+                .plus(2, ChronoUnit.DAYS)
+                .atTime(LocalTime.MIN)
+                .atZone(ZoneId.systemDefault());
+        ChronoLocalDate futureDate = futureDateTime.toLocalDate();
+
+        Object nowObj = validator.testGetNow(futureDateTime);
+        assertInstanceOf(ChronoZonedDateTime.class, nowObj);
+        ChronoZonedDateTime<?> now = (ChronoZonedDateTime<?>) nowObj;
+
+        assertEquals(futureDateTime.getZone(), now.getZone());
+        assertNotEquals(futureDate, now.toLocalDate());
+        assertTrue(validator.testCompareTemporal(futureDateTime, now) > 0);
     }
 
     /**

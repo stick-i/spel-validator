@@ -1,5 +1,6 @@
 package cn.sticki.spel.validator.core.util;
 
+import java.lang.reflect.Array;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -32,18 +33,29 @@ public class CalcLengthUtil {
         hashSet.add(java.util.Collection.class);
         hashSet.add(java.util.Map.class);
         hashSet.add(Object[].class);
+        hashSet.add(boolean[].class);
+        hashSet.add(byte[].class);
+        hashSet.add(short[].class);
+        hashSet.add(int[].class);
+        hashSet.add(long[].class);
+        hashSet.add(float[].class);
+        hashSet.add(double[].class);
+        hashSet.add(char[].class);
         SUPPORT_TYPE = Collections.unmodifiableSet(hashSet);
     }
 
     public static int calcFieldSize(Object object) {
+        if (object == null) {
+            return 0;
+        }
         if (object instanceof CharSequence) {
             return ((CharSequence) object).length();
         } else if (object instanceof java.util.Collection) {
             return ((java.util.Collection<?>) object).size();
         } else if (object instanceof java.util.Map) {
             return ((java.util.Map<?, ?>) object).size();
-        } else if (object instanceof Object[]) {
-            return ((Object[]) object).length;
+        } else if (object.getClass().isArray()) {
+            return Array.getLength(object);
         } else {
             return 0;
         }

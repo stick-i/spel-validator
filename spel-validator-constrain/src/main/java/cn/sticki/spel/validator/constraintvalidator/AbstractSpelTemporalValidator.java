@@ -78,15 +78,19 @@ public abstract class AbstractSpelTemporalValidator<T extends Annotation> implem
      * @return 比较结果：负数表示temporal在now之前，0表示相等，正数表示temporal在now之后
      */
     protected int compareTemporal(Object temporal, Object now) {
-        // 这个类型下面有不同的实现类，特殊处理下
-        if (temporal instanceof ChronoLocalDate) {
-            return ((ChronoLocalDate) temporal).compareTo((ChronoLocalDate) now);
+        if (temporal instanceof ChronoLocalDateTime || now instanceof ChronoLocalDateTime) {
+            return compareChronoLocalDateTime(temporal, now);
+        }
+        if (temporal instanceof ChronoZonedDateTime || now instanceof ChronoZonedDateTime) {
+            return compareChronoZonedDateTime(temporal, now);
+        }
+        if (temporal instanceof ChronoLocalDate || now instanceof ChronoLocalDate) {
+            return compareChronoLocalDate(temporal, now);
         }
 
         // 检查类型是否一致
         if (temporal.getClass() != now.getClass()) {
-            throw new IllegalArgumentException("Cannot compare different types: " +
-                    temporal.getClass().getName() + " and " + now.getClass().getName());
+            throw differentTypeException(temporal, now);
         }
 
         if (temporal instanceof Comparable) {
@@ -97,6 +101,38 @@ public abstract class AbstractSpelTemporalValidator<T extends Annotation> implem
         }
 
         throw new IllegalArgumentException("Unsupported non-comparable temporal type: " + temporal.getClass().getName());
+    }
+
+    private int compareChronoLocalDateTime(Object temporal, Object now) {
+        if (!(temporal instanceof ChronoLocalDateTime) || !(now instanceof ChronoLocalDateTime)) {
+            throw differentTypeException(temporal, now);
+        }
+        ChronoLocalDateTime<?> temporalDateTime = (ChronoLocalDateTime<?>) temporal;
+        ChronoLocalDateTime<?> nowDateTime = (ChronoLocalDateTime<?>) now;
+        return temporalDateTime.compareTo(nowDateTime);
+    }
+
+    private int compareChronoZonedDateTime(Object temporal, Object now) {
+        if (!(temporal instanceof ChronoZonedDateTime) || !(now instanceof ChronoZonedDateTime)) {
+            throw differentTypeException(temporal, now);
+        }
+        ChronoZonedDateTime<?> temporalDateTime = (ChronoZonedDateTime<?>) temporal;
+        ChronoZonedDateTime<?> nowDateTime = (ChronoZonedDateTime<?>) now;
+        return temporalDateTime.compareTo(nowDateTime);
+    }
+
+    private int compareChronoLocalDate(Object temporal, Object now) {
+        if (!(temporal instanceof ChronoLocalDate) || !(now instanceof ChronoLocalDate)) {
+            throw differentTypeException(temporal, now);
+        }
+        ChronoLocalDate temporalDate = (ChronoLocalDate) temporal;
+        ChronoLocalDate nowDate = (ChronoLocalDate) now;
+        return temporalDate.compareTo(nowDate);
+    }
+
+    private IllegalArgumentException differentTypeException(Object temporal, Object now) {
+        return new IllegalArgumentException("Cannot compare different types: " +
+                temporal.getClass().getName() + " and " + now.getClass().getName());
     }
 
     /**
@@ -140,7 +176,22 @@ public abstract class AbstractSpelTemporalValidator<T extends Annotation> implem
             return Calendar.getInstance();
         }
 
-        // 对于 ChronoLocalDate, ChronoLocalDateTime, ChronoZonedDateTime
+        if (temporal instanceof ChronoLocalDateTime) {
+            ChronoLocalDateTime<?> chronoLocalDateTime = (ChronoLocalDateTime<?>) temporal;
+            // 必须基于真实当前时刻构造“now”，不能复用被校验值自身日期
+            return chronoLocalDateTime.toLocalDate()
+                    .getChronology()
+                    .zonedDateTime(Instant.now(), ZoneId.systemDefault())
+                    .toLocalDateTime();
+        }
+        if (temporal instanceof ChronoZonedDateTime) {
+            ChronoZonedDateTime<?> chronoZonedDateTime = (ChronoZonedDateTime<?>) temporal;
+            // 对带时区时间使用同一时区下的真实当前时刻
+            return chronoZonedDateTime.getChronology()
+                    .zonedDateTime(Instant.now(), chronoZonedDateTime.getZone());
+        }
+
+        // 对于 ChronoLocalDate 的实现类，统一使用 ISO 日期作为比较基准
         if (temporal instanceof ChronoLocalDate) {
             return LocalDate.now();
         }

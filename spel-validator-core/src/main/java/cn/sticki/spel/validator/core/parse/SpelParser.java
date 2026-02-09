@@ -35,21 +35,31 @@ public class SpelParser {
 
     private static final Map<String, Expression> expressionCache = new ConcurrentHashMap<>();
 
-    // 由于init当中使用了静态变量，故此静态代码块必须放在静态变量的定义之后，否则会出现空指针异常。
+    // 静态初始化仅输出一次启动日志，BeanResolver 绑定由 SpelValidatorBeanRegistrar 主动触发。
     static {
-        init();
+        logInitInfo();
     }
 
-    private static void init() {
-        ApplicationContext applicationContext = SpelValidatorBeanRegistrar.getApplicationContext();
-        if (applicationContext != null) {
+    private static void logInitInfo() {
+        if (context.getBeanResolver() == null) {
+            log.info("SpelParser initialized without BeanResolver, spring bean reference is temporarily unavailable");
+            log.info("If you want to use spring bean reference in SpelParser, please use @EnableSpelValidatorBeanRegistrar to enable ApplicationContext support");
+        } else {
+            log.debug("SpelParser initialized with BeanResolver");
+        }
+        log.debug("SpelParser init log complete");
+    }
+
+    /**
+     * 绑定 Spring BeanResolver。
+     * 该方法由 {@link SpelValidatorBeanRegistrar} 在 ApplicationContext 注入后主动调用。
+     */
+    static void bindBeanResolver(@NotNull ApplicationContext applicationContext) {
+        synchronized (context) {
             AutowireCapableBeanFactory beanFactory = applicationContext.getAutowireCapableBeanFactory();
             context.setBeanResolver(new BeanFactoryResolver(beanFactory));
-        } else {
-            log.info("ApplicationContext is null, SpelParser will not support spring bean reference");
-            log.info("If you want to use spring bean reference in SpelParser, please use @EnableSpelValidatorBeanRegistrar to enable ApplicationContext support");
+            log.debug("SpelParser bind bean resolver success");
         }
-        log.debug("SpelParser init success");
     }
 
     /**
