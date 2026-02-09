@@ -1,0 +1,9 @@
+User-agent:*
+
+Allow: /
+
+Sitemap: https://spel-validator.sticki.cn/sitemap.xml
+User-agent:*
+Disallow:
+
+Sitemap: https://spel-validator.sticki.cn/sitemap.xml
