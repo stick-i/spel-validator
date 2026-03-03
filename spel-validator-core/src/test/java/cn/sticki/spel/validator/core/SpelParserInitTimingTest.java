@@ -8,7 +8,6 @@ import org.junit.jupiter.api.parallel.Isolated;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.expression.BeanResolver;
 import org.springframework.context.support.GenericApplicationContext;
-import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import java.lang.reflect.Field;
 
@@ -35,15 +34,14 @@ public class SpelParserInitTimingTest {
      */
     @Test
     void testApplicationContextInjectedAfterInitCanAutoBindBeanResolver() throws Exception {
-        Field contextField = SpelParser.class.getDeclaredField("context");
-        contextField.setAccessible(true);
-        StandardEvaluationContext spelContext = (StandardEvaluationContext) contextField.get(null);
-        BeanResolver originalResolver = spelContext.getBeanResolver();
+        Field beanResolverField = SpelParser.class.getDeclaredField("beanResolver");
+        beanResolverField.setAccessible(true);
+        BeanResolver originalResolver = (BeanResolver) beanResolverField.get(null);
 
         GenericApplicationContext testContext = new GenericApplicationContext();
         try {
             // 清空现场，模拟首次初始化时 ApplicationContext 尚不可用
-            spelContext.setBeanResolver(null);
+            beanResolverField.set(null, null);
 
             Integer parseResult = SpelParser.parse("1+1", null, Integer.class);
             Assertions.assertEquals(2, parseResult.intValue());
@@ -59,7 +57,7 @@ public class SpelParserInitTimingTest {
             if (testContext.isActive()) {
                 testContext.close();
             }
-            spelContext.setBeanResolver(originalResolver);
+            beanResolverField.set(null, originalResolver);
         }
     }
 }
