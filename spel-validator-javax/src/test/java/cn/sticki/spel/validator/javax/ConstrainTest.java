@@ -1,7 +1,6 @@
 package cn.sticki.spel.validator.javax;
 
-import cn.sticki.spel.validator.javax.bean.ExampleTestBean;
-import cn.sticki.spel.validator.javax.bean.SpelValidTestBean;
+import cn.sticki.spel.validator.javax.bean.*;
 import cn.sticki.spel.validator.javax.util.JavaxSpelValidator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -31,6 +30,21 @@ public class ConstrainTest {
     void testSpelValid() {
         boolean verified = JavaxSpelValidator.check(SpelValidTestBean.paramTestCase());
         Assertions.assertTrue(verified);
+    }
+
+    @Test
+    void testParentClass() {
+        boolean verified = JavaxSpelValidator.check(ParentClassTestBean.paramTestCase());
+        Assertions.assertTrue(verified);
+    }
+
+    @Test
+    void testI18n() {
+        boolean testUs = JavaxSpelValidator.check(I18nTestBean.testUs());
+        Assertions.assertTrue(testUs, "I18nTestBean.testUs() failed");
+
+        boolean testZh = JavaxSpelValidator.check(I18nTestBean.testZh());
+        Assertions.assertTrue(testZh, "I18nTestBean.testZh() failed");
     }
 
 }
