@@ -21,7 +21,6 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.OptionalInt;
 
 /**
  * 一些边边角角的测试
@@ -106,7 +105,7 @@ public class OtherTest {
         Assertions.assertThrows(IllegalArgumentException.class, () -> NumberComparatorUtil.compare(null, 1, NumberComparatorUtil.GREATER_THAN));
         Assertions.assertThrows(IllegalArgumentException.class, () -> NumberComparatorUtil.compare(1, null, NumberComparatorUtil.GREATER_THAN));
         Assertions.assertThrows(IllegalArgumentException.class, () -> NumberComparatorUtil.compare(1, 1, null));
-        Assertions.assertThrows(IllegalArgumentException.class, () -> NumberComparatorUtil.compare(1, 1, OptionalInt.empty()));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> NumberComparatorUtil.compare(1, 1, NumberComparatorUtil.FINITE_VALUE));
     }
 
 }
