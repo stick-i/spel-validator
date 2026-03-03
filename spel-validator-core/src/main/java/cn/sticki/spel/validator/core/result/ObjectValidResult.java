@@ -15,7 +15,9 @@ public class ObjectValidResult {
 
     private final List<FieldError> errors = new ArrayList<>();
 
-    public static final ObjectValidResult EMPTY = new ObjectValidResult();
+    public static ObjectValidResult empty() {
+        return new ObjectValidResult();
+    }
 
     public boolean hasError() {
         return !errors.isEmpty();
