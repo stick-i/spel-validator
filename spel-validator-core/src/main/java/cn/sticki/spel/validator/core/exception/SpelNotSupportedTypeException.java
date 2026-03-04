@@ -16,12 +16,12 @@ public class SpelNotSupportedTypeException extends SpelValidatorException {
 
     private final Class<?> clazz;
 
-    private final Set<Class<?>> supperType;
+    private final Set<Class<?>> supportedType;
 
-    public SpelNotSupportedTypeException(Class<?> clazz, Set<Class<?>> supperType) {
-        super("Class type not supported, current type: " + clazz.getName() + ", supper type: " + supperType.toString());
+    public SpelNotSupportedTypeException(Class<?> clazz, Set<Class<?>> supportedType) {
+        super("Class type not supported, current type: " + clazz.getName() + ", supported type: " + supportedType.toString());
         this.clazz = clazz;
-        this.supperType = supperType;
+        this.supportedType = supportedType;
     }
 
 }

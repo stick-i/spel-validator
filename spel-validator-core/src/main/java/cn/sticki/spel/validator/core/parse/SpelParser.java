@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.expression.BeanFactoryResolver;
+import org.springframework.expression.BeanResolver;
 import org.springframework.expression.Expression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
@@ -31,7 +32,7 @@ public class SpelParser {
 
     private static final SpelExpressionParser parser = new SpelExpressionParser();
 
-    private static final StandardEvaluationContext context = new StandardEvaluationContext();
+    private static volatile BeanResolver beanResolver;
 
     private static final Map<String, Expression> expressionCache = new ConcurrentHashMap<>();
 
@@ -41,7 +42,7 @@ public class SpelParser {
     }
 
     private static void logInitInfo() {
-        if (context.getBeanResolver() == null) {
+        if (beanResolver == null) {
             log.info("SpelParser initialized without BeanResolver, spring bean reference is temporarily unavailable");
             log.info("If you want to use spring bean reference in SpelParser, please use @EnableSpelValidatorBeanRegistrar to enable ApplicationContext support");
         } else {
@@ -55,11 +56,18 @@ public class SpelParser {
      * 该方法由 {@link SpelValidatorBeanRegistrar} 在 ApplicationContext 注入后主动调用。
      */
     static void bindBeanResolver(@NotNull ApplicationContext applicationContext) {
-        synchronized (context) {
-            AutowireCapableBeanFactory beanFactory = applicationContext.getAutowireCapableBeanFactory();
-            context.setBeanResolver(new BeanFactoryResolver(beanFactory));
-            log.debug("SpelParser bind bean resolver success");
+        AutowireCapableBeanFactory beanFactory = applicationContext.getAutowireCapableBeanFactory();
+        beanResolver = new BeanFactoryResolver(beanFactory);
+        log.debug("SpelParser bind bean resolver success");
+    }
+
+    private static StandardEvaluationContext createEvaluationContext() {
+        StandardEvaluationContext context = new StandardEvaluationContext();
+        BeanResolver resolver = beanResolver;
+        if (resolver != null) {
+            context.setBeanResolver(resolver);
         }
+        return context;
     }
 
     /**
@@ -74,7 +82,7 @@ public class SpelParser {
         try {
             log.debug("======> Parse expression [{}]", expression);
             Expression parsed = expressionCache.computeIfAbsent(expression, parser::parseExpression);
-            Object value = parsed.getValue(context, rootObject, Object.class);
+            Object value = parsed.getValue(createEvaluationContext(), rootObject, Object.class);
             log.debug("======> Parse result [{}]", value);
             return value;
         } catch (RuntimeException e) {
@@ -96,10 +104,10 @@ public class SpelParser {
     public static <T> T parse(@Language("spel") String expression, Object rootObject, Class<T> requiredType) {
         Object any = parse(expression, rootObject);
         if (any == null) {
-            throw new SpelParserException("Expression [" + expression + "] calculate result can not be null");
+            throw new SpelParserException("Expression [" + expression + "] evaluated to null, expected type [" + requiredType.getName() + "]. Please check if the SpEL expression is correct.");
         }
         if (!requiredType.isInstance(any)) {
-            throw new SpelParserException("Expression [" + expression + "] calculate result must be [" + requiredType.getName() + "]");
+            throw new SpelParserException("Expression [" + expression + "] evaluated to type [" + any.getClass().getName() + "], expected type [" + requiredType.getName() + "]. Please check if the SpEL expression is correct.");
         }
         //noinspection unchecked
         return (T) any;

@@ -49,9 +49,11 @@ public class ConstraintViolationSet {
         }
         // 当存在多个约束时，优先匹配具有相同message的数据。
         // 否则当一个字段有多个约束条件时，无法匹配到期望的约束。
-        for (FieldError violation : violationList) {
+        Iterator<FieldError> iterator = violationList.iterator();
+        while (iterator.hasNext()) {
+            FieldError violation = iterator.next();
             if (expectMessage.equals(violation.getErrorMessage())) {
-                violationList.remove(violation);
+                iterator.remove();
                 return violation;
             }
         }

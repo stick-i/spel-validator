@@ -3,7 +3,6 @@ package cn.sticki.spel.validator.javax;
 import org.intellij.lang.annotations.Language;
 
 import javax.validation.Constraint;
-import javax.validation.constraints.NotNull;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -58,7 +57,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  */
 @Documented
 @Retention(RUNTIME)
-@Target({METHOD, FIELD, CONSTRUCTOR, PARAMETER, TYPE_USE})
+@Target({METHOD, FIELD, CONSTRUCTOR, PARAMETER, TYPE_USE, TYPE})
 @Constraint(validatedBy = {SpelValidator.class})
 public @interface SpelValid {
 
@@ -78,7 +77,6 @@ public @interface SpelValid {
     @Language("SpEL")
     String[] spelGroups() default {};
 
-    @NotNull
     String message() default "";
 
     Class<?>[] groups() default {};
