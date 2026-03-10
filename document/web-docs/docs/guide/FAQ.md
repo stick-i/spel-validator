@@ -60,7 +60,7 @@
 
 这样看来，目前的性能表现还算可以接受，但还有优化空间，后续会继续优化。
 
-## 如何对实体类单独进行校验
+## 如何手动对实体类进行校验
 
 正常情况下，只需要触发 jakarta.validation-api 的校验，就会顺带触发 spel.validator 的校验。
 这一点可以参考下源码的测试工具`cn.sticki.spel.validator.jakarta.JakartaSpelValidator.validate`的实现，大概是下面这个样子：
