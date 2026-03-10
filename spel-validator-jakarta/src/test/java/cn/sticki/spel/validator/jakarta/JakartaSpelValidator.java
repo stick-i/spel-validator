@@ -59,7 +59,7 @@ public class JakartaSpelValidator extends AbstractSpelValidator {
         // 通过 @Valid 的方式进行验证
         Set<ConstraintViolation<Object>> validate = validator.validate(obj);
         if (validate == null || validate.isEmpty()) {
-            return ObjectValidResult.EMPTY;
+            return ObjectValidResult.empty();
         }
         ObjectValidResult validResult = new ObjectValidResult();
         List<FieldError> list = validate.stream().map(JakartaSpelValidator::convert).collect(Collectors.toList());

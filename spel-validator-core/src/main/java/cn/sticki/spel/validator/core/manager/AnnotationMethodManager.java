@@ -2,6 +2,7 @@ package cn.sticki.spel.validator.core.manager;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -16,7 +17,7 @@ public class AnnotationMethodManager {
     private AnnotationMethodManager() {
     }
 
-    private final static ConcurrentHashMap<String, Method> METHOD_CACHE = new ConcurrentHashMap<>();
+    private final static ConcurrentHashMap<String, Optional<Method>> METHOD_CACHE = new ConcurrentHashMap<>();
 
     /**
      * 获取方法。
@@ -29,11 +30,11 @@ public class AnnotationMethodManager {
         // 由于注解类的方法无法重载，可以通过注解类和方法名来唯一确定一个方法
         return METHOD_CACHE.computeIfAbsent(clazz.toString() + "#" + methodName, s -> {
             try {
-                return clazz.getMethod(methodName);
+                return Optional.of(clazz.getMethod(methodName));
             } catch (NoSuchMethodException e) {
-                return null;
+                return Optional.empty();
             }
-        });
+        }).orElse(null);
     }
 
 }

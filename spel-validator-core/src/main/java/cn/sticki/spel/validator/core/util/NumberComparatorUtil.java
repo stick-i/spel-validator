@@ -1,7 +1,8 @@
 package cn.sticki.spel.validator.core.util;
 
+import lombok.Getter;
+
 import java.math.BigDecimal;
-import java.util.OptionalInt;
 
 /**
  * 数值类比较工具
@@ -10,21 +11,47 @@ import java.util.OptionalInt;
  *
  * @author oddfar
  */
-@SuppressWarnings({"OptionalUsedAsFieldOrParameterType", "JavadocReference"})
+@SuppressWarnings("JavadocReference")
 public class NumberComparatorUtil {
 
     private NumberComparatorUtil() {
     }
 
-    public static final OptionalInt LESS_THAN = OptionalInt.of(-1);
+    @Getter
+    public enum CompareResult {
+        LESS_THAN(-1),
+        FINITE_VALUE(0),
+        GREATER_THAN(1);
 
-    public static final OptionalInt FINITE_VALUE = OptionalInt.empty();
+        private final int value;
 
-    public static final OptionalInt GREATER_THAN = OptionalInt.of(1);
+        CompareResult(int value) {
+            this.value = value;
+        }
 
-    public static int compare(Number number, Number value, OptionalInt treatNanAs) {
-        if (number == null || value == null || treatNanAs == null || !treatNanAs.isPresent()) {
+        public CompareResult negate() {
+            if (this == LESS_THAN) {
+                return GREATER_THAN;
+            }
+            if (this == GREATER_THAN) {
+                return LESS_THAN;
+            }
+            return FINITE_VALUE;
+        }
+    }
+
+    public static final CompareResult LESS_THAN = CompareResult.LESS_THAN;
+
+    public static final CompareResult FINITE_VALUE = CompareResult.FINITE_VALUE;
+
+    public static final CompareResult GREATER_THAN = CompareResult.GREATER_THAN;
+
+    public static int compare(Number number, Number value, CompareResult treatNanAs) {
+        if (number == null || value == null || treatNanAs == null) {
             throw new IllegalArgumentException("[Number], [Value] and [TreatNanAs] must not be null.");
+        }
+        if (treatNanAs == CompareResult.FINITE_VALUE) {
+            throw new IllegalArgumentException("[TreatNanAs] must not be FINITE_VALUE.");
         }
         if (number.equals(value)) {
             return 0;
@@ -49,28 +76,27 @@ public class NumberComparatorUtil {
         return number.compareTo(value);
     }
 
-    private static int compare(Number number, Double value, OptionalInt treatNanAs) {
+    private static int compare(Number number, Double value, CompareResult treatNanAs) {
         // 检查的是 value，所以需要反转
-        //noinspection OptionalGetWithoutIsPresent
-        treatNanAs = OptionalInt.of(-treatNanAs.getAsInt());
-        OptionalInt infinity = infinityCheck(value, treatNanAs);
-        if (infinity.isPresent()) {
+        CompareResult negatedTreatNanAs = treatNanAs.negate();
+        CompareResult infinity = infinityCheck(value, negatedTreatNanAs);
+        if (infinity != FINITE_VALUE) {
             // 这里也要反转
-            return -infinity.getAsInt();
+            return -infinity.getValue();
         }
         return BigDecimalUtil.valueOf(number).compareTo(BigDecimal.valueOf(value));
     }
 
-    private static int compare(Double number, Number value, OptionalInt treatNanAs) {
-        OptionalInt infinity = infinityCheck(number, treatNanAs);
-        if (infinity.isPresent()) {
-            return infinity.getAsInt();
+    private static int compare(Double number, Number value, CompareResult treatNanAs) {
+        CompareResult infinity = infinityCheck(number, treatNanAs);
+        if (infinity != FINITE_VALUE) {
+            return infinity.getValue();
         }
         return BigDecimalUtil.valueOf(number).compareTo(BigDecimalUtil.valueOf(value));
     }
 
-    private static OptionalInt infinityCheck(Double number, OptionalInt treatNanAs) {
-        OptionalInt result = FINITE_VALUE;
+    private static CompareResult infinityCheck(Double number, CompareResult treatNanAs) {
+        CompareResult result = FINITE_VALUE;
         if (number == Double.NEGATIVE_INFINITY) {
             result = LESS_THAN;
         } else if (number.isNaN()) {

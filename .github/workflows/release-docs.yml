@@ -50,6 +50,5 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: document/web-docs/docs/.vuepress/dist
-          repository-name: stick-i/spel-validator-gh-pages
-          branch: gh-pages
-          token: ${{ secrets.GH_PAGES_TOKEN }}
+          branch: docs-deploy
+          token: ${{ github.token }}

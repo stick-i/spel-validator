@@ -9,9 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.context.support.GenericApplicationContext;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 /**
  * SpelParser 测试
  *
@@ -36,14 +33,7 @@ public class SpelParserTest {
         SpelValidatorBeanRegistrar registrar = new SpelValidatorBeanRegistrar();
         registrar.setApplicationContext(applicationContext);
 
-        // 重新初始化 SpelParser，确保 ApplicationContext 注入成功
-        try {
-            Method method = SpelParser.class.getDeclaredMethod("init");
-            method.setAccessible(true);
-            method.invoke(null);
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+        // setApplicationContext 内部会主动绑定 SpelParser 的 BeanResolver。
     }
 
     public static class MyService {
