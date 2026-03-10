@@ -26,10 +26,7 @@ jobs:
       - name: 安装 pnpm
         uses: pnpm/action-setup@v2
         with:
-          # 选择要使用的 pnpm 版本
-          version: 8
-          # 使用 pnpm 安装依赖
-          run_install: true
+          version: 9
 
       - name: 设置 Node.js
         uses: actions/setup-node@v4
@@ -43,6 +40,7 @@ jobs:
           NODE_OPTIONS: --max_old_space_size=8192
         run: |-
           cd document/web-docs
+          pnpm install --frozen-lockfile
           pnpm run docs:build
           > docs/.vuepress/dist/.nojekyll
 
